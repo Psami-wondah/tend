@@ -1,0 +1,42 @@
+databases:
+  - name: tend-db
+    plan: free
+
+services:
+  - type: web
+    name: tend
+    runtime: node
+    plan: free
+    buildCommand: npm ci && npm run build
+    # Seeds the demo circle on first boot (no-op if it already exists).
+    startCommand: npm run db:seed && npm start
+    healthCheckPath: /mum
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: tend-db
+          property: connectionString
+      - key: PAYPAL_CLIENT_ID
+        sync: false
+      - key: PAYPAL_CLIENT_SECRET
+        sync: false
+      - key: NEXT_PUBLIC_PAYPAL_CLIENT_ID
+        sync: false
+      - key: PAYPAL_WEBHOOK_ID
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: CURRENCY
+        value: USD
+      - key: SANDBOX_PHARMACY_EMAIL
+        sync: false
+      - key: SANDBOX_CARER_EMAIL
+        sync: false
+      - key: SANDBOX_TAXI_EMAIL
+        sync: false
+      - key: SANDBOX_ADA_EMAIL
+        sync: false
+      - key: SANDBOX_TUNDE_EMAIL
+        sync: false
+      - key: SANDBOX_CHIOMA_EMAIL
+        sync: false

@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+/*
+  Tend palette — a bank passbook and a chemist's bottle, not a fintech app.
+  Status colours carry meaning: marigold = waiting on you, brick = refused,
+  passbook green = paid / safe.
+*/
+@theme {
+  --color-paper: #eef2ee;
+  --color-sheet: #ffffff;
+  --color-ink: #1c2b27;
+  --color-ink-soft: #4b5c56;
+  --color-rule: #c9d6cf;
+  --color-passbook: #2f5d4e;
+  --color-passbook-deep: #213f35;
+  --color-passbook-tint: #dde9e2;
+  --color-marigold: #c98a1b;
+  --color-marigold-tint: #f8ecd2;
+  --color-brick: #a63a2b;
+  --color-brick-tint: #f5ddd8;
+
+  --font-sans: "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", system-ui, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-paper: #121a17;
+    --color-sheet: #1a2420;
+    --color-ink: #e6eee9;
+    --color-ink-soft: #a6b8b0;
+    --color-rule: #2e3d37;
+    --color-passbook: #7fbfa6;
+    --color-passbook-deep: #a8dcc7;
+    --color-passbook-tint: #1f3a31;
+    --color-marigold: #e9b552;
+    --color-marigold-tint: #3a2e14;
+    --color-brick: #ee8a7c;
+    --color-brick-tint: #3d1f1b;
+  }
+}
+
+html {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Tabular figures for every amount so columns line up like a passbook. */
+.figures {
+  font-variant-numeric: tabular-nums;
+}
+
+/* The passbook page: faint ruled lines behind the ledger rows. */
+.passbook-page {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent calc(3rem - 1px),
+    var(--color-rule) calc(3rem - 1px),
+    var(--color-rule) 3rem
+  );
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-marigold);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
