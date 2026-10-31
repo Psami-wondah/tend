@@ -5,3 +5,8 @@ node_modules
 .env.local
 *.tsbuildinfo
 next-env.d.ts
+
+# Impeccable working files (the surface brief, DESIGN.md and design.json are kept)
+.impeccable/review/
+.impeccable/questions/
+.impeccable/hook.cache.json

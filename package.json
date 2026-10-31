@@ -12,14 +12,20 @@
     "test": "vitest run",
     "db:seed": "tsx scripts/seed.ts",
     "db:reset": "tsx scripts/seed.ts --reset",
-    "demo:scenario": "tsx scripts/demo-scenario.ts"
+    "demo:scenario": "tsx scripts/demo-scenario.ts",
+    "eval:intake": "tsx scripts/eval-intake.ts",
+    "mcp:demo": "tsx scripts/mcp-demo.ts"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^4.0.94",
     "@electric-sql/pglite": "^0.5.13",
+    "@modelcontextprotocol/sdk": "^1.32.2",
     "@paypal/agent-toolkit": "1.11",
+    "ag-grid-community": "^36.2.0",
+    "ag-grid-react": "^36.2.0",
     "ai": "^7.0.159",
     "drizzle-orm": "^0.45.4",
+    "lucide-react": "^1.56.0",
     "next": "^16.4.3",
     "pg": "^8.23.1",
     "react": "^19.3.1",

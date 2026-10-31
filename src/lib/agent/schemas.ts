@@ -48,6 +48,16 @@ export const ExtractionSchema = z.object({
     explanation: z.string().describe("Why, in one or two plain sentences."),
   }),
   confidence: z.number().min(0).max(1).describe("Confidence in the extracted amount and payee."),
+  paypalNative: z
+    .object({
+      kind: z.enum(["invoice", "money_request", "account_alert"]),
+      phoneInNote: z
+        .string()
+        .nullable()
+        .describe("A phone number written in the invoice or request note, or in the message, telling them to call. PayPal never puts support numbers in invoice notes."),
+    })
+    .nullish()
+    .describe("Set only if this came through PayPal itself: a real PayPal invoice, a PayPal money request, or a PayPal-branded alert email. Null otherwise."),
 });
 
 export type Extraction = z.infer<typeof ExtractionSchema>;

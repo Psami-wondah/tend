@@ -49,6 +49,24 @@ export interface Mandate {
   scamRefuseThreshold: number;
   /** Minimum scam-risk score at which Tend asks the family instead of paying. */
   scamReviewThreshold: number;
+  /** When the person pays from their own PayPal. Optional for mandates saved before this existed. */
+  ownPayments?: OwnPaymentRules;
+}
+
+/**
+ * The person's own money stays theirs. Tend never vetoes an ordinary payment;
+ * it buys the circle time. Routine payments go straight through, unusual ones
+ * are held (authorized, not captured) so someone they trust can look.
+ */
+export interface OwnPaymentRules {
+  /** How long an unusual payment is held before Tend lets it go. */
+  coolingOffHours: number;
+  /** Payments above this are held even to someone they've paid before. */
+  coolOffOverMinor: number;
+  /** Payments above this need one person in the circle to say yes. */
+  approvalOverMinor: number;
+  /** Hold the first payment to anyone new. */
+  holdNewPayees: boolean;
 }
 
 export interface ScamSignals {
@@ -77,6 +95,8 @@ export interface PaymentProposal {
   scam: ScamSignals;
   /** Set when the same payee/amount/reference was paid recently. */
   duplicateOfIntentId?: string | null;
+  /** A real PayPal invoice or money request whose note carries a phone number to call. */
+  paypalPhoneInNote?: string | null;
 }
 
 /** Facts about the circle at decision time. */
@@ -85,7 +105,7 @@ export interface CircleState {
   spentThisMonthMinor: Partial<Record<Category, number>>;
 }
 
-export type Decision = "auto_pay" | "needs_approval" | "hold" | "refuse";
+export type Decision = "auto_pay" | "cool_off" | "needs_approval" | "hold" | "refuse";
 
 export type ReasonCode =
   | "within_auto_limit"
@@ -101,7 +121,11 @@ export type ReasonCode =
   | "duplicate"
   | "insufficient_funds"
   | "invalid_amount"
-  | "currency_mismatch";
+  | "currency_mismatch"
+  | "cooling_off"
+  | "own_routine"
+  | "own_large"
+  | "paypal_invoice_scam";
 
 export interface Reason {
   code: ReasonCode;

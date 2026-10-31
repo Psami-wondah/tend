@@ -1,10 +1,12 @@
 import { and, eq } from "drizzle-orm";
 import { getDb, schema } from "./db/client";
 import { alert, audit, getCircle, getMember, getMembers } from "./circle";
-import { captureOrder, createTopUpOrder } from "./paypal/rest";
+import { captureOrder, createTopUpOrder, isSimulatedId } from "./paypal/rest";
 import { runPayPalTool } from "./paypal/toolkit";
 import { formatMoney, toMajorString } from "./money";
 import { releaseHolds } from "./agent/approvals";
+import { settleRecoveryInvoice } from "./recoveries";
+import { isFamily } from "./people";
 
 const { contributions, ledgerEntries } = schema;
 
@@ -56,7 +58,7 @@ export async function completeTopUp(orderId: string) {
 export async function requestShares(totalMinor: number, note: string) {
   const db = await getDb();
   const circle = await getCircle();
-  const siblings = (await getMembers(circle.id)).filter((m) => m.role === "owner" || m.role === "sibling");
+  const siblings = (await getMembers(circle.id)).filter(isFamily);
   if (!siblings.length) throw new Error("No family members to invoice");
   const share = Math.ceil(totalMinor / siblings.length);
 
@@ -109,7 +111,7 @@ export async function syncInvoices() {
     .from(contributions)
     .where(and(eq(contributions.source, "invoice"), eq(contributions.status, "pending")));
   for (const c of pending) {
-    if (!c.paypalInvoiceId) continue;
+    if (!c.paypalInvoiceId || isSimulatedId(c.paypalInvoiceId)) continue;
     try {
       const inv = await runPayPalTool<{ status?: string }>("get_invoice", { invoice_id: c.paypalInvoiceId });
       if (inv.status === "PAID" || inv.status === "MARKED_AS_PAID") {
@@ -121,10 +123,31 @@ export async function syncInvoices() {
   }
 }
 
+/** An invoice was paid: either a sibling's share, or a payee refunding a double payment. */
 export async function settleInvoice(invoiceId: string) {
   const db = await getDb();
   const [c] = await db.select().from(contributions).where(eq(contributions.paypalInvoiceId, invoiceId));
   if (c) await settleContribution(c.id, { invoiceId });
+  else await settleRecoveryInvoice(invoiceId);
+}
+
+/** Demo mode only: stand in for a sibling paying their share invoice in PayPal. */
+export async function simulatePayShare(contributionId: string, memberId: string) {
+  const db = await getDb();
+  const [c] = await db.select().from(contributions).where(eq(contributions.id, contributionId));
+  if (!c) throw new Error("Not found");
+  if (c.memberId !== memberId) throw new Error("Only the person invoiced can pay their share.");
+  if (!isSimulatedId(c.paypalInvoiceId)) throw new Error("This is a real PayPal invoice. Pay it in PayPal.");
+  await settleContribution(c.id, { invoiceId: c.paypalInvoiceId!, simulated: "true" });
+}
+
+/** Share invoices still open, for the "pay your share" prompts. */
+export async function pendingShares(circleId: string) {
+  const db = await getDb();
+  return db
+    .select()
+    .from(contributions)
+    .where(and(eq(contributions.circleId, circleId), eq(contributions.source, "invoice"), eq(contributions.status, "pending")));
 }
 
 async function settleContribution(contributionId: string, ref: Record<string, string>) {
@@ -143,7 +166,7 @@ async function settleContribution(contributionId: string, ref: Record<string, st
     amountMinor: c.amountMinor,
     memberId: c.memberId,
     contributionId: c.id,
-    description: `${member?.name ?? "Family"} topped up the pot`,
+    description: c.source === "invoice" ? `${member?.name ?? "Family"} paid their share` : `${member?.name ?? "Family"} topped up the pot`,
   });
   await audit(c.circleId, "paypal", "contribution_received", { ...ref, amountMinor: c.amountMinor });
   await alert(c.circleId, "info", `${member?.name ?? "Someone"} added ${formatMoney(c.amountMinor, c.currency)}`, "Thank you.");

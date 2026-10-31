@@ -3,6 +3,7 @@ import { getDb, schema } from "../db/client";
 import { alert, audit, getMember } from "../circle";
 import { executeIntent, load, transition } from "./executor";
 import type { PaymentIntent } from "../db/schema";
+import { releaseOwnPayment, stopOwnPayment } from "../own-payments";
 
 const { approvals, paymentIntents } = schema;
 
@@ -25,6 +26,18 @@ export async function recordVerdict(opts: {
   if (!member || member.circleId !== intent.circleId) throw new ApprovalError("Not a member of this care circle.");
   if (member.role !== "owner" && member.role !== "sibling") {
     throw new ApprovalError("Only family members on the care circle can approve payments.");
+  }
+  // Own-wallet payments: "approve" lets the held money go now, "decline" stops it.
+  if (intent.funding === "own") {
+    if (intent.status !== "held") throw new ApprovalError(`This payment is already ${intent.status.replace("_", " ")}.`);
+    await db
+      .insert(approvals)
+      .values({ intentId: intent.id, memberId: member.id, verdict: opts.verdict, note: opts.note ?? null })
+      .onConflictDoUpdate({ target: [approvals.intentId, approvals.memberId], set: { verdict: opts.verdict, note: opts.note ?? null, createdAt: new Date() } });
+    await audit(intent.circleId, `member:${member.id}`, opts.verdict === "approve" ? "approved" : "rejected", { note: opts.note }, intent.id);
+    return opts.verdict === "approve"
+      ? releaseOwnPayment(intent.id, `member:${member.id}`, "approved")
+      : stopOwnPayment(intent.id, member.id, opts.note);
   }
   if (intent.status !== "awaiting_approval" && intent.status !== "on_hold") {
     throw new ApprovalError(`This payment is already ${intent.status.replace("_", " ")}.`);
@@ -58,7 +71,7 @@ export async function approvalCount(intentId: string): Promise<number> {
 }
 
 /** If an intent has enough approvals, move it to "approved" and pay it. */
-async function maybeRelease(intentId: string): Promise<PaymentIntent> {
+export async function maybeRelease(intentId: string): Promise<PaymentIntent> {
   const intent = await load(intentId);
   const count = await approvalCount(intentId);
   if (count < intent.approvalsRequired) return intent;

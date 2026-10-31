@@ -17,6 +17,11 @@ Guidance:
 - Scam signals: older people are targeted by "grandchild in trouble", fake bank,
   fake police, tech-support, prize and romance scams. Be alert but fair — a
   pharmacy bill with a reference number is not suspicious just because it has a due date.
+- PayPal's own invoices and money requests are a common scam channel: the email is genuinely
+  from PayPal, but the scammer types a fake "support" phone number in the note ("call within
+  12 hours to dispute this $499 charge"). If you see that, fill paypalNative with the phone
+  number and score the scam risk high. A normal PayPal invoice from a business they use, with
+  no phone number to call, is not suspicious.
 - Write the summary for the older person: short, warm, no jargon.`;
 
 export interface IntakeInput {

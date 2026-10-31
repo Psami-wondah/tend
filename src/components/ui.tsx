@@ -1,0 +1,117 @@
+import { Check, Clock3, Hourglass, Loader, OctagonX, Ban, TriangleAlert, CircleCheck, PauseCircle, Wallet } from "lucide-react";
+import type { IntentStatus } from "@/lib/db/schema";
+import { formatMoney } from "@/lib/money";
+import { personVar } from "@/lib/people";
+import { Txt } from "./figures-text";
+
+/** One numeral system for every amount (fixed steps: xl pot, lg card, md row). */
+export function Money({ minor, currency, size = "md", signed = false, className = "" }: {
+  minor: number;
+  currency: string;
+  size?: "xl" | "lg" | "md" | "sm";
+  signed?: boolean;
+  className?: string;
+}) {
+  const text = formatMoney(Math.abs(minor), currency);
+  const sign = signed ? (minor > 0 ? "+" : minor < 0 ? "−" : "") : minor < 0 ? "−" : "";
+  const cls = { xl: "text-[3.25rem] leading-none font-semibold tracking-[-0.02em]", lg: "text-[2.125rem] leading-none font-semibold tracking-[-0.01em]", md: "text-lg font-medium", sm: "text-base font-medium" }[size];
+  return <span className={`figures ${cls} ${className}`}>{sign}{text}</span>;
+}
+
+const STATUS: Record<IntentStatus, { label: string; tone: "paid" | "wait" | "stop" | "quiet"; Icon: typeof Check }> = {
+  awaiting_approval: { label: "Needs approval", tone: "wait", Icon: Hourglass },
+  on_hold: { label: "Needs a top-up", tone: "wait", Icon: Clock3 },
+  refused: { label: "Refused", tone: "stop", Icon: OctagonX },
+  rejected: { label: "Declined", tone: "quiet", Icon: Ban },
+  approved: { label: "Approved", tone: "paid", Icon: Check },
+  paying: { label: "Paying now", tone: "paid", Icon: Loader },
+  paid: { label: "Paid", tone: "paid", Icon: CircleCheck },
+  failed: { label: "Payment failed", tone: "stop", Icon: TriangleAlert },
+  awaiting_payer: { label: "Waiting for PayPal", tone: "quiet", Icon: Wallet },
+  held: { label: "Held", tone: "wait", Icon: PauseCircle },
+  voided: { label: "Stopped", tone: "quiet", Icon: Ban },
+};
+
+const TONE = {
+  paid: "bg-paid-tint text-paid",
+  wait: "bg-wait-tint text-wait",
+  stop: "bg-stop-tint text-stop",
+  quiet: "bg-enamel text-ink-soft",
+};
+
+export function StatusBadge({ status }: { status: IntentStatus }) {
+  const s = STATUS[status];
+  return (
+    <span className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-bold whitespace-nowrap ${TONE[s.tone]}`}>
+      <s.Icon aria-hidden size={15} strokeWidth={2.5} className={status === "paying" ? "animate-spin [animation-duration:2s]" : ""} />
+      {s.label}
+    </span>
+  );
+}
+
+export const statusLabel = (s: IntentStatus) => STATUS[s].label;
+
+type PersonLike = { name: string; color: string | null; role?: string };
+
+export function PersonDot({ member, size = 10, dim = false }: { member: PersonLike; size?: number; dim?: boolean }) {
+  return (
+    <span
+      aria-hidden
+      className="inline-block shrink-0 rounded-full"
+      style={{ width: size, height: size, background: personVar(member), opacity: dim ? 0.45 : 1 }}
+    />
+  );
+}
+
+/** Name with their colour. `note` adds a quiet trailing word: "asleep", "approved". */
+export function PersonChip({ member, note, tone = "plain" }: { member: PersonLike; note?: string; tone?: "plain" | "done" | "asleep" }) {
+  const bg = tone === "done" ? "bg-paid-tint" : tone === "asleep" ? "bg-night text-night-ink" : "bg-enamel";
+  const noteCls = tone === "done" ? "text-paid" : tone === "asleep" ? "text-night-soft" : "text-ink-soft";
+  return (
+    <span className={`inline-flex min-h-8 items-center gap-2 rounded-full ${bg} py-1 pr-3 pl-2 text-sm`}>
+      <PersonDot member={member} />
+      <span className="font-bold">{member.name}</span>
+      {note && (
+        <span className={noteCls}>
+          <Txt>{note}</Txt>
+        </span>
+      )}
+      {tone === "done" && <Check aria-hidden size={14} strokeWidth={3} className="text-paid" />}
+    </span>
+  );
+}
+
+export const btn = {
+  primary:
+    "inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-action px-5 text-base font-bold text-action-ink transition-colors duration-200 hover:bg-action-hover disabled:cursor-not-allowed disabled:opacity-55",
+  approve:
+    "inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-paid px-5 text-base font-bold text-paid-ink transition-colors duration-200 hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-55",
+  secondary:
+    "inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border-2 border-rule-strong bg-dial px-5 text-base font-bold text-ink transition-colors duration-200 hover:border-ink disabled:cursor-not-allowed disabled:opacity-55",
+  danger:
+    "inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border-2 border-rule-strong bg-dial px-5 text-base font-bold text-ink transition-colors duration-200 hover:border-stop hover:text-stop disabled:cursor-not-allowed disabled:opacity-55",
+  quiet:
+    "inline-flex min-h-10 items-center gap-1.5 rounded-lg px-2 text-sm font-bold text-ink-soft underline decoration-rule-strong underline-offset-4 hover:text-ink hover:decoration-ink disabled:opacity-55",
+};
+
+export const field =
+  "min-h-12 w-full rounded-xl border-2 border-rule bg-dial px-3.5 text-base text-ink placeholder:text-ink-soft/80 focus:border-accent focus:outline-none";
+
+export function SectionHeading({ id, children, action }: { id: string; children: React.ReactNode; action?: React.ReactNode }) {
+  return (
+    <div className="mb-3 flex items-end justify-between gap-4">
+      <h2 id={id} className="font-display text-[1.375rem] leading-tight font-semibold tracking-[-0.01em]">
+        {children}
+      </h2>
+      {action}
+    </div>
+  );
+}
+
+/** A label that says a transaction is simulated or seed data, never real money. */
+export function SimTag({ id }: { id: string | null | undefined }) {
+  if (!id) return null;
+  if (id.startsWith("SIM-")) return <span className="rounded-md bg-wait-tint px-1.5 py-0.5 text-xs font-bold text-wait">Simulated</span>;
+  if (id.startsWith("SEED-")) return <span className="rounded-md bg-enamel px-1.5 py-0.5 text-xs font-bold text-ink-soft">Seed data</span>;
+  return null;
+}

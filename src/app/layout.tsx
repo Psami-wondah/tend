@@ -1,24 +1,31 @@
 import type { Metadata, Viewport } from "next";
+import { Atkinson_Hyperlegible_Next, Jost } from "next/font/google";
 import "./globals.css";
 
+// Jost carries amounts, times and headings like lobby-clock numerals;
+// Atkinson Hyperlegible Next carries every line people read, on the person's screen most of all.
+const jost = Jost({ subsets: ["latin"], variable: "--font-jost", display: "swap" });
+const atkinson = Atkinson_Hyperlegible_Next({ subsets: ["latin"], variable: "--font-atkinson", display: "swap" });
+
 export const metadata: Metadata = {
-  title: "Tend",
-  description: "A shared care pot for families, run by an agent that pays what you've agreed and refuses what you haven't.",
+  title: { default: "Tend", template: "%s · Tend" },
+  description: "Their money, their say: a second key for the people an older adult trusts. Built on PayPal and Claude.",
+  appleWebApp: { capable: true, title: "Tend", statusBarStyle: "black-translucent" },
 };
 
-export const viewport: Viewport = { width: "device-width", initialScale: 1 };
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#1c2250" },
+    { media: "(prefers-color-scheme: dark)", color: "#0b0f26" },
+  ],
+};
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;700;800&display=swap"
-        />
-      </head>
+    <html lang="en" className={`${jost.variable} ${atkinson.variable}`}>
       <body className="min-h-dvh">{children}</body>
     </html>
   );

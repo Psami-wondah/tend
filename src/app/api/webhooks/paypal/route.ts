@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
 import { getDb, schema } from "@/lib/db/client";
 import { verifyWebhook } from "@/lib/paypal/rest";
-import { markPaid, refreshPayout } from "@/lib/agent/executor";
+import { markPaid, refreshPayout, transition } from "@/lib/agent/executor";
 import { settleInvoice } from "@/lib/contributions";
 import { audit, getCircle } from "@/lib/circle";
 
@@ -14,6 +14,7 @@ type Event = { id: string; event_type: string; resource: Record<string, any> };
  * PayPal webhooks. Subscribe your sandbox app to:
  *   PAYMENT.PAYOUTS-ITEM.SUCCEEDED / .FAILED / .RETURNED / .BLOCKED
  *   INVOICING.INVOICE.PAID
+ *   PAYMENT.AUTHORIZATION.VOIDED, PAYMENT.CAPTURE.COMPLETED (cooling-off holds)
  * Every handler is idempotent, so redeliveries are harmless.
  */
 export async function POST(req: Request) {
@@ -40,6 +41,23 @@ export async function POST(req: Request) {
     case "PAYMENT.PAYOUTS-ITEM.BLOCKED": {
       const intentId = event.resource.payout_item?.sender_item_id as string | undefined;
       if (intentId) await refreshPayout(intentId);
+      break;
+    }
+    case "PAYMENT.AUTHORIZATION.VOIDED": {
+      // Voided outside Tend (e.g. it expired): a held payment can no longer go.
+      const authId = event.resource.id as string | undefined;
+      if (authId) {
+        const [intent] = await db.select().from(schema.paymentIntents).where(eq(schema.paymentIntents.paypalAuthorizationId, authId));
+        if (intent && (await transition(intent.id, "held", "voided"))) await audit(intent.circleId, "paypal", "authorization_voided", { authId }, intent.id);
+      }
+      break;
+    }
+    case "PAYMENT.CAPTURE.COMPLETED": {
+      const captureId = event.resource.id as string | undefined;
+      if (captureId) {
+        const [intent] = await db.select().from(schema.paymentIntents).where(eq(schema.paymentIntents.paypalCaptureId, captureId));
+        if (intent) await audit(intent.circleId, "paypal", "capture_completed", { captureId }, intent.id);
+      }
       break;
     }
     case "INVOICING.INVOICE.PAID": {

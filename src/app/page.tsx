@@ -1,139 +1,115 @@
 import Link from "next/link";
-import { dashboard } from "@/lib/views";
-import { formatMoney } from "@/lib/money";
-import { ApprovalCard } from "@/components/approval-card";
-import { Passbook } from "@/components/passbook";
-import { MemberSwitcher } from "@/components/member-switcher";
-import { TopUp } from "@/components/top-up";
-import { ShareRequest } from "@/components/share-request";
-import { AskTend } from "@/components/ask-tend";
-import { SyncButton } from "@/components/sync-button";
-import { Reasons } from "@/components/reasons";
+import { getMembers, listCircles } from "@/lib/circle";
+import { integrations } from "@/lib/setup";
+import { personProps } from "@/lib/page-context";
+import { PersonPicker } from "@/components/person-picker";
 
 export const dynamic = "force-dynamic";
 
-export default async function FamilyPage({ searchParams }: { searchParams: Promise<{ as?: string }> }) {
-  const { as } = await searchParams;
-  const d = await dashboard(as);
-  const money = (m: number) => formatMoney(m, d.circle.currency);
-  const needsMe = d.waiting.filter((w) => w.myVote !== "approve");
+// The same four stages every payment shows, at the same fixed scale.
+const STAGES = [
+  {
+    stage: "Read",
+    title: "They send it, Claude reads it",
+    body: "A photo of a bill, a voice note, or a text or PayPal email someone sent them. Claude pulls out who's asking, how much, and any scam signals.",
+  },
+  {
+    stage: "Rules",
+    title: "Their circle's rules decide",
+    body: "A rule book the circle wrote decides: pay, hold, ask, or refuse. Gift cards, crypto and wire transfers are refused outright. The AI never holds a tool that moves money.",
+  },
+  {
+    stage: "Circle",
+    title: "Time for a second look",
+    body: "Anything unusual from their own PayPal is authorized but held for a day. Whoever is awake can stop it, and PayPal voids the hold. Nothing leaves until then.",
+  },
+  {
+    stage: "PayPal",
+    title: "PayPal pays, everyone sees it",
+    body: "Released payments are captured and paid out by PayPal. Every decision explains itself, in each person's own time zone.",
+  },
+];
+
+export default async function Welcome() {
+  const circles = await listCircles();
+  const withPeople = await Promise.all(
+    circles.map(async (c) => {
+      const ms = await getMembers(c.id);
+      const person = ms.find((m) => m.role === "care_recipient");
+      const rest = ms.filter((m) => m.role !== "care_recipient");
+      return { circle: c, people: [...(person ? [person] : []), ...rest].map((m) => ({ ...personProps(m), relation: m.relation })) };
+    }),
+  );
+  const i = integrations();
+  const demo = i.paypal === "simulated" || !i.ai;
+  const now = Date.now();
 
   return (
-    <div className="mx-auto max-w-6xl px-4 pb-24 sm:px-6">
-      <header className="flex flex-wrap items-center justify-between gap-4 py-5">
-        <div className="flex items-baseline gap-3">
-          <span className="text-2xl font-extrabold tracking-tight text-passbook">Tend</span>
-          <span className="text-ink-soft">{d.circle.name}</span>
-        </div>
-        <div className="flex flex-wrap items-center gap-4">
-          <MemberSwitcher members={d.family} current={d.me.id} />
-          <Link href="/mum" className="min-h-10 rounded-lg border-2 border-passbook px-4 py-1.5 font-bold text-passbook">
-            Open {d.circle.careRecipientName}&apos;s screen
-          </Link>
-        </div>
-      </header>
+    <div className="min-h-dvh">
+      <section className="on-night bg-night text-night-ink">
+        <div className="mx-auto max-w-5xl px-4 pt-[max(1rem,env(safe-area-inset-top))] pb-10 sm:px-6">
+          <div className="flex items-center gap-3">
+            <span className="font-display text-[1.75rem] font-semibold tracking-[-0.01em]">Tend</span>
+            {demo && (
+              <Link href="/setup" className="rounded-full bg-day px-2.5 py-1 text-xs font-bold text-night">
+                Demo mode
+              </Link>
+            )}
+            <Link href="/setup" className="ml-auto text-sm font-bold text-night-soft underline decoration-night-soft/50 hover:text-night-ink">
+              Setup
+            </Link>
+          </div>
+          <h1 className="mt-10 max-w-3xl font-display text-[2.5rem] leading-[1.05] font-semibold tracking-[-0.02em] text-balance sm:text-[3.5rem]">
+            Their money, their say. A second key for the people they trust.
+          </h1>
+          <p className="mt-4 max-w-2xl text-lg text-night-soft">
+            Americans over 60 reported <span className="figures text-night-ink">$7.75 billion</span> lost to fraud last year, up 59%. Tend lets an older adult keep paying from their own PayPal, and gives the people they trust time to stop anything that looks wrong. Built on PayPal and Claude.
+          </p>
 
-      <section aria-labelledby="pot" className="rounded-3xl bg-passbook px-6 py-8 text-white sm:px-10">
-        <h1 id="pot" className="text-lg font-bold text-white/80">
-          In {d.circle.careRecipientName}&apos;s care pot
-        </h1>
-        <p className="figures mt-1 text-6xl font-extrabold tracking-tight sm:text-7xl">{money(d.balanceMinor)}</p>
-        <p className="mt-2 text-white/80">
-          {d.reservedMinor > 0 ? `${money(d.reservedMinor)} is set aside for payments going out now. ` : ""}
-          {needsMe.length > 0
-            ? `${needsMe.length} payment${needsMe.length > 1 ? "s" : ""} waiting for you, ${d.me.name}.`
-            : `Nothing waiting for you, ${d.me.name}.`}
-        </p>
-        <dl className="mt-6 grid grid-cols-2 gap-4 border-t border-white/25 pt-5 sm:grid-cols-4">
-          {d.contributedBy.map((c) => (
-            <div key={c.member.id}>
-              <dt className="text-sm text-white/75">{c.member.name} has put in</dt>
-              <dd className="figures text-xl font-bold">{money(c.totalMinor)}</dd>
-            </div>
-          ))}
-        </dl>
+          <div className="mt-10 grid gap-8 lg:grid-cols-2">
+            {withPeople.map(({ circle, people }) => (
+              <section key={circle.id} aria-labelledby={`c-${circle.id}`}>
+                <h2 id={`c-${circle.id}`} className="font-display text-xl font-semibold">
+                  {circle.name}
+                </h2>
+                {circle.story && <p className="mt-1 max-w-prose text-[0.9375rem] text-night-soft">{circle.story}</p>}
+                <div className="mt-4">
+                  <PersonPicker people={people} initialNow={now} />
+                </div>
+              </section>
+            ))}
+          </div>
+          <p className="mt-6 text-sm text-night-soft">Demo circles: everyone here, and their history, is made-up seed data.</p>
+        </div>
       </section>
 
-      <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_24rem]">
-        <div className="space-y-10">
-          <section aria-labelledby="waiting">
-            <h2 id="waiting" className="mb-4 text-2xl font-extrabold">Waiting for the family</h2>
-            {d.waiting.length === 0 ? (
-              <p className="rounded-2xl bg-sheet p-6 text-ink-soft">
-                Nothing to approve. Tend is paying routine bills within the limits you agreed.
-              </p>
-            ) : (
-              <div className="space-y-4">
-                {d.waiting.map((w) => (
-                  <ApprovalCard key={w.intent.id} intent={w.intent} approvedBy={w.approvals} myVote={w.myVote} memberId={d.me.id} />
-                ))}
-              </div>
-            )}
-          </section>
-
-          {d.recentRefusals.length > 0 && (
-            <section aria-labelledby="stopped">
-              <h2 id="stopped" className="mb-4 text-2xl font-extrabold">What Tend stopped</h2>
-              <div className="space-y-4">
-                {d.recentRefusals.map((r) => (
-                  <article key={r.id} className="rounded-2xl border-2 border-brick bg-brick-tint/40 p-5">
-                    <p className="text-lg font-bold">
-                      {money(r.amountMinor)} to {r.payeeName}
-                    </p>
-                    <p className="mb-3 text-ink-soft">{r.summary}</p>
-                    <Reasons reasons={r.evaluation.reasons.filter((x) => x.effect === "refuse")} />
-                  </article>
-                ))}
-              </div>
-            </section>
-          )}
-
-          <section aria-labelledby="passbook">
-            <div className="mb-4 flex items-baseline justify-between gap-4">
-              <h2 id="passbook" className="text-2xl font-extrabold">Passbook</h2>
-              <SyncButton />
-            </div>
-            <Passbook rows={d.passbook} currency={d.circle.currency} asMemberId={d.me.id} />
-          </section>
+      <section className="mx-auto max-w-5xl px-4 py-12 sm:px-6" aria-labelledby="how">
+        <h2 id="how" className="font-display text-[1.75rem] leading-tight font-semibold tracking-[-0.01em]">
+          How Tend decides
+        </h2>
+        <ol className="mt-6 grid gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+          {STAGES.map(({ stage, title, body }, n) => (
+            <li key={stage}>
+              <span aria-hidden className="block h-1.5 rounded-full bg-night-cell" />
+              <h3 className="mt-3 text-lg leading-snug font-bold">
+                <span className="sr-only">Stage {n + 1}, </span>
+                <span className="font-display font-semibold">{stage}.</span> {title}
+              </h3>
+              <p className="mt-1 text-ink-soft">{body}</p>
+            </li>
+          ))}
+        </ol>
+        <div className="mt-10 grid max-w-3xl gap-3 text-ink-soft">
+          <p>
+            In the UK, banks may now hold a suspicious payment for up to four business days, because time breaks scams. The people someone trusts have no such power over
+            their payments. Tend gives it to them, using PayPal&apos;s own authorize-and-capture.
+          </p>
+          <p className="text-sm">
+            Sources: FBI IC3 2025 report (losses reported by people 60+); UK Payment Services (Amendment) Regulations 2024 and FCA FG24/6. Details in the repo&apos;s
+            STRATEGY.md.
+          </p>
         </div>
-
-        <aside className="space-y-10">
-          <section aria-labelledby="ask">
-            <h2 id="ask" className="mb-4 text-2xl font-extrabold">Ask Tend</h2>
-            <AskTend memberId={d.me.id} />
-          </section>
-
-          <section aria-labelledby="topup">
-            <h2 id="topup" className="mb-4 text-2xl font-extrabold">Top up the pot</h2>
-            <TopUp memberId={d.me.id} currency={d.circle.currency} />
-          </section>
-
-          <section aria-labelledby="shares">
-            <h2 id="shares" className="mb-2 text-2xl font-extrabold">Ask everyone to chip in</h2>
-            <p className="mb-4 text-ink-soft">Tend sends each of you a PayPal invoice for an equal share.</p>
-            <ShareRequest siblings={d.family.length} currency={d.circle.currency} />
-          </section>
-
-          {d.alerts.length > 0 && (
-            <section aria-labelledby="alerts">
-              <h2 id="alerts" className="mb-4 text-2xl font-extrabold">Recent</h2>
-              <ul className="space-y-3">
-                {d.alerts.map((a) => (
-                  <li
-                    key={a.id}
-                    className={`rounded-xl border-l-4 bg-sheet px-4 py-3 ${
-                      a.severity === "danger" ? "border-brick" : a.severity === "action" ? "border-marigold" : "border-passbook"
-                    }`}
-                  >
-                    <p className="font-bold">{a.title}</p>
-                    <p className="text-sm text-ink-soft">{a.body}</p>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
-        </aside>
-      </div>
+      </section>
     </div>
   );
 }

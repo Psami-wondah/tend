@@ -1,4 +1,11 @@
-import type { Mandate } from "./types";
+import type { Mandate, OwnPaymentRules } from "./types";
+
+export const DEFAULT_OWN_PAYMENTS: OwnPaymentRules = {
+  coolingOffHours: 24,
+  coolOffOverMinor: 15_000,
+  approvalOverMinor: 100_000,
+  holdNewPayees: true,
+};
 
 /** A sensible starting mandate. Families edit this in Settings. */
 export const DEFAULT_MANDATE: Mandate = {
@@ -20,4 +27,5 @@ export const DEFAULT_MANDATE: Mandate = {
   blockedMethods: ["gift_card", "crypto", "wire", "cash_courier"],
   scamRefuseThreshold: 0.75,
   scamReviewThreshold: 0.4,
+  ownPayments: DEFAULT_OWN_PAYMENTS,
 };

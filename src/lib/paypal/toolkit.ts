@@ -1,5 +1,6 @@
 import { PayPalAgentToolkit } from "@paypal/agent-toolkit/ai-sdk";
 import { tool, type ToolSet } from "ai";
+import { simulated } from "./rest";
 
 /**
  * PayPal Agent Toolkit, scoped for Tend.
@@ -77,8 +78,23 @@ export function readOnlyPayPalTools(): ToolSet {
   return out;
 }
 
+/** Demo mode: invoices get SIM- ids and stay "SENT" until the family marks them paid in Tend. */
+function simulatedTool(name: string): unknown {
+  switch (name) {
+    case "create_invoice":
+      return { id: `SIM-INV-${crypto.randomUUID().replace(/-/g, "").slice(0, 12).toUpperCase()}`, status: "DRAFT" };
+    case "send_invoice":
+      return { status: "SENT" };
+    case "get_invoice":
+      return { status: "SENT" };
+    default:
+      throw new Error(`${name} isn't available in demo mode. Add PayPal sandbox keys to use it.`);
+  }
+}
+
 /** Server-side invocation of a toolkit tool (used after mandate + approvals). */
 export async function runPayPalTool<T = unknown>(name: string, args: Record<string, unknown>): Promise<T> {
+  if (simulated()) return simulatedTool(name) as T;
   const t = rawTools()[name];
   if (!t) throw new Error(`PayPal tool ${name} is not enabled`);
   const result = await t.execute(args);

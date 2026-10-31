@@ -1,76 +1,234 @@
 @import "tailwindcss";
 
 /*
-  Tend palette — a bank passbook and a chemist's bottle, not a fintech app.
-  Status colours carry meaning: marigold = waiting on you, brick = refused,
-  passbook green = paid / safe.
+  Tend: the family clock wall.
+  The family lives in four time zones, so the app reads like the row of city
+  clocks in a diaspora living room: white enamel dials, a night-indigo shell,
+  brass for Mum's home clock, and one colour per person, used everywhere.
+  State colours (paid, waiting, refused) always travel with a word and an icon.
 */
-@theme {
-  --color-paper: #eef2ee;
-  --color-sheet: #ffffff;
-  --color-ink: #1c2b27;
-  --color-ink-soft: #4b5c56;
-  --color-rule: #c9d6cf;
-  --color-passbook: #2f5d4e;
-  --color-passbook-deep: #213f35;
-  --color-passbook-tint: #dde9e2;
-  --color-marigold: #c98a1b;
-  --color-marigold-tint: #f8ecd2;
-  --color-brick: #a63a2b;
-  --color-brick-tint: #f5ddd8;
+@theme static {
+  --color-enamel: #f1f3f6;
+  --color-dial: #ffffff;
+  --color-ink: #12151c;
+  --color-ink-soft: #4a5163;
+  --color-rule: #d8dde6;
+  --color-rule-strong: #b9c0cd;
 
-  --font-sans: "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", system-ui, sans-serif;
+  --color-night: #1c2250;
+  --color-night-deep: #141a3f;
+  --color-night-cell: #2c3473;
+  --color-night-ink: #f0f2fb;
+  --color-night-soft: #b9bfe0;
+  --color-day: #edc66f;
+
+  --color-brass: #a9792a;
+  --color-brass-deep: #7d5718;
+
+  --color-person-brass: #a9792a;
+  --color-person-cobalt: #2c5bd4;
+  --color-person-violet: #7448c4;
+  --color-person-magenta: #b8306f;
+  --color-person-teal: #0f7f86;
+  --color-person-rust: #b4532a;
+
+  --color-paid: #1d7650;
+  --color-paid-tint: #e1f1e9;
+  --color-paid-ink: #ffffff;
+  --color-wait: #a85f00;
+  --color-wait-tint: #fbefd9;
+  --color-stop: #bf3528;
+  --color-stop-tint: #f9e3df;
+  --color-stop-ink: #ffffff;
+  --color-second-hand: #d23a2c;
+
+  /* Clock faces keep their meaning in either theme: white is day, indigo is night. */
+  /* Interaction accent (focus, caret, selection, Tend's own icons). Never a person's colour. */
+  --color-accent: #2c3473;
+
+  /* Primary actions: indigo on light, near-white on dark, always maximum contrast. */
+  --color-action: #1c2250;
+  --color-action-hover: #141a3f;
+  --color-action-ink: #f0f2fb;
+
+  --color-face-day: #ffffff;
+  --color-face-night: #1c2250;
+  --color-hand-day: #12151c;
+  --color-hand-night: #f0f2fb;
+
+  --radius-dial: 999px;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+@theme inline {
+  --font-sans: var(--font-atkinson), "Atkinson Hyperlegible", system-ui, sans-serif;
+  --font-display: var(--font-jost), "Futura", system-ui, sans-serif;
+}
+
+/* Night for the reader: the ground becomes the shell's indigo. */
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-paper: #121a17;
-    --color-sheet: #1a2420;
-    --color-ink: #e6eee9;
-    --color-ink-soft: #a6b8b0;
-    --color-rule: #2e3d37;
-    --color-passbook: #7fbfa6;
-    --color-passbook-deep: #a8dcc7;
-    --color-passbook-tint: #1f3a31;
-    --color-marigold: #e9b552;
-    --color-marigold-tint: #3a2e14;
-    --color-brick: #ee8a7c;
-    --color-brick-tint: #3d1f1b;
+    --color-enamel: #11152f;
+    --color-dial: #1a2046;
+    --color-ink: #eef0fa;
+    --color-ink-soft: #b3b9d9;
+    --color-rule: #2c3363;
+    --color-rule-strong: #414a85;
+    --color-night: #0b0f26;
+    --color-night-deep: #070a1c;
+    --color-night-cell: #222a63;
+    --color-brass: #d4a24f;
+    --color-brass-deep: #e7c07c;
+    --color-person-brass: #d4a24f;
+    --color-person-cobalt: #7a9cf5;
+    --color-person-violet: #ad8cf0;
+    --color-person-magenta: #ec78ae;
+    --color-person-teal: #4cc3c9;
+    --color-person-rust: #ec9168;
+    --color-paid: #5fcf98;
+    --color-paid-tint: #143628;
+    --color-paid-ink: #06231a;
+    --color-wait: #f0b552;
+    --color-wait-tint: #3a2b0e;
+    --color-stop: #ff8b7d;
+    --color-stop-tint: #3d1a17;
+    --color-stop-ink: #2a0a06;
+    --color-accent: #c3cbf5;
+    --color-action: #eef0fa;
+    --color-action-hover: #ffffff;
+    --color-action-ink: #11152f;
+    --color-face-day: #eef0f8;
+    --color-face-night: #0b0f26;
   }
 }
 
 html {
-  background: var(--color-paper);
+  background: var(--color-enamel);
   color: var(--color-ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* Tabular figures for every amount so columns line up like a passbook. */
+body {
+  background: var(--color-enamel);
+}
+
+::selection {
+  background: var(--color-night);
+  color: var(--color-night-ink);
+}
+
+/* Every amount and every time lines up like a clock face. */
 .figures {
-  font-variant-numeric: tabular-nums;
-}
-
-/* The passbook page: faint ruled lines behind the ledger rows. */
-.passbook-page {
-  background-image: repeating-linear-gradient(
-    to bottom,
-    transparent 0,
-    transparent calc(3rem - 1px),
-    var(--color-rule) calc(3rem - 1px),
-    var(--color-rule) 3rem
-  );
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
 }
 
 :focus-visible {
-  outline: 3px solid var(--color-marigold);
+  outline: 3px solid var(--color-accent);
   outline-offset: 2px;
-  border-radius: 4px;
+  border-radius: 6px;
+}
+.on-night :focus-visible {
+  outline-color: var(--color-day);
+}
+/* Headings that receive focus only so screen readers announce a new step. */
+[tabindex="-1"]:focus-visible {
+  outline: none;
+}
+
+a {
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1.5px;
+}
+
+input,
+textarea,
+select {
+  caret-color: var(--color-accent);
+}
+
+/* Clock hands sweep once into place when a dial first appears. */
+@keyframes hand-sweep {
+  from {
+    transform: rotate(calc(var(--to) - 120deg));
+  }
+  to {
+    transform: rotate(var(--to));
+  }
+}
+.dial-hand {
+  transform-origin: 50% 100%;
+  transform: rotate(var(--to));
+  animation: hand-sweep 900ms var(--ease-out) both;
+}
+
+/* A state change settles into place; content is fully visible from the first frame. */
+@keyframes rise {
+  from {
+    transform: translateY(6px);
+  }
+}
+.rise {
+  animation: rise 220ms var(--ease-out) both;
+}
+
+@keyframes pulse-dot {
+  50% {
+    opacity: 0.35;
+  }
+}
+.pulse-dot {
+  animation: pulse-dot 1.4s ease-in-out infinite;
+}
+
+/* Skeleton shimmer for loading states. */
+.skeleton {
+  background: linear-gradient(90deg, var(--color-rule) 0%, var(--color-enamel) 50%, var(--color-rule) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s linear infinite;
+  border-radius: 8px;
+}
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+/* Mum's text size, chosen on her screen. */
+[data-mum-size="1"] {
+  font-size: 1.25rem;
+}
+[data-mum-size="2"] {
+  font-size: 1.5rem;
+}
+[data-mum-size="3"] {
+  font-size: 1.8rem;
+}
+
+html {
+  scrollbar-color: var(--color-rule-strong) transparent;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  * {
+  *,
+  *::before,
+  *::after {
     animation: none !important;
     transition: none !important;
   }
+}
+
+/* AG Grid: wrapped cells (passbook on phones) read as text, not as stretched rows. */
+.ag-cell-wrap-text {
+  line-height: 1.35 !important;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  word-break: normal;
+}
+.ag-row.cursor-pointer {
+  cursor: pointer;
 }

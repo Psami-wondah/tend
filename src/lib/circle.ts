@@ -1,4 +1,4 @@
-import { and, desc, eq, gte, inArray, sql } from "drizzle-orm";
+import { and, asc, desc, eq, gte, inArray, sql } from "drizzle-orm";
 import { getDb, schema } from "./db/client";
 import type { Mandate } from "./mandate/types";
 import { DEFAULT_MANDATE } from "./mandate/defaults";
@@ -6,12 +6,45 @@ import type { Payee } from "./db/schema";
 
 const { circles, members, payees, mandates, paymentIntents, ledgerEntries, auditEvents, alerts } = schema;
 
-/** The hackathon build runs a single demo circle. */
+/**
+ * The circle being viewed: the one the current viewer belongs to (demo
+ * stand-in for sign-in), else the first circle. Outside a request (scripts,
+ * tests, webhooks) there's no viewer, so it's the first circle.
+ */
 export async function getCircle() {
   const db = await getDb();
-  const [circle] = await db.select().from(circles).limit(1);
+  const viewer = await viewerFromCookie();
+  if (viewer) {
+    const [m] = await db.select({ circleId: members.circleId }).from(members).where(eq(members.id, viewer));
+    if (m) {
+      const [c] = await db.select().from(circles).where(eq(circles.id, m.circleId));
+      if (c) return c;
+    }
+  }
+  const [circle] = await db.select().from(circles).orderBy(asc(circles.createdAt)).limit(1);
   if (!circle) throw new Error("No circle found. Run `npm run db:seed` first.");
   return circle;
+}
+
+export async function getCircleById(id: string) {
+  const db = await getDb();
+  const [c] = await db.select().from(circles).where(eq(circles.id, id));
+  if (!c) throw new Error("Circle not found");
+  return c;
+}
+
+export async function listCircles() {
+  const db = await getDb();
+  return db.select().from(circles).orderBy(asc(circles.createdAt));
+}
+
+async function viewerFromCookie(): Promise<string | null> {
+  try {
+    const { cookies } = await import("next/headers");
+    return (await cookies()).get("tend_as")?.value ?? null;
+  } catch {
+    return null; // not in a request
+  }
 }
 
 export async function getMembers(circleId: string) {
@@ -54,6 +87,7 @@ export async function reservedMinor(circleId: string): Promise<number> {
     .where(
       and(
         eq(paymentIntents.circleId, circleId),
+        eq(paymentIntents.funding, "pot"),
         inArray(paymentIntents.status, ["approved", "paying"]),
       ),
     );
@@ -74,6 +108,7 @@ export async function spentThisMonthByCategory(circleId: string) {
     .where(
       and(
         eq(paymentIntents.circleId, circleId),
+        eq(paymentIntents.funding, "pot"),
         inArray(paymentIntents.status, ["paid", "paying", "approved"]),
         gte(paymentIntents.createdAt, start),
       ),
@@ -131,7 +166,11 @@ export async function payeePreviouslyPaid(payeeId: string): Promise<boolean> {
   return Boolean(row);
 }
 
-/** Same payee + same amount (+ same reference if any) in the last 30 days. */
+/**
+ * Same payee + same amount + same reference in the last 30 days. When either
+ * side has no reference (a taxi fare, say) the window shrinks to 3 days, so a
+ * regular same-price ride isn't mistaken for a double charge.
+ */
 export async function findDuplicate(opts: {
   circleId: string;
   payeeId: string | null;
@@ -142,18 +181,22 @@ export async function findDuplicate(opts: {
   const db = await getDb();
   const since = new Date(Date.now() - 30 * 24 * 3600 * 1000);
   const rows = await db
-    .select({ id: paymentIntents.id, reference: paymentIntents.reference })
+    .select({ id: paymentIntents.id, reference: paymentIntents.reference, createdAt: paymentIntents.createdAt })
     .from(paymentIntents)
     .where(
       and(
         eq(paymentIntents.circleId, opts.circleId),
         eq(paymentIntents.payeeId, opts.payeeId),
         eq(paymentIntents.amountMinor, opts.amountMinor),
+        eq(paymentIntents.funding, "pot"),
         inArray(paymentIntents.status, ["paid", "paying", "approved", "awaiting_approval"]),
         gte(paymentIntents.createdAt, since),
       ),
     );
-  const hit = rows.find((r) => !opts.reference || !r.reference || r.reference === opts.reference);
+  const recent = Date.now() - 3 * 24 * 3600 * 1000;
+  const hit = rows.find((r) =>
+    opts.reference && r.reference ? r.reference === opts.reference : r.createdAt.getTime() >= recent,
+  );
   return hit?.id ?? null;
 }
 

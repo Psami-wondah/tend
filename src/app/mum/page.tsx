@@ -1,10 +1,6 @@
-import { getCircle, getMembers } from "@/lib/circle";
-import { MumScreen } from "@/components/mum-screen";
+import { redirect } from "next/navigation";
 
-export const dynamic = "force-dynamic";
-
-export default async function MumPage() {
-  const circle = await getCircle();
-  const mum = (await getMembers(circle.id)).find((m) => m.role === "care_recipient");
-  return <MumScreen memberId={mum?.id ?? null} name={circle.careRecipientName} />;
+/** Old link: the person's screen now lives at /me, whoever they are. */
+export default function MumRedirect() {
+  redirect("/me");
 }

@@ -1,5 +1,7 @@
 /**
- * Seeds the demo care circle.
+ * Seeds the two demo circles, with history:
+ *   - the Okafor family: Mum in Houston, her children in London, Toronto and Lagos, a shared care pot
+ *   - Walter's circle: Walter, 84, no children; his niece in Seattle and his neighbour next door
  *
  *   npm run db:seed          create if empty
  *   npm run db:reset         wipe and recreate
@@ -13,20 +15,27 @@
 import "./load-env";
 import { sql } from "drizzle-orm";
 import { getDb, schema } from "../src/lib/db/client";
-import { seedDemo } from "../src/lib/db/seed-demo";
+import { seedAll, seedDemo } from "../src/lib/db/seed-demo";
+import { scanForDuplicates } from "../src/lib/recoveries";
 
 async function main() {
   const db = await getDb();
   if (process.argv.includes("--reset")) {
-    await db.execute(sql`TRUNCATE alerts, audit_events, ledger_entries, contributions, approvals,
+    await db.execute(sql`TRUNCATE recoveries, alerts, audit_events, ledger_entries, contributions, approvals,
       payment_intents, intakes, mandates, payees, members, circles CASCADE`);
     console.log("Wiped.");
   } else if ((await db.select().from(schema.circles).limit(1)).length) {
     console.log("Already seeded. Use `npm run db:reset` to start over.");
     return;
   }
-  const { circle } = await seedDemo();
-  console.log(`Seeded "${circle.name}" (${circle.currency}): Ada, Tunde, Chioma, Mum; 3 payees.`);
+  if (process.argv.includes("--bare")) {
+    const { circle } = await seedDemo({ history: false });
+    console.log(`Seeded "${circle.name}" without history.`);
+    return;
+  }
+  await seedAll();
+  const dupes = await scanForDuplicates();
+  console.log(`Seeded two circles: the Okafor family (Mum in Houston, children in London, Toronto and Lagos) and Walter's circle (Walter in Tucson, his niece and his neighbour). ${dupes.length} double payment flagged.`);
 }
 
 main()

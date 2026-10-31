@@ -1,7 +1,7 @@
 import { and, eq } from "drizzle-orm";
 import { getDb, schema } from "../db/client";
 import { formatMoney } from "../money";
-import { getPayoutBatch, paypalConfigured, sendPayout, PayPalError } from "../paypal/rest";
+import { getPayoutBatch, isSimulatedId, sendPayout, PayPalError } from "../paypal/rest";
 import { alert, audit, potBalanceMinor, reservedMinor } from "../circle";
 import type { IntentStatus, PaymentIntent } from "../db/schema";
 
@@ -43,11 +43,6 @@ export async function executeIntent(intentId: string): Promise<PaymentIntent> {
     await fail(intent, "Payee isn't verified.");
     return load(intentId);
   }
-  if (!paypalConfigured()) {
-    await fail(intent, "PayPal sandbox credentials aren't configured.");
-    return load(intentId);
-  }
-
   const claimed = await transition(intentId, "approved", "paying");
   if (!claimed) return load(intentId); // someone else got there first
 
@@ -63,12 +58,13 @@ export async function executeIntent(intentId: string): Promise<PaymentIntent> {
       .update(paymentIntents)
       .set({ paypalBatchId: payout.batchId, updatedAt: new Date() })
       .where(eq(paymentIntents.id, intentId));
-    await audit(intent.circleId, "agent", "payout_sent", { ...payout, to: payee.paypalEmail }, intentId);
+    const sim = isSimulatedId(payout.batchId);
+    await audit(intent.circleId, "agent", "payout_sent", { ...payout, to: payee.paypalEmail, simulated: sim }, intentId);
 
     // Sandbox payouts usually settle in a few seconds; check briefly so the
     // demo shows "Paid", and let the webhook / refresh catch slower ones.
     for (let i = 0; i < 4; i++) {
-      await new Promise((r) => setTimeout(r, 1500));
+      if (!sim) await new Promise((r) => setTimeout(r, 1500));
       const after = await refreshPayout(intentId);
       if (after.status !== "paying") return after;
     }
@@ -110,13 +106,16 @@ export async function markPaid(intent: PaymentIntent, itemId: string | null, txI
     .returning({ id: paymentIntents.id });
   if (!updated.length) return; // already settled
 
-  await db.insert(ledgerEntries).values({
-    circleId: intent.circleId,
-    type: "payment",
-    amountMinor: -intent.amountMinor,
-    intentId: intent.id,
-    description: `${intent.payeeName} — ${intent.summary}`,
-  });
+  // Own-wallet payments came from the person's PayPal, not the pot.
+  if (intent.funding !== "own") {
+    await db.insert(ledgerEntries).values({
+      circleId: intent.circleId,
+      type: "payment",
+      amountMinor: -intent.amountMinor,
+      intentId: intent.id,
+      description: `${intent.payeeName} — ${intent.summary}`,
+    });
+  }
   await audit(intent.circleId, "paypal", "payout_succeeded", { itemId, txId }, intent.id);
   await alert(
     intent.circleId,
