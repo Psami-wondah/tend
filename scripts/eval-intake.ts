@@ -4,7 +4,7 @@
  * and messages that only mention money)
  * through the reader and checks amount, category and scam risk.
  *
- *   npm run eval:intake             # Claude (needs ANTHROPIC_API_KEY)
+ *   npm run eval:intake             # Claude (needs ANTHROPIC_API_KEY or OPENROUTER_API_KEY)
  *   npm run eval:intake -- --offline  # the keyword reader used in demo mode
  *
  * Reads only: nothing is written to the database and nothing is paid.
@@ -13,6 +13,7 @@ import "./load-env";
 import fs from "node:fs";
 import path from "node:path";
 import { extract } from "../src/lib/agent/intake";
+import { aiConfigured, aiProvider, modelId } from "../src/lib/agent/model";
 import { heuristicExtract } from "../src/lib/agent/offline";
 import type { Extraction } from "../src/lib/agent/schemas";
 
@@ -62,8 +63,8 @@ async function read(c: Case, offline: boolean): Promise<Extraction> {
 
 async function main() {
   const offline = process.argv.includes("--offline");
-  if (!offline && !process.env.ANTHROPIC_API_KEY) {
-    console.error("Set ANTHROPIC_API_KEY, or run with --offline to score the demo-mode reader.");
+  if (!offline && !aiConfigured()) {
+    console.error("Set ANTHROPIC_API_KEY or OPENROUTER_API_KEY, or run with --offline to score the demo-mode reader.");
     process.exit(1);
   }
   const rows: string[][] = [];
@@ -93,7 +94,7 @@ async function main() {
   const head = ["Input", "Amount", "Category", "Scam risk", "Result"];
   const widths = head.map((h, i) => Math.max(h.length, ...rows.map((r) => r[i].length)));
   const line = (r: string[]) => `| ${r.map((x, i) => x.padEnd(widths[i])).join(" | ")} |`;
-  console.log(`\nTend intake eval (${offline ? "offline keyword reader" : process.env.TEND_MODEL || "claude-sonnet-5-5"})\n`);
+  console.log(`\nTend intake eval (${offline ? "offline keyword reader" : `${modelId()} via ${aiProvider()}`})\n`);
   console.log(line(head));
   console.log(`| ${widths.map((w) => "-".repeat(w)).join(" | ")} |`);
   for (const r of rows) console.log(line(r));

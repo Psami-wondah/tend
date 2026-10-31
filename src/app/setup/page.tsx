@@ -18,8 +18,10 @@ export default async function SetupPage() {
     {
       ok: i.ai,
       title: "Claude reads bills and answers questions",
-      body: i.ai ? `Connected, using ${i.model}.` : "Not connected. The examples and typed messages still work with a keyword reader, but photos need Claude.",
-      fix: "Add ANTHROPIC_API_KEY to .env (console.anthropic.com, API keys), then restart.",
+      body: i.ai
+        ? `Connected, using ${i.model}${i.aiProvider === "openrouter" ? " through OpenRouter" : ""}.`
+        : "Not connected. The examples and typed messages still work with a keyword reader, but photos need Claude.",
+      fix: "Add ANTHROPIC_API_KEY (console.anthropic.com, API keys) or OPENROUTER_API_KEY (openrouter.ai, Keys) to .env, then restart. Either way it's Claude.",
     },
     {
       ok: i.paypal !== "simulated",

@@ -20,6 +20,7 @@
     "@ai-sdk/anthropic": "^4.0.94",
     "@electric-sql/pglite": "^0.5.13",
     "@modelcontextprotocol/sdk": "^1.32.2",
+    "@openrouter/ai-sdk-provider": "^3.1.0",
     "@paypal/agent-toolkit": "1.11",
     "ag-grid-community": "^36.2.0",
     "ag-grid-react": "^36.2.0",

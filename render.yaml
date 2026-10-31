@@ -36,7 +36,10 @@ services:
         sync: false
       - key: PAYPAL_WEBHOOK_ID
         sync: false
+      # Claude: set one of these two.
       - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: OPENROUTER_API_KEY
         sync: false
       - key: CHANNEL3_API_KEY
         sync: false

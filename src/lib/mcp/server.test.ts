@@ -8,6 +8,7 @@ process.env.PGLITE_DIR = ":memory:";
 delete process.env.PAYPAL_CLIENT_ID;
 delete process.env.PAYPAL_CLIENT_SECRET;
 delete process.env.ANTHROPIC_API_KEY;
+delete process.env.OPENROUTER_API_KEY;
 
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";

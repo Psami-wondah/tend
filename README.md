@@ -62,7 +62,7 @@ Copy `.env.example` to `.env` and fill in what you have. Each key switches one p
 
 | Key | Where | Switches on |
 | --- | --- | --- |
-| `ANTHROPIC_API_KEY` | console.anthropic.com | Claude reads photos, voice and texts; Ask Tend becomes a tool-using agent; rules and passbook questions in plain English |
+| `ANTHROPIC_API_KEY` or `OPENROUTER_API_KEY` | console.anthropic.com, or openrouter.ai → Keys (Claude through OpenRouter) | Claude reads photos, voice and texts; Ask Tend becomes a tool-using agent; rules and passbook questions in plain English |
 | `PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET` | developer.paypal.com → Apps & Credentials → **Sandbox** → a Merchant app with **Payouts**, **Invoicing** and **Vault** ticked | Real sandbox authorizations, captures, voids, payouts, invoices and saved wallets. The JS SDK v6 buttons get a client token from the server, so no public client ID is needed |
 | `SANDBOX_*_EMAIL` | developer.paypal.com → Testing tools → Sandbox accounts (one Personal account can be reused) | Where payouts and share invoices go, and the accounts Mum and Walter approve with. Run `npm run db:reset` after setting them |
 | `PAYPAL_WEBHOOK_ID` | your sandbox app's webhooks, once deployed | Signature-verified webhooks; locally Tend polls instead |

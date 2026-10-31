@@ -1,4 +1,4 @@
-import { aiConfigured } from "./agent/model";
+import { aiConfigured, aiProvider, modelId } from "./agent/model";
 import { paypalMode } from "./paypal/rest";
 
 /** What's connected. Drives the demo-mode labels and the Setup page. */
@@ -6,7 +6,8 @@ export function integrations() {
   const paypal = paypalMode();
   return {
     ai: aiConfigured(),
-    model: process.env.TEND_MODEL || "claude-sonnet-5-5",
+    model: modelId(),
+    aiProvider: aiProvider(),
     paypal,
     mcpToken: Boolean(process.env.TEND_MCP_TOKEN),
     webhook: Boolean(process.env.PAYPAL_WEBHOOK_ID),
