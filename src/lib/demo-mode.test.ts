@@ -58,8 +58,8 @@ describe("demo mode", () => {
     expect(r.outcome).toBe("refused");
   });
 
-  it("can't read a photo without Claude, and says so", async () => {
-    await expect(handleIntake({ source: "photo", imageDataUrl: "data:image/png;base64,AAAA" })).rejects.toThrow(/Claude/);
+  it("can't read a photo without an AI model, and says so", async () => {
+    await expect(handleIntake({ source: "photo", imageDataUrl: "data:image/png;base64,AAAA" })).rejects.toThrow(/AI model/);
   });
 
   it("finds the seeded double payment and gets it back through a refund invoice", async () => {

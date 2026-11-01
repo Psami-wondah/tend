@@ -17,6 +17,11 @@ Guidance:
 - Scam signals: older people are targeted by "grandchild in trouble", fake bank,
   fake police, tech-support, prize and romance scams. Be alert but fair — a
   pharmacy bill with a reference number is not suspicious just because it has a due date.
+- Tend refuses outright only when impersonation, secrecy or unusualMethod is true, so set
+  those only when the text really shows them. Someone claiming to be Medicare, Social
+  Security, the IRS, a bank, the police, a delivery company or tech support is
+  impersonation. A stranger in a hurry (a roofer at the door wanting a deposit today) is
+  urgency and unsolicited, not impersonation: score the risk honestly and the circle checks it.
 - PayPal's own invoices and money requests are a common scam channel: the email is genuinely
   from PayPal, but the scammer types a fake "support" phone number in the note ("call within
   12 hours to dispute this $499 charge"). If you see that, fill paypalNative with the phone

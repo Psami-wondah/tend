@@ -453,7 +453,7 @@ async function askOffline(act: ReturnType<typeof actions>, circle: Circle, text:
   const waiting = s.awaitingApproval.length ? ` ${s.awaitingApproval.length} payment${s.awaitingApproval.length > 1 ? "s are" : " is"} waiting for the family.` : "";
   const contributed = s.members.filter((m) => m.role === "owner" || m.role === "sibling").map((m) => `${m.name} ${m.contributed}`).join(", ");
   return done(
-    `The pot has ${s.potBalance}${s.reserved !== money(0) ? ` (${s.reserved} set aside for payments going out)` : ""}. So far: ${contributed}.${waiting} I'm answering from the ledger without AI; connect Claude for open questions.`,
+    `The pot has ${s.potBalance}${s.reserved !== money(0) ? ` (${s.reserved} set aside for payments going out)` : ""}. So far: ${contributed}.${waiting} I'm answering from the ledger without AI; connect an AI model for open questions.`,
     ["care_summary"],
   );
 }

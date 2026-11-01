@@ -137,7 +137,7 @@ export function PayPalApprove(props: {
   }
 
   return (
-    <div ref={holder} className={props.big ? "min-h-20" : "min-h-12"}>
+    <div ref={holder} className={props.big ? "paypal-big min-h-20" : "min-h-12"}>
       {createElement("paypal-button", { type: "pay", hidden: true, class: "paypal-gold" })}
       {state === "loading" && <div className="skeleton h-12 w-full" aria-label="Loading PayPal" />}
       {state === "unavailable" && <p className="font-bold text-stop">PayPal isn&apos;t available right now.</p>}

@@ -117,16 +117,19 @@ export function heuristicExtract(text: string, knownPayees: { name: string; alia
   const urgency = /\b(today|right now|immediately|urgent|asap|within (?:24|48) hours|or else|arrest|suspended|final notice|avoid losing|lose (?:your )?(?:coverage|benefits))\b/i.test(t);
   // Medicare, Social Security and the IRS never charge a fee to replace a card.
   const agencyFee = /(medicare|medicaid|social security|\birs\b)/i.test(t) && /\b(fee|charge|pay)\b/i.test(t);
+  // Storm-chasers: a stranger at the door wanting money up front. Could be real, so the circle checks.
+  const doorstep = /(knocked|at (?:my|the) door|on my doorstep|door[- ]to[- ]door|came (?:round|by)|storm (?:damage|damaged))/i.test(t) && /\b(deposit|up ?front|today|cash)\b/i.test(t);
   const secrecy = /(don'?t tell|do not tell|keep (?:this|it) (?:between us|secret|quiet)|secret)/i.test(t);
   const unusualMethod = method !== "paypal" && method !== "bank_transfer";
-  const unsolicited = impersonation || /(you(?:'ve| have)? won|prize|lottery|claim your|refund owed|inheritance|package is held|redelivery fee|unpaid fee)/i.test(t);
+  const unsolicited = impersonation || doorstep || /(you(?:'ve| have)? won|prize|lottery|claim your|refund owed|inheritance|package is held|redelivery fee|unpaid fee)/i.test(t);
   const riskScore = phoneInNote
     ? 0.96
-    : Math.min(0.99, (impersonation ? 0.3 : 0) + (agencyFee ? 0.15 : 0) + (urgency ? 0.15 : 0) + (secrecy ? 0.25 : 0) + (unusualMethod ? 0.35 : 0) + (unsolicited ? 0.1 : 0));
+    : Math.min(0.99, (impersonation ? 0.3 : 0) + (agencyFee ? 0.25 : 0) + (doorstep ? 0.2 : 0) + (urgency ? 0.15 : 0) + (secrecy ? 0.25 : 0) + (unusualMethod ? 0.35 : 0) + (unsolicited ? 0.1 : 0));
   const signals = [
     phoneInNote && `a real PayPal ${/money request|sent you a request/i.test(t) ? "money request" : "invoice"} with a phone number to call (${phoneInNote}); PayPal never puts support numbers in invoice notes`,
     agencyFee && "a government agency asking for a fee; Medicare, Social Security and the IRS never charge to replace a card",
     impersonation && !phoneInNote && !agencyFee && "someone claiming to be family or an official",
+    doorstep && "a stranger at the door asking for money up front",
     urgency && "pressure to pay right now",
     secrecy && "asks to keep it secret",
     unusualMethod && "an unusual way to pay",

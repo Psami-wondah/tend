@@ -17,11 +17,11 @@ export default async function SetupPage() {
   const items = [
     {
       ok: i.ai,
-      title: "Claude reads bills and answers questions",
+      title: "AI reads bills and answers questions",
       body: i.ai
         ? `Connected, using ${i.model}${i.aiProvider === "openrouter" ? " through OpenRouter" : ""}.`
-        : "Not connected. The examples and typed messages still work with a keyword reader, but photos need Claude.",
-      fix: "Add ANTHROPIC_API_KEY (console.anthropic.com, API keys) or OPENROUTER_API_KEY (openrouter.ai, Keys) to .env, then restart. Either way it's Claude.",
+        : "Not connected. The examples and typed messages still work with a keyword reader, but photos need an AI model.",
+      fix: "Add OPENROUTER_API_KEY (openrouter.ai, Keys) or ANTHROPIC_API_KEY (console.anthropic.com) to .env, then restart. Pick any model with TEND_MODEL; the default is Claude Sonnet 5.5.",
     },
     {
       ok: i.paypal !== "simulated",
@@ -58,6 +58,14 @@ export default async function SetupPage() {
       title: "Shopping searches real retailers",
       body: i.channel3 ? "Channel3 product search is on." : "Ask Tend shops from a small sample catalogue.",
       fix: "Get a free key at trychannel3.com (1,000 searches a month) and set CHANNEL3_API_KEY.",
+    },
+    {
+      ok: i.agLicense,
+      title: "The dashboard (AG Studio) without a watermark",
+      body: i.agLicense
+        ? "Licensed: AG Studio and AG Grid Enterprise run without a watermark."
+        : "Every feature works, including the AI assistant, with a trial watermark and a console notice.",
+      fix: "Email info@ag-grid.com for a trial licence key and set AG_GRID_LICENSE_KEY.",
     },
     {
       ok: i.webhook,
@@ -109,9 +117,9 @@ export default async function SetupPage() {
         </ul>
 
         <section aria-labelledby="mcp" className="rounded-2xl bg-dial p-4">
-          <h2 id="mcp" className="font-bold">Use Tend from Claude (MCP)</h2>
+          <h2 id="mcp" className="font-bold">Use Tend from an AI assistant (MCP)</h2>
           <p className="mt-1 text-[0.9375rem] text-ink-soft">
-            Tend is also an MCP server, so Claude or any agent about to pay a bill can ask the circle&apos;s second key first. Eight tools: check a payment
+            Tend is also an MCP server, so any AI assistant or agent about to pay a bill can ask the circle&apos;s second key first. Eight tools: check a payment
             request, list held payments, explain a decision, search the passbook, read the rules, and stop a held payment. None of them can send money.
           </p>
           <p className="mt-3 text-sm font-bold">Claude Code</p>
@@ -120,6 +128,8 @@ export default async function SetupPage() {
           </pre>
           <p className="mt-3 text-sm font-bold">Claude.ai or Claude Desktop</p>
           <p className="text-[0.9375rem] text-ink-soft">Settings, Connectors, Add custom connector, and paste {mcpUrl}</p>
+          <p className="mt-3 text-sm font-bold">Any other MCP client</p>
+          <p className="text-[0.9375rem] text-ink-soft">Add a Streamable HTTP server at {mcpUrl}</p>
           <p className="mt-3 text-[0.9375rem] text-ink-soft">
             {i.mcpToken
               ? "Protected: send TEND_MCP_TOKEN as a bearer token."

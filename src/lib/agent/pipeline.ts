@@ -267,7 +267,7 @@ export async function read(
   // Demo mode: no model. Examples have known readings; text gets the keyword reader.
   if (isSampleId(input.sampleId)) return { ...SAMPLES[input.sampleId], currency: circle.currency };
   if (input.text?.trim()) return heuristicExtract(input.text, payeeList, circle.currency);
-  throw new CantReadError("I can read photos once Claude is connected. Until then, try one of the examples or type what it says.");
+  throw new CantReadError("I can read photos once an AI model is connected. Until then, try one of the examples or type what it says.");
 }
 
 /**

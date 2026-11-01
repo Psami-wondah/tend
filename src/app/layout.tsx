@@ -9,7 +9,7 @@ const atkinson = Atkinson_Hyperlegible_Next({ subsets: ["latin"], variable: "--f
 
 export const metadata: Metadata = {
   title: { default: "Tend", template: "%s · Tend" },
-  description: "Their money, their say: a second key for the people an older adult trusts. Built on PayPal and Claude.",
+  description: "Their money, their say: a second key for the people an older adult trusts. Built on PayPal, with AI.",
   appleWebApp: { capable: true, title: "Tend", statusBarStyle: "black-translucent" },
 };
 

@@ -18,7 +18,7 @@ export default async function AskPage() {
           <h1 className="font-display text-[2rem] leading-none font-semibold tracking-[-0.01em]">Ask Tend</h1>
           <p className="mt-2 max-w-xl text-night-soft">
             {ctx.integrations.ai
-              ? `Claude, with Tend's ledger${ctx.integrations.paypal !== "simulated" ? " and read-only PayPal tools" : ""}. It can propose payments and stop held ones; the circle's rules decide.`
+              ? `${ctx.integrations.model}, with Tend's ledger${ctx.integrations.paypal !== "simulated" ? " and read-only PayPal tools" : ""}. It can propose payments and stop held ones; the circle's rules decide.`
               : "Demo mode: answers come from the ledger without AI. Add an Anthropic or OpenRouter key on Setup for open questions."}
           </p>
         </div>

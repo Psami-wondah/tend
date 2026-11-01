@@ -22,7 +22,7 @@ export default async function RulesPage({ searchParams }: { searchParams: Promis
         <div className="mt-6">
           <h1 className="font-display text-[2rem] leading-none font-semibold tracking-[-0.01em]">The circle&apos;s rules</h1>
           <p className="mt-2 max-w-2xl text-night-soft">
-            Claude reads the bills. These rules decide what happens, the same way every time. Version {mandate.version}, last changed by {history[0]?.by ?? "the circle"}.
+            AI reads the bills. These rules decide what happens, the same way every time. Version {mandate.version}, last changed by {history[0]?.by ?? "the circle"}.
           </p>
         </div>
       }

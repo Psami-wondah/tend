@@ -21,7 +21,7 @@ import { scanForDuplicates } from "../src/lib/recoveries";
 async function main() {
   const db = await getDb();
   if (process.argv.includes("--reset")) {
-    await db.execute(sql`TRUNCATE recoveries, alerts, audit_events, ledger_entries, contributions, approvals,
+    await db.execute(sql`TRUNCATE dashboards, recoveries, alerts, audit_events, ledger_entries, contributions, approvals,
       payment_intents, intakes, mandates, payees, members, circles CASCADE`);
     console.log("Wiped.");
   } else if ((await db.select().from(schema.circles).limit(1)).length) {

@@ -10,8 +10,8 @@ export const dynamic = "force-dynamic";
 const STAGES = [
   {
     stage: "Read",
-    title: "They send it, Claude reads it",
-    body: "A photo of a bill, a voice note, or a text or PayPal email someone sent them. Claude pulls out who's asking, how much, and any scam signals.",
+    title: "They send it, AI reads it",
+    body: "A photo of a bill, a voice note, or a text or PayPal email someone sent them. An AI model pulls out who's asking, how much, and any scam signals.",
   },
   {
     stage: "Rules",
@@ -63,7 +63,7 @@ export default async function Welcome() {
             Their money, their say. A second key for the people they trust.
           </h1>
           <p className="mt-4 max-w-2xl text-lg text-night-soft">
-            Americans over 60 reported <span className="figures text-night-ink">$7.75 billion</span> lost to fraud last year, up 59%. Tend lets an older adult keep paying from their own PayPal, and gives the people they trust time to stop anything that looks wrong. Built on PayPal and Claude.
+            Americans over 60 reported <span className="figures text-night-ink">$7.75 billion</span> lost to fraud last year, up 59%. Tend lets an older adult keep paying from their own PayPal, and gives the people they trust time to stop anything that looks wrong. Built on PayPal, with AI that reads every request.
           </p>
 
           <div className="mt-10 grid gap-8 lg:grid-cols-2">

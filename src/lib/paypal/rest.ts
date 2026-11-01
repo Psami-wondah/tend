@@ -215,12 +215,17 @@ export async function getAuthorization(authorizationId: string) {
 
 // --- JS SDK v6: a browser-safe client token ------------------------------------
 
-export async function clientToken(domain: string): Promise<{ accessToken: string; expiresIn: number }> {
+/**
+ * `hostname` binds the token to the site (PayPal wants a bare host like
+ * tend.onrender.com, no scheme or port). PayPal rejects localhost and IPs as
+ * domains, so local development gets an unbound token.
+ */
+export async function clientToken(hostname: string): Promise<{ accessToken: string; expiresIn: number }> {
   const id = process.env.PAYPAL_CLIENT_ID;
   const secret = process.env.PAYPAL_CLIENT_SECRET;
   if (!id || !secret) throw new Error("PayPal isn't configured");
   const body = new URLSearchParams({ grant_type: "client_credentials", response_type: "client_token" });
-  body.append("domains[]", domain);
+  if (hostname.includes(".") && !/^[\d.]+$/.test(hostname)) body.append("domains[]", hostname);
   const res = await fetch(`${BASE}/v1/oauth2/token`, {
     method: "POST",
     headers: { Authorization: `Basic ${Buffer.from(`${id}:${secret}`).toString("base64")}`, "Content-Type": "application/x-www-form-urlencoded" },

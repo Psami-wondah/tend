@@ -16,7 +16,7 @@ export async function POST() {
   if (process.env.TEND_ALLOW_RESET === "0") return NextResponse.json({ error: "Reset is turned off on this deploy." }, { status: 403 });
   try {
     const db = await getDb();
-    await db.execute(sql`TRUNCATE recoveries, alerts, audit_events, ledger_entries, contributions, approvals,
+    await db.execute(sql`TRUNCATE dashboards, recoveries, alerts, audit_events, ledger_entries, contributions, approvals,
       payment_intents, intakes, mandates, payees, members, circles CASCADE`);
     await seedAll();
     await scanForDuplicates();

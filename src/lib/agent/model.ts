@@ -2,8 +2,9 @@ import { anthropic } from "@ai-sdk/anthropic";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 
 /**
- * Tend reasons with Claude, reached either directly (ANTHROPIC_API_KEY) or
- * through OpenRouter (OPENROUTER_API_KEY). If both are set, Anthropic wins.
+ * Tend's AI model, reached directly (ANTHROPIC_API_KEY) or through OpenRouter
+ * (OPENROUTER_API_KEY, any model it offers). If both are set, Anthropic wins.
+ * Defaults to Claude Sonnet 5.5; TEND_MODEL picks another.
  */
 export function aiProvider(): "anthropic" | "openrouter" | null {
   if (process.env.ANTHROPIC_API_KEY) return "anthropic";

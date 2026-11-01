@@ -323,13 +323,13 @@ export async function seedWalter(opts: { history?: boolean } = { history: true }
   const [pharmacy, electric, housekeeper] = await db
     .insert(schema.payees)
     .values([
-      { circleId: circle.id, name: "Saguaro Pharmacy", aliases: ["Saguaro Rx", "Saguaro Drug"], kind: "pharmacy", paypalEmail: env("SANDBOX_PHARMACY_EMAIL", "saguaro@tend-payees.example.com"), verified: true, verifiedBy: priya.id, verifiedAt: daysAgo(70), addedBy: priya.id },
-      { circleId: circle.id, name: "Desert Sun Electric", aliases: ["Desert Sun"], kind: "utilities", paypalEmail: env("SANDBOX_CARER_EMAIL", "billing@desertsun.example.com"), verified: true, verifiedBy: priya.id, verifiedAt: daysAgo(70), addedBy: priya.id },
-      { circleId: circle.id, name: "Rosa Delgado", aliases: ["Rosa", "Rosa's Housekeeping"], kind: "carer", paypalEmail: env("SANDBOX_TAXI_EMAIL", "rosa@tend-payees.example.com"), verified: true, verifiedBy: dolores.id, verifiedAt: daysAgo(65), addedBy: dolores.id },
+      { circleId: circle.id, name: "Saguaro Pharmacy", aliases: ["Saguaro Rx", "Saguaro Drug"], kind: "pharmacy", paypalEmail: env("SANDBOX_PHARMACY_EMAIL", "saguaro@tend-payees.example.com"), verified: true, verifiedBy: priya.id, verifiedAt: daysAgo(92), addedBy: priya.id },
+      { circleId: circle.id, name: "Desert Sun Electric", aliases: ["Desert Sun"], kind: "utilities", paypalEmail: env("SANDBOX_CARER_EMAIL", "billing@desertsun.example.com"), verified: true, verifiedBy: priya.id, verifiedAt: daysAgo(92), addedBy: priya.id },
+      { circleId: circle.id, name: "Rosa Delgado", aliases: ["Rosa", "Rosa's Housekeeping"], kind: "carer", paypalEmail: env("SANDBOX_TAXI_EMAIL", "rosa@tend-payees.example.com"), verified: true, verifiedBy: dolores.id, verifiedAt: daysAgo(91), addedBy: dolores.id },
     ])
     .returning();
   const mandate: Mandate = { ...DEFAULT_MANDATE, largePaymentApprovals: 1, defaultApprovals: 1 };
-  await db.insert(schema.mandates).values({ circleId: circle.id, version: 1, rules: mandate, createdBy: priya.id, createdAt: daysAgo(70) });
+  await db.insert(schema.mandates).values({ circleId: circle.id, version: 1, rules: mandate, createdBy: priya.id, createdAt: daysAgo(92) });
   if (!opts.history) return { circle, members: { walter, priya, dolores } };
 
   const own = async (o: {
@@ -347,6 +347,10 @@ export async function seedWalter(opts: { history?: boolean } = { history: true }
     note?: string;
     text?: string;
     paypalPhoneInNote?: string;
+    /** Someone in the circle let it go early, or said yes; `after` is minutes after it was sent. */
+    releasedBy?: Member;
+    after?: number;
+    source?: "voice" | "text";
   }) => {
     const proposal = {
       amountMinor: o.amountMinor,
@@ -359,7 +363,7 @@ export async function seedWalter(opts: { history?: boolean } = { history: true }
       paypalPhoneInNote: o.paypalPhoneInNote ?? null,
     };
     const evaluation = evaluateOwnPayment(proposal, mandate, currency, "Walter");
-    const [intake] = await db.insert(schema.intakes).values({ circleId: circle.id, submittedBy: walter.id, source: "text", text: o.text ?? null, createdAt: o.at }).returning();
+    const [intake] = await db.insert(schema.intakes).values({ circleId: circle.id, submittedBy: walter.id, source: o.source ?? "text", text: o.text ?? null, createdAt: o.at }).returning();
     const [intent] = await db
       .insert(schema.paymentIntents)
       .values({
@@ -385,7 +389,7 @@ export async function seedWalter(opts: { history?: boolean } = { history: true }
         paypalCaptureId: o.status === "paid" ? `SEED-CAPTURE-${o.at.getTime()}` : null,
         paypalBatchId: o.status === "paid" ? `SEED-BATCH-${o.at.getTime()}` : null,
         holdUntil: evaluation.decision === "cool_off" ? new Date(o.at.getTime() + 24 * 3600_000) : null,
-        releasedAt: o.status === "paid" ? new Date(o.at.getTime() + (evaluation.decision === "cool_off" ? 24 * 3600_000 : 60_000)) : null,
+        releasedAt: o.status === "paid" ? new Date(o.at.getTime() + (o.releasedBy ? (o.after ?? 60) * 60_000 : evaluation.decision === "cool_off" ? 24 * 3600_000 : 60_000)) : null,
         stoppedBy: o.stoppedBy?.id ?? null,
         createdAt: o.at,
         updatedAt: o.at,
@@ -396,7 +400,7 @@ export async function seedWalter(opts: { history?: boolean } = { history: true }
     if (o.status !== "refused") {
       await db.insert(schema.auditEvents).values({ circleId: circle.id, intentId: intent.id, actor: "paypal", type: "authorized", data: { seed: true }, createdAt: t(2) });
     }
-    if (evaluation.decision === "cool_off" && o.status !== "refused") {
+    if ((evaluation.decision === "cool_off" || evaluation.decision === "needs_approval") && o.status !== "refused") {
       await db.insert(schema.auditEvents).values({ circleId: circle.id, intentId: intent.id, actor: "agent", type: "held", data: { seed: true }, createdAt: t(2) });
     }
     if (o.status === "voided" && o.stoppedBy) {
@@ -410,7 +414,13 @@ export async function seedWalter(opts: { history?: boolean } = { history: true }
         createdAt: t(95),
       });
     }
-    if (o.status === "paid") {
+    if (o.status === "paid" && o.releasedBy) {
+      const after = o.after ?? 60;
+      await db.insert(schema.auditEvents).values([
+        { circleId: circle.id, intentId: intent.id, actor: `member:${o.releasedBy.id}`, type: "released", data: { note: o.note ?? null }, createdAt: t(after) },
+        { circleId: circle.id, intentId: intent.id, actor: "paypal", type: "payout_succeeded", data: { seed: true }, createdAt: t(after + 1) },
+      ]);
+    } else if (o.status === "paid") {
       await db.insert(schema.auditEvents).values([
         { circleId: circle.id, intentId: intent.id, actor: "agent", type: "released", data: { seed: true }, createdAt: t(evaluation.decision === "cool_off" ? 1440 : 3) },
         { circleId: circle.id, intentId: intent.id, actor: "paypal", type: "payout_succeeded", data: { seed: true }, createdAt: t(evaluation.decision === "cool_off" ? 1441 : 4) },
@@ -422,6 +432,88 @@ export async function seedWalter(opts: { history?: boolean } = { history: true }
     return intent;
   };
 
+  // Twelve weeks of Walter's life before the last five: routine bills, two scams
+  // refused, and three times Priya or Dolores stepped in, so the dashboard has a story.
+  const pharmacyP = { id: pharmacy.id, name: pharmacy.name, email: pharmacy.paypalEmail, verified: true };
+  const electricP = { id: electric.id, name: electric.name, email: electric.paypalEmail, verified: true };
+  const rosaP = { id: housekeeper.id, name: housekeeper.name, email: housekeeper.paypalEmail, verified: true };
+  const stranger = (name: string, email = "") => ({ id: null, name, email, verified: false });
+  await own({ payee: pharmacyP, amountMinor: 3_820, category: "pharmacy", summary: "Walter's heart tablets.", reference: "SR-1955", at: daysAgo(86, 17), status: "paid", previouslyPaid: true });
+  await own({ payee: electricP, amountMinor: 10_410, category: "utilities", summary: "July electricity.", reference: "DSE-86120", at: daysAgo(82, 16), status: "paid", previouslyPaid: true });
+  await own({ payee: rosaP, amountMinor: 9_000, category: "carer", summary: "Rosa's cleaning, two visits.", reference: null, at: daysAgo(79, 15), status: "paid", previouslyPaid: true, source: "voice", text: "Rosa came Tuesday and Friday, ninety dollars." });
+  await own({
+    payee: stranger("Publishers Prize Center"),
+    amountMinor: 4_999,
+    category: "other",
+    method: "gift_card",
+    summary: "A prize letter asking for a $49.99 \"processing fee\" in gift cards.",
+    reference: null,
+    at: daysAgo(72, 19),
+    status: "refused",
+    previouslyPaid: false,
+    scam: { impersonation: false, urgency: true, secrecy: false, unusualMethod: true, unsolicited: true, riskScore: 0.97 },
+    text: "Congratulations! You have won $250,000. Pay the $49.99 processing fee with Google Play cards today to claim your prize.",
+  });
+  await own({ payee: rosaP, amountMinor: 9_000, category: "carer", summary: "Rosa's cleaning, two visits.", reference: null, at: daysAgo(65, 15), status: "paid", previouslyPaid: true });
+  await own({ payee: pharmacyP, amountMinor: 3_820, category: "pharmacy", summary: "Walter's heart tablets.", reference: "SR-2041", at: daysAgo(58, 17), status: "paid", previouslyPaid: true });
+  await own({
+    payee: stranger("Copper State Plumbing", "office@copperstateplumbing.example.com"),
+    amountMinor: 16_500,
+    category: "other",
+    summary: "Fixing the kitchen tap. Walter booked them himself.",
+    reference: "CSP-3381",
+    at: daysAgo(55, 16),
+    status: "paid",
+    previouslyPaid: false,
+    releasedBy: priya,
+    after: 170,
+    note: "Licensed in Arizona, and Walter called them. Fine to go.",
+    source: "voice",
+    text: "The plumber fixed the kitchen tap, one hundred sixty-five dollars, Copper State Plumbing.",
+  });
+  await own({ payee: electricP, amountMinor: 13_175, category: "utilities", summary: "August electricity.", reference: "DSE-87240", at: daysAgo(52, 16), status: "paid", previouslyPaid: true });
+  await own({ payee: rosaP, amountMinor: 9_000, category: "carer", summary: "Rosa's cleaning, two visits.", reference: null, at: daysAgo(51, 15), status: "paid", previouslyPaid: true });
+  await own({
+    payee: stranger("Tucson Dental Group", "billing@tucsondental.example.com"),
+    amountMinor: 124_000,
+    category: "clinic",
+    summary: "Two crowns, after insurance.",
+    reference: "TDG-77812",
+    at: daysAgo(47, 23),
+    status: "paid",
+    previouslyPaid: false,
+    releasedBy: priya,
+    after: 400,
+    note: "Matches the treatment plan Walter showed me in August.",
+  });
+  await own({
+    payee: stranger("Social Security Administration"),
+    amountMinor: 20_000,
+    category: "other",
+    summary: "A call saying Walter's benefits were suspended until he paid $200.",
+    reference: null,
+    at: daysAgo(41, 21),
+    status: "refused",
+    previouslyPaid: false,
+    scam: { impersonation: true, urgency: true, secrecy: true, unusualMethod: false, unsolicited: true, riskScore: 0.95 },
+    source: "voice",
+    text: "A man from Social Security says my benefits are suspended and I have to pay two hundred dollars today to turn them back on. He said not to tell the bank.",
+  });
+  await own({ payee: rosaP, amountMinor: 9_000, category: "carer", summary: "Rosa's cleaning, two visits.", reference: null, at: daysAgo(37, 15), status: "paid", previouslyPaid: true });
+  await own({ payee: rosaP, amountMinor: 9_000, category: "carer", summary: "Rosa's cleaning, two visits.", reference: null, at: daysAgo(23, 15), status: "paid", previouslyPaid: true });
+  await own({
+    payee: stranger("Food City Delivery", "orders@foodcity.example.com"),
+    amountMinor: 7_240,
+    category: "groceries",
+    summary: "Groceries delivered, the first order from a new shop.",
+    reference: "FC-55102",
+    at: daysAgo(15, 17),
+    status: "paid",
+    previouslyPaid: false,
+    releasedBy: dolores,
+    after: 38,
+    note: "That's the shop on Grant Road. I saw the van.",
+  });
   await own({ payee: { id: pharmacy.id, name: pharmacy.name, email: pharmacy.paypalEmail, verified: true }, amountMinor: 3_820, category: "pharmacy", summary: "Walter's heart tablets.", reference: "SR-2210", at: daysAgo(34, 17), status: "paid", previouslyPaid: true });
   await own({ payee: { id: electric.id, name: electric.name, email: electric.paypalEmail, verified: true }, amountMinor: 11_240, category: "utilities", summary: "September electricity.", reference: "DSE-88412", at: daysAgo(21, 16), status: "paid", previouslyPaid: true });
   await own({ payee: { id: housekeeper.id, name: housekeeper.name, email: housekeeper.paypalEmail, verified: true }, amountMinor: 9_000, category: "carer", summary: "Rosa's cleaning, two visits.", reference: null, at: daysAgo(9, 15), status: "paid", previouslyPaid: true });

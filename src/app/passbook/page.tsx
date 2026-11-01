@@ -5,6 +5,7 @@ import { potBalanceMinor } from "@/lib/circle";
 import { Shell } from "@/components/shell";
 import { PassbookGrid } from "@/components/passbook-grid";
 import { Money } from "@/components/ui";
+import { PassbookTabs } from "@/components/passbook-tabs";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Passbook" };
@@ -64,6 +65,9 @@ export default async function PassbookPage() {
               </>
             )}
           </dl>
+          <div className="basis-full">
+            <PassbookTabs current="ledger" />
+          </div>
         </div>
       }
     >

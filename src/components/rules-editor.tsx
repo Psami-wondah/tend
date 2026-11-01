@@ -198,7 +198,7 @@ export function RulesEditor(props: {
 
       <section aria-labelledby="scam">
         <h2 id="scam" className="font-display text-[1.375rem] font-semibold">How careful to be with scams</h2>
-        <p className="mt-1 text-ink-soft">Claude scores each request for scam signals from 0 to 100%. Lower numbers make Tend more careful.</p>
+        <p className="mt-1 text-ink-soft">The AI scores each request for scam signals from 0 to 100%. Lower numbers make Tend more careful. Refusing outright also needs a sign with no innocent version: someone posing as family or an official, a request for secrecy, or gift cards, crypto or wire. Otherwise a risky request waits for a yes.</p>
         <div className="mt-4 space-y-5 rounded-2xl bg-dial p-4">
           <Slider label="Ask the circle when the risk is at least" value={draft.scamReviewThreshold} onChange={(v) => set("scamReviewThreshold", v)} />
           <Slider label="Refuse outright when the risk is at least" value={draft.scamRefuseThreshold} onChange={(v) => set("scamRefuseThreshold", v)} />
@@ -290,7 +290,7 @@ function PlainEnglish({ initialAsk, aiLive, onPropose }: { initialAsk: string | 
         Change a rule in plain words
       </h2>
       <p className="mt-1 text-sm text-ink-soft">
-        {aiLive ? "Claude proposes the change. Nothing happens until you save it." : "Demo mode reads simple sentences without AI. Nothing happens until you save it."}
+        {aiLive ? "The AI proposes the change. Nothing happens until you save it." : "Demo mode reads simple sentences without AI. Nothing happens until you save it."}
       </p>
       <form
         onSubmit={(e) => {

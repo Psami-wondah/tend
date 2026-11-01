@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { evaluate } from "./engine";
+import { evaluate, evaluateOwnPayment } from "./engine";
 import { DEFAULT_MANDATE } from "./defaults";
 import type { CircleState, PaymentProposal } from "./types";
 
@@ -103,6 +103,23 @@ describe("mandate engine", () => {
     );
     expect(r.decision).toBe("refuse");
     expect(r.reasons[0].effect).toBe("refuse");
+  });
+
+  it("lets the circle check a high score with no hard scam sign, instead of refusing", () => {
+    // The roofer at the door: pressure and out of the blue, but it might be a real roofer.
+    const roofer = { ...noScam, urgency: true, unsolicited: true, riskScore: 0.85 };
+    const r = run(proposal({ scam: roofer }));
+    expect(r.decision).toBe("needs_approval");
+    expect(r.reasons.map((x) => x.code)).toContain("scam_review");
+
+    const own = evaluateOwnPayment(proposal({ scam: roofer }), DEFAULT_MANDATE, "USD", "Walter");
+    expect(own.decision).toBe("needs_approval");
+    expect(own.reasons.map((x) => x.code)).toContain("scam_review");
+
+    // Same score, but someone posing as Medicare: no innocent version, so refused.
+    const medicare = evaluateOwnPayment(proposal({ scam: { ...roofer, impersonation: true } }), DEFAULT_MANDATE, "USD", "Walter");
+    expect(medicare.decision).toBe("refuse");
+    expect(medicare.reasons.map((x) => x.code)).toContain("scam_refuse");
   });
 
   it("sends medium-risk requests to the family instead of paying", () => {

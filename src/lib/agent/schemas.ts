@@ -43,7 +43,7 @@ export const ExtractionSchema = z.object({
     urgency: z.boolean().describe("Pressure to pay immediately or face consequences."),
     secrecy: z.boolean().describe("Asks not to tell family or anyone else."),
     unusualMethod: z.boolean().describe("Asks for gift cards, crypto, wire, or cash collection."),
-    unsolicited: z.boolean().describe("A request she didn't initiate (not a normal bill for a service she uses)."),
+    unsolicited: z.boolean().describe("A request they didn't start (not a normal bill for a service they use)."),
     riskScore: z.number().min(0).max(1).describe("Overall probability this is a scam."),
     explanation: z.string().describe("Why, in one or two plain sentences."),
   }),

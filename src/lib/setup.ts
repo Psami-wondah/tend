@@ -14,6 +14,7 @@ export function integrations() {
     database: process.env.DATABASE_URL ? "postgres" : "embedded",
     cronSecret: Boolean(process.env.CRON_SECRET),
     channel3: Boolean(process.env.CHANNEL3_API_KEY),
+    agLicense: Boolean(process.env.AG_GRID_LICENSE_KEY),
     sandboxEmails: [
       "SANDBOX_PHARMACY_EMAIL",
       "SANDBOX_CARER_EMAIL",
@@ -23,6 +24,9 @@ export function integrations() {
       "SANDBOX_CHIOMA_EMAIL",
       "SANDBOX_MUM_EMAIL",
       "SANDBOX_WALTER_EMAIL",
+      "SANDBOX_PRIYA_EMAIL",
+      "SANDBOX_DOLORES_EMAIL",
+      "SANDBOX_SHOP_EMAIL",
     ].map(
       (k) => ({ key: k, set: Boolean(process.env[k]?.trim()) }),
     ),

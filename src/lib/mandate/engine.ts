@@ -59,7 +59,7 @@ export function evaluate(
 
   if (proposal.paypalPhoneInNote) {
     reasons.push(paypalInvoiceReason(proposal.paypalPhoneInNote));
-  } else if (proposal.scam.riskScore >= mandate.scamRefuseThreshold) {
+  } else if (proposal.scam.riskScore >= mandate.scamRefuseThreshold && hardScamSign(proposal.scam)) {
     reasons.push({
       code: "scam_refuse",
       effect: "refuse",
@@ -196,6 +196,16 @@ function paypalInvoiceReason(phone: string): Reason {
   };
 }
 
+/**
+ * A high score alone never refuses. Tend refuses outright only on a sign that
+ * has no innocent version: someone posing as family or an official, a request
+ * for secrecy, or gift cards, crypto, wire or a courier. A stranger in a hurry
+ * might still be a real roofer, so that waits for a yes from the circle instead.
+ */
+export function hardScamSign(s: PaymentProposal["scam"]): boolean {
+  return s.impersonation || s.secrecy || s.unusualMethod;
+}
+
 function scamSummary(p: PaymentProposal): string {
   const s = p.scam;
   const parts: string[] = [];
@@ -266,7 +276,7 @@ export function evaluateOwnPayment(
   }
   if (proposal.paypalPhoneInNote) {
     reasons.push(paypalInvoiceReason(proposal.paypalPhoneInNote));
-  } else if (proposal.scam.riskScore >= mandate.scamRefuseThreshold) {
+  } else if (proposal.scam.riskScore >= mandate.scamRefuseThreshold && hardScamSign(proposal.scam)) {
     reasons.push({ code: "scam_refuse", effect: "refuse", message: `This looks like a scam (${scamSummary(proposal)}).` });
   } else if (proposal.scam.riskScore >= mandate.scamReviewThreshold) {
     reasons.push({ code: "scam_review", effect: "needs_approval", message: `Some warning signs (${scamSummary(proposal)}), so someone in the circle should look first.` });

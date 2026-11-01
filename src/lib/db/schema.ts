@@ -230,6 +230,17 @@ export const recoveries = pgTable("recoveries", {
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
+/**
+ * The circle's own dashboard (AG Studio report state), saved so a view one
+ * person builds is the one everyone opens. One per circle; none means Tend's.
+ */
+export const dashboards = pgTable("dashboards", {
+  circleId: text("circle_id").primaryKey().references(() => circles.id),
+  state: jsonb("state").$type<Record<string, unknown>>().notNull(),
+  savedBy: text("saved_by").references(() => members.id),
+  savedAt: timestamp("saved_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
 export type Circle = typeof circles.$inferSelect;
 export type Member = typeof members.$inferSelect;
 export type Payee = typeof payees.$inferSelect;

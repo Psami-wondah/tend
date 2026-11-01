@@ -360,7 +360,7 @@ export function PassbookGrid({ rows, currency, people, aiLive, pot = true }: { r
           <MessageCircle aria-hidden size={18} className="text-accent" />
           Ask the passbook
         </label>
-        <p className="mt-0.5 text-sm text-ink-soft">{aiLive ? "Claude turns your question into a filter you can see and remove." : "Demo mode matches keywords; with an Anthropic or OpenRouter key, Claude reads the question."}</p>
+        <p className="mt-0.5 text-sm text-ink-soft">{aiLive ? "The AI turns your question into a filter you can see and remove." : "Demo mode matches keywords; with an AI key set up, the model reads the question."}</p>
         <div className="mt-2 flex gap-2">
           <input
             id="ask-passbook"
@@ -386,7 +386,7 @@ export function PassbookGrid({ rows, currency, people, aiLive, pot = true }: { r
       <div className="flex flex-wrap items-center gap-2">
         {chips.length > 0 && (
           <>
-            <span className="text-sm text-ink-soft">{viaAi ? "Claude filtered to:" : "Showing:"}</span>
+            <span className="text-sm text-ink-soft">{viaAi ? "The AI filtered to:" : "Showing:"}</span>
             {chips.map((c) => (
               <button
                 key={c.label}

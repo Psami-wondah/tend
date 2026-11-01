@@ -36,12 +36,14 @@ services:
         sync: false
       - key: PAYPAL_WEBHOOK_ID
         sync: false
-      # Claude: set one of these two.
+      # The AI model: set one of these two (TEND_MODEL picks the model).
       - key: ANTHROPIC_API_KEY
         sync: false
       - key: OPENROUTER_API_KEY
         sync: false
       - key: CHANNEL3_API_KEY
+        sync: false
+      - key: AG_GRID_LICENSE_KEY
         sync: false
       - key: CURRENCY
         value: USD
