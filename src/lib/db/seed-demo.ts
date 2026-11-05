@@ -432,7 +432,7 @@ export async function seedWalter(opts: { history?: boolean } = { history: true }
     return intent;
   };
 
-  // Twelve weeks of Walter's life before the last five: routine bills, two scams
+  // Twelve weeks of Walter's life: routine bills, two scams
   // refused, and three times Priya or Dolores stepped in, so the dashboard has a story.
   const pharmacyP = { id: pharmacy.id, name: pharmacy.name, email: pharmacy.paypalEmail, verified: true };
   const electricP = { id: electric.id, name: electric.name, email: electric.paypalEmail, verified: true };

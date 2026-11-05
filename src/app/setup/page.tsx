@@ -142,7 +142,7 @@ export default async function SetupPage() {
         <section aria-labelledby="demo" className="rounded-2xl bg-dial p-4">
           <h2 id="demo" className="font-bold">Start the demo again</h2>
           <p className="mt-1 text-[0.9375rem] text-ink-soft">
-            Wipes everything and reloads both circles, the Okafor family and Walter, with five weeks of history. Handy before recording a take.
+            Wipes everything and reloads both circles: the Okafor family with five weeks of history, and Walter with twelve. Handy before recording a take.
           </p>
           <div className="mt-3">
             <ResetDemo />
