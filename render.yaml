@@ -3,11 +3,12 @@
 # Fill in the `sync: false` secrets when Render asks. With none of them set,
 # Tend still runs, in its labelled demo mode.
 #
-# Free Render Postgres expires 30 days after it's created. If that happens
-# before judging ends, Tend notices DATABASE_URL is unreachable, falls back to
-# its embedded database and reseeds the demo on boot (see /api/health). To keep
-# history across restarts instead, upgrade tend-db to a paid plan or point
-# DATABASE_URL at another Postgres.
+# Paid plans, so the demo is always awake and keeps its history through
+# judging: a Starter web service (never sleeps) and a Basic database (doesn't
+# expire). To run it free instead, set both plans to `free` and delete the
+# cron job: a free web service sleeps after 15 minutes idle, and free Postgres
+# expires after 30 days. If the database ever stops answering, Tend falls back
+# to its embedded database and reseeds the demo (see /api/health).
 #
 # No APP_URL needed: Render sets RENDER_EXTERNAL_URL, which Tend uses for
 # invite links and PayPal return URLs. When pasting a laptop .env into the
@@ -15,13 +16,13 @@
 
 databases:
   - name: tend-db
-    plan: free
+    plan: basic-256mb
 
 services:
   - type: web
     name: tend
     runtime: node
-    plan: free
+    plan: starter
     # --include=dev: the build needs Tailwind and TypeScript, and the seed runs on tsx.
     buildCommand: npm ci --include=dev && npm run build
     # Seeds the demo circle on first boot (no-op if it already exists).
