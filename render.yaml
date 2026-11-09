@@ -94,15 +94,17 @@ services:
     plan: starter
     schedule: "*/5 * * * *"
     buildCommand: "true"
-    startCommand: 'curl -fsS -H "Authorization: Bearer $CRON_SECRET" "https://$TEND_HOST/api/sync"'
+    # Over Render's private network: `hostport` is the web service's internal
+    # name and port (e.g. tend-abcd:10000), which only answers plain http.
+    startCommand: 'curl -fsS --max-time 60 -H "Authorization: Bearer $CRON_SECRET" "http://$TEND_HOSTPORT/api/sync"'
     envVars:
       - key: CRON_SECRET
         fromService:
           name: tend
           type: web
           envVarKey: CRON_SECRET
-      - key: TEND_HOST
+      - key: TEND_HOSTPORT
         fromService:
           name: tend
           type: web
-          property: host
+          property: hostport
