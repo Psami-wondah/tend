@@ -16,7 +16,7 @@ const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 async function familyMember(memberId: string) {
   const m = await getMember(memberId);
   const circle = await getCircle();
-  if (!m || m.circleId !== circle.id || !isFamily(m)) throw new PayeeError("Only the family can manage payees.");
+  if (!m || m.circleId !== circle.id || !isFamily(m)) throw new PayeeError("Only people in the circle can manage payees.");
   return { m, circle };
 }
 

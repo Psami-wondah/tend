@@ -16,7 +16,6 @@ export default async function RulesPage({ searchParams }: { searchParams: Promis
   return (
     <Shell
       me={personProps(ctx.me)}
-      people={ctx.members.map(personProps)}
       demo={ctx.demo}
       band={
         <div className="mt-6">

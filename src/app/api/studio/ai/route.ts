@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { generateText, jsonSchema, Output, tool, type ToolSet } from "ai";
 import { aiConfigured, model, modelId } from "@/lib/agent/model";
-import { toMessages, type StudioTurn } from "@/lib/agent/studio-turn";
+import { systemOf, toMessages, type StudioTurn } from "@/lib/agent/studio-turn";
 
 export const runtime = "nodejs";
 
@@ -70,7 +70,7 @@ export async function POST(req: Request) {
   try {
     const result = await generateText({
       model: model(),
-      system: turn.instructions,
+      system: [turn.instructions, systemOf(turn.input ?? [])].filter(Boolean).join("\n\n") || undefined,
       messages: toMessages(turn.input ?? []),
       tools: hasTools ? tools : undefined,
       toolChoice: !hasTools ? undefined : typeof choice === "object" ? { type: "tool", toolName: choice.name } : choice,

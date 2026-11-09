@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
-import { BookOpen, House, MessageCircle, ScrollText, Store, FlaskConical, ChevronDown } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { BookOpen, House, MessageCircle, ScrollText, Store, FlaskConical, Settings } from "lucide-react";
 import { personVar } from "@/lib/people";
+import { LiveAlert } from "./live-alert";
 
 type Person = { id: string; name: string; city: string | null; color: string | null; role: string };
 
@@ -23,14 +23,12 @@ const TABS = [
  */
 export function Shell({
   me,
-  people,
   demo,
   band,
   children,
   wide = false,
 }: {
   me: Person;
-  people: Person[];
   demo: { paypal: boolean; ai: boolean };
   band?: React.ReactNode;
   children: React.ReactNode;
@@ -39,10 +37,11 @@ export function Shell({
   const width = wide ? "max-w-6xl" : "max-w-5xl";
   return (
     <div className="min-h-dvh pb-[calc(5rem+env(safe-area-inset-bottom))] md:pb-16">
+      <LiveAlert />
       <header className="on-night bg-night text-night-ink">
         <div className={`mx-auto ${width} px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-4 sm:px-6`}>
           <div className="flex items-center gap-3">
-            <Link href="/" className="font-display text-[1.75rem] font-semibold tracking-[-0.01em]" aria-label="Tend, choose who you are">
+            <Link href="/home" className="font-display text-[1.75rem] font-semibold tracking-[-0.01em]">
               Tend
             </Link>
             {(demo.paypal || demo.ai) && <DemoBadge demo={demo} />}
@@ -50,7 +49,7 @@ export function Shell({
               <TabLinks variant="top" />
             </nav>
             <div className="ml-auto">
-              <ViewerSwitch me={me} people={people} />
+              <Account me={me} />
             </div>
           </div>
           {band}
@@ -107,7 +106,7 @@ function DemoBadge({ demo }: { demo: { paypal: boolean; ai: boolean } }) {
     <Link
       href="/setup"
       className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-day px-2.5 py-1 text-xs font-bold whitespace-nowrap text-night"
-      title={`${what}. Add keys on the Setup page.`}
+      title={`${what}. See what's connected.`}
     >
       <FlaskConical aria-hidden size={13} strokeWidth={2.5} />
       Demo<span className="hidden sm:inline"> mode</span>
@@ -115,42 +114,22 @@ function DemoBadge({ demo }: { demo: { paypal: boolean; ai: boolean } }) {
   );
 }
 
-/** Demo stand-in for sign-in: switch which family member you're viewing as. */
-export function ViewerSwitch({ me, people }: { me: Person; people: Person[] }) {
-  const router = useRouter();
-  const [busy, setBusy] = useState(false);
-  async function pick(id: string) {
-    if (id === "__circles") return router.push("/");
-    setBusy(true);
-    const res = await fetch("/api/viewer", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ memberId: id }) });
-    const json = await res.json().catch(() => ({}));
-    setBusy(false);
-    if (json.role === "care_recipient") router.push("/me");
-    else router.refresh();
-  }
+/** Who's signed in, which is also the way to Settings. */
+function Account({ me }: { me: Person }) {
+  const on = usePathname() === "/settings";
   return (
-    <label className="relative inline-flex min-h-10 items-center gap-2 rounded-full bg-night-ink/10 py-1.5 pr-8 pl-2.5 text-sm font-bold">
+    <Link
+      href="/settings"
+      aria-current={on ? "page" : undefined}
+      className={`inline-flex min-h-10 items-center gap-2 rounded-full py-1.5 pr-3 pl-2.5 text-sm font-bold transition-colors duration-200 ${on ? "bg-night-ink/20" : "bg-night-ink/10 hover:bg-night-ink/16"}`}
+    >
       <span aria-hidden className="size-2.5 rounded-full ring-2 ring-night-ink/30" style={{ background: personVar(me) }} />
-      <span className="sr-only">Viewing as</span>
-      <span aria-hidden className="whitespace-nowrap">
+      <span className="whitespace-nowrap">
         {me.name}
         <span className="hidden font-normal text-night-soft sm:inline"> in {me.city}</span>
       </span>
-      <ChevronDown aria-hidden size={16} className="absolute right-2.5" />
-      <select
-        value={me.id}
-        disabled={busy}
-        onChange={(e) => void pick(e.target.value)}
-        className="absolute inset-0 cursor-pointer opacity-0"
-        aria-label="Viewing as"
-      >
-        {people.map((p) => (
-          <option key={p.id} value={p.id}>
-            {p.role === "care_recipient" ? `${p.name} (their own screen)` : `${p.name}, ${p.city}`}
-          </option>
-        ))}
-        <option value="__circles">Another circle…</option>
-      </select>
-    </label>
+      <Settings aria-hidden size={16} className="text-night-soft" />
+      <span className="sr-only">, settings</span>
+    </Link>
   );
 }

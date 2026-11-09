@@ -20,28 +20,39 @@ export const metadata: Metadata = { title: "Payment" };
 
 const EVENT: Record<string, string> = {
   intake_read: "Tend read it",
-  decided: "Tend checked it against the family's rules",
+  decided: "Tend checked it against the circle's rules",
   reevaluated: "Tend checked it again",
   approved: "Approved",
   rejected: "Declined",
-  approval_threshold_met: "Enough of the family said yes",
-  payee_attached: "Added the payee",
+  approval_threshold_met: "Enough of the circle said yes",
+  payee_attached: "The payee was added",
   payout_sent: "Sent to PayPal",
   payout_succeeded: "PayPal confirmed the payment",
   payout_failed: "PayPal rejected the payment",
-  payment_failed: "Payment failed",
+  payment_failed: "The payment failed",
   duplicate_found: "Tend spotted it was paid twice",
-  recovery_requested: "Asked the payee for the money back",
-  recovery_dismissed: "The family said it was right",
+  recovery_requested: "Tend asked the payee for the money back",
+  recovery_dismissed: "The circle said it was right",
   recovery_paid: "The payee paid it back",
   authorized: "PayPal authorized it: the money is held, not sent",
   held: "Tend held it for the circle to look",
-  released: "Released: captured and sent",
-  stopped: "Stopped it: PayPal voided the hold",
+  released: "Released: PayPal captured it and sent it",
+  stopped: "Stopped: PayPal voided the hold",
   expired: "Nobody said yes in time, so the hold was cancelled",
   vault_charge: "Paid from the saved PayPal they agreed to",
   authorization_voided: "PayPal voided the hold",
   capture_completed: "PayPal confirmed the capture",
+};
+
+/** The same events, said with the person who did them: "Dolores stopped it, and PayPal voided the hold". */
+const BY_MEMBER: Record<string, string> = {
+  approved: "said yes",
+  rejected: "said no",
+  payee_attached: "added the payee",
+  recovery_requested: "asked the payee for the money back",
+  recovery_dismissed: "said it was right",
+  released: "let it go, and PayPal captured it and sent it",
+  stopped: "stopped it, and PayPal voided the hold",
 };
 
 export default async function PaymentPage({ params }: { params: Promise<{ id: string }> }) {
@@ -57,12 +68,15 @@ export default async function PaymentPage({ params }: { params: Promise<{ id: st
   const own = intent.funding === "own";
   const payer = intent.payerId ? byId(intent.payerId) : null;
   const stopper = intent.stoppedBy ? byId(intent.stoppedBy) : null;
+  // Stopping or letting a payment go also records a no or a yes; show the one line that says what happened.
+  const trail = d.trail.filter(
+    (t) => !((t.type === "rejected" && d.trail.some((s) => s.type === "stopped" && s.actor === t.actor)) || (t.type === "approved" && d.trail.some((s) => s.type === "released" && s.actor === t.actor))),
+  );
   const stoppedNote = (d.trail.find((t) => t.type === "stopped")?.data as { note?: string } | undefined)?.note;
 
   return (
     <Shell
       me={personProps(ctx.me)}
-      people={ctx.members.map(personProps)}
       demo={ctx.demo}
       band={
         <div className="mt-5">
@@ -119,7 +133,7 @@ export default async function PaymentPage({ params }: { params: Promise<{ id: st
               <div className="mt-5 border-t border-rule pt-4">
                 <h2 className="mb-2.5 font-bold">Why Tend decided this</h2>
                 <Reasons reasons={intent.evaluation.reasons} />
-                <p className="mt-3 text-sm text-ink-soft">Checked against version {intent.evaluation.mandateVersion} of the family&apos;s rules.</p>
+                <p className="mt-3 text-sm text-ink-soft">Checked against version {intent.evaluation.mandateVersion} of the circle&apos;s rules.</p>
               </div>
             </article>
           )}
@@ -153,15 +167,16 @@ export default async function PaymentPage({ params }: { params: Promise<{ id: st
                   {d.intake.text && <blockquote className="mt-2 rounded-xl bg-enamel px-3.5 py-2.5 text-[0.9375rem]">{d.intake.text}</blockquote>}
                 </TimelineItem>
               )}
-              {d.trail.map((t) => {
+              {trail.map((t) => {
                 const who = actor(t.actor);
                 const label = EVENT[t.type] ?? t.type.replaceAll("_", " ");
+                const title = who ? `${who.name} ${BY_MEMBER[t.type] ?? `${label.charAt(0).toLowerCase()}${label.slice(1)}`}` : label;
                 return (
                   <TimelineItem
                     key={t.id}
                     dot={who ? personVar(who) : t.actor === "paypal" ? "var(--color-accent)" : "var(--color-night)"}
                     Icon={who ? null : t.actor === "paypal" ? Landmark : Bot}
-                    title={who ? `${who.name}: ${label.toLowerCase()}` : `${t.actor === "paypal" ? "PayPal" : "Tend"}: ${label.charAt(0).toLowerCase()}${label.slice(1)}`}
+                    title={title}
                     when={stampIn(who?.timezone ?? ctx.me.timezone, t.createdAt)}
                     where={who ? who.city : null}
                     you={who && who.id !== ctx.me.id ? stampIn(ctx.me.timezone, t.createdAt) : null}

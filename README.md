@@ -2,7 +2,7 @@
 
 **Their money, their say. A second key for the people they trust.**
 
-Tend lets an older adult keep paying from their own PayPal, and gives the people they trust time to stop anything that looks wrong. Routine bills go straight through. Anything unusual is **authorized but held** in their PayPal: for a day if it's simply new or large, until someone says yes if it shows warning signs. Anyone in their circle can stop it, and PayPal voids the hold so the money never leaves. Gift cards, crypto, wire transfers and clear scams are refused before any money moves. Built on **PayPal** (Orders authorize/capture/void, Vault, Payouts, Invoicing, Agent Toolkit, JS SDK v6, Webhooks), with an **AI model** reading every request (Claude Sonnet 5.5 by default; any model through OpenRouter), and an **AG Studio** dashboard for the circle.
+Tend lets an older adult keep paying from their own PayPal, and gives the people they trust time to stop anything that looks wrong. Routine bills go straight through. Anything unusual is **authorized but held** in their PayPal: for a day if it's simply new or large, until someone says yes if it shows warning signs. Anyone in their circle can stop it, and PayPal voids the hold so the money never leaves. Gift cards, crypto, wire transfers and clear scams are refused before any money moves. Built on **PayPal** (Orders authorize/capture/void, Vault, Payouts, Invoicing, Agent Toolkit, JS SDK v6, Webhooks), with an **AI model** reading every request (Claude Sonnet 5.5 by default, on the Claude API; any model through OpenRouter), and an **AG Studio** dashboard for the circle.
 
 ![Welcome: two circles, the Okafor family and Walter's circle, as a wall of live clocks](docs/screenshots/welcome.png)
 
@@ -36,26 +36,26 @@ npm run db:seed      # embedded Postgres in ./.data, nothing to install
 npm run dev          # http://localhost:3000
 ```
 
-With no keys Tend runs in **demo mode**: PayPal is simulated (every order, authorization, payout and invoice gets a `SIM-` id and is labelled), and messages are read by a keyword reader instead of the AI model. Everything else is the real code: the rules engine, holds, approvals, the ledger, the MCP server. `/setup` shows what's connected and which key switches on what.
+With no keys Tend runs in **demo mode**: PayPal is simulated (every order, authorization, payout and invoice gets a `SIM-` id and is labelled), and messages are read by a keyword reader instead of the AI model. Everything else is the real code: the rules engine, holds, approvals, the ledger, the MCP server. `/setup` ("What's connected") shows which key switches on what.
 
 **Walter's story (the second key)**
 
-1. On `/`, pick **Walter**. Open **Try it with an example** and send **Pharmacy refill**. Approve with PayPal: it's paid at once, because Walter has paid Saguaro Pharmacy before.
+1. On `/`, tap **Try the demo** and pick **Walter** (or open `/join/walter`). Open **Try it with an example** and send **Pharmacy refill**. Approve with PayPal: it's paid at once, because Walter has paid Saguaro Pharmacy before.
 2. Send **A roofer at the door** (a stranger wants a $650 deposit today). Tend explains it will hold the money in Walter's PayPal until Priya or Dolores says yes. Approve with PayPal: **Held for now**.
-3. Go back to `/` and pick **Dolores**. The held payment is at the top. Tap **Stop it**: PayPal voids the authorization and the money never left. (**Say yes** would let it go.)
+3. Open `/join/dolores` in another browser or phone (or **Settings → Open as someone else**). The held payment is at the top, and if Dolores's screen was already open, a banner slid in when it was held. Tap **Stop it**: PayPal voids the authorization and the money never left. (**Say yes** would let it go.)
 4. As Walter, send **A PayPal invoice email**. Tend recognises the fake support number: *"You don't owe this. Don't call the number."*
 5. Send **A Medicare card fee**. Someone posing as Medicare, which never charges for a card: Tend refuses it and tells Priya and Dolores.
 6. As Priya, open **Ask Tend** and ask *"Is anything of Walter's held right now?"*, then say *"stop it"*.
 7. Still as Priya, open **Passbook → Dashboard**: twelve weeks of Walter's money, what Tend kept safe, and who stepped in. Click **Build your own** and ask the assistant *"Which week did we stop the most?"*. Save it for the circle.
 
-**The Okafor family (a shared care pot)**
+**The Okafor family (a shared care pot)**, under **More examples** on `/demo`
 
-1. Pick **Mum** and send the **Carer's invoice**. Tend asks the family and says who's awake. Approve as Ada, then switch to Tunde (top right) and approve again. It's paid by PayPal Payout.
+1. Pick **Mum** and send the **Carer's invoice**. Tend asks the family and says who's awake. Approve as Ada, then open `/join/tunde` and approve again. It's paid by PayPal Payout.
 2. As Mum, send **A worrying text** (a "grandchild" asking for gift cards). Refused, and the family is told.
 3. On the family home, **Money to get back** shows a pharmacy bill paid twice. Ask for it back: Tend sends the pharmacy a PayPal invoice.
 4. In **Passbook**, ask *"pharmacy payments this month"*.
 
-`/setup` → **Reset the demo** puts everything back.
+**Reset the demo** on `/demo` (or in Settings, in an example circle) puts both example circles back. Circles people set up themselves are never touched, and everyone stays signed in.
 
 ## Make it real (PayPal sandbox + an AI model)
 
@@ -135,15 +135,16 @@ The Agent Toolkit ships AI SDK v4 tool objects; Tend runs AI SDK v7. `toolkit.ts
 
 ## Where AI is used
 
-Every AI call goes through the Vercel AI SDK (`src/lib/agent/model.ts`), so the model is a setting, not a dependency. The default is Claude Sonnet 5.5: `anthropic/claude-sonnet-5.5` through OpenRouter, or `claude-sonnet-5-5` with an Anthropic key. Set `TEND_MODEL` to any model with image input, tool calls and structured output.
+Every AI call goes through the Vercel AI SDK (`src/lib/agent/model.ts`), so the model is a setting, not a dependency. The default is Claude Sonnet 5.5: `claude-sonnet-5-5` with an Anthropic key (`ANTHROPIC_API_KEY`, used first when both are set), or `anthropic/claude-sonnet-5.5` through OpenRouter. The voice always uses OpenRouter, so a deploy can run the model on the Claude API and the voice on OpenRouter. Set `TEND_MODEL` to any model with image input, tool calls and structured output.
 
 - **Reading** (`src/lib/agent/intake.ts`): a photo, voice transcript or forwarded message becomes a typed extraction: payee, amount, category, reference, the payment method asked for, a one-sentence summary for the person, scam signals with a risk score, and whether it's a PayPal-native invoice or money request with a phone number to call.
 - **Ask Tend** (`src/lib/agent/assistant.ts`): a tool-using agent over the ledger, held payments, everyone's clocks, the duplicate hunter, shopping and PayPal's read-only tools. It can stop a held payment; it can only *propose* payments and rule changes.
 - **Rules in plain English** (`src/lib/rules.ts`) and **questions to the passbook** (`src/lib/agent/passbook-query.ts`): the model returns structured changes or filters; pure code validates them; a person saves.
 - **Shopping** (`src/lib/shopping.ts`): the model picks one of three in-stock options and says why. Buying goes through the rules like any bill.
+- **Spoken answers** (`src/lib/voice.ts`, `src/app/api/speak/route.ts`): the person's screen reads every answer aloud in a natural voice from OpenRouter's speech endpoint (Microsoft MAI Voice 2.1 by default; `TEND_VOICE_MODEL` and `TEND_VOICE` pick another), cached per line, with the browser's own best voice as the fallback.
 - **The dashboard assistant** (`src/app/api/studio/ai/route.ts`, `src/lib/agent/studio-turn.ts`): AG Studio's own agents run their loop in the browser and build widgets with AG Studio's tools; each turn goes to Tend's server and runs on the same model, so no key reaches the page. Same-origin only, with size and rate limits.
 
-Each has an offline stand-in (`src/lib/agent/offline.ts`), labelled wherever it answers. `npm run eval:intake` scores the reader on 21 real-looking inputs, including PayPal invoice and money-request scams, a Medicare card fee, a roofer at the door and messages that only mention money, and checks whether the rules would refuse each one or let the circle check it. Claude (Sonnet 5.5 via OpenRouter) scores 21/21; the offline reader 19/19 (the two photos need Claude).
+Each has an offline stand-in (`src/lib/agent/offline.ts`), labelled wherever it answers. `npm run eval:intake` scores the reader on 21 real-looking inputs, including PayPal invoice and money-request scams, a Medicare card fee, a roofer at the door and messages that only mention money, and checks whether the rules would refuse each one or let the circle check it. Claude Sonnet 5.5 scores 21/21, both on the Claude API and through OpenRouter; the offline reader 19/19 (the two photos need Claude).
 
 ## Tend as an MCP server
 
@@ -178,6 +179,16 @@ In Claude.ai or Claude Desktop: Settings → Connectors → Add custom connector
 | --- | --- |
 | ![Passbook: held, refused, stopped and paid rows with status pills](docs/screenshots/passbook.png) | ![Passbook for the Okafor pot in dark mode](docs/screenshots/passbook-pot-dark.png) |
 
+## Signing in, alerts and setting up
+
+- **Sign in by invite link** (`src/lib/session.ts`, `/join/[token]`): everyone gets into Tend from their own link, which carries a signed token (HMAC of their id, so it can't be made up from an id seen on a page). Opening it signs them in on that device with a signed, HttpOnly session cookie for a year. Pages need a session (`/signin` explains where to get one), the person at the centre only ever sees their own screen, and every API request that names who is acting (`memberId`, `payerId`, `submittedBy`) must be the person signed in, or it gets a 401/403. **Settings** shows each person's link to send again, and **Sign out**. The secret comes from `TEND_SESSION_SECRET` or is made once and kept in the database.
+- **A Home Screen app** (`/manifest.webmanifest`): added from a signed-in page, the app's start link is that person's own invite link, so it opens on their screen and stays signed in, even on an iPhone, where a Home Screen app keeps its own cookies. The demo people keep the same ids across a reset, so installed apps keep working.
+- **The example circles live behind their own door** (`/demo`): open them as anyone, try the examples, reset them. The front page shows Walter's circle; a real circle never shows any of this.
+
+- **Alerts on the circle's phones** (`src/lib/push.ts`, `public/sw.js`): when Tend holds a payment or stops a scam, everyone in the circle who turned alerts on gets a Web Push notification. A held payment carries **Stop it** and **Say yes**, which act from the notification without opening Tend (Android and desktop; an iPhone shows the alert without buttons, and a tap opens the payment). The person at the centre is never buzzed. iPhones need Tend on the Home Screen first; the iOS Simulator can't receive web push at all.
+- **The same moment inside the app** (`src/components/live-alert.tsx`, `/api/alerts/live`): any circle screen that's open gets a banner the moment something is held or refused, and brings itself up to date, on any device, alerts on or not. Keys are made once and kept in the database (or set `VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY`).
+- **Set up Tend for someone** (`/start`, `src/lib/onboarding.ts`): four short steps (who it's for, who their second key is, how careful, check it over) create a real circle with its own rules, and give everyone their own invite link. The new circle's home starts with a short list: send their link, add who they pay, turn on alerts. The example people also answer to their first names (`/join/walter`, `/join/dolores`); real circles only open with the signed link.
+
 ## The safety model
 
 1. **The person stays in charge.** Tend never refuses an ordinary payment from their own money. It holds unusual ones, and only for as long as the circle agreed.
@@ -193,7 +204,7 @@ In Claude.ai or Claude Desktop: Settings → Connectors → Add custom connector
 
 ## Design: the clock wall
 
-Diaspora homes and bank halls have a row of clocks labelled with cities. Tend's interface is that wall: one live dial per person, night indigo when they're asleep, so a held payment always says who can look *now*. Each person keeps one colour everywhere. Amounts and times share one numeral system (Jost). Every line people read uses Atkinson Hyperlegible Next, designed for low-vision readers. The person's own screen has three big actions, three text sizes and spoken answers. Light and dark both work. The design record is in `DESIGN.md`.
+Diaspora homes and bank halls have a row of clocks labelled with cities. Tend's interface is that wall: one live dial per person, night indigo when they're asleep, so a held payment always says who can look *now*. Each person keeps one colour everywhere. Amounts and times share one numeral system (Jost). Every line people read uses Atkinson Hyperlegible Next, designed for low-vision readers. The person's own screen has three big actions, three text sizes and answers read aloud in a natural voice. Light and dark both work. The design record is in `DESIGN.md`.
 
 | The circle's home (dark) | The Okafor family home | Rules for their own payments |
 | --- | --- | --- |
@@ -202,7 +213,7 @@ Diaspora homes and bank halls have a row of clocks labelled with cities. Tend's 
 ## Scripts
 
 ```bash
-npm test               # 69 tests: rules engine, own payments and holds, Vault, MCP server, pipeline, dashboard data and its assistant, demo mode end to end
+npm test               # 83 tests: rules engine, own payments and holds, Vault, MCP server, pipeline, sign-in, phone alerts, dashboard data and its assistant, demo mode end to end
 npm run typecheck
 npm run db:reset       # wipe and reseed both circles (Okafors: five weeks of history, Walter: twelve)
 npm run mcp:demo       # talk to the MCP server the way an AI assistant would
@@ -211,17 +222,17 @@ npm run eval:intake    # score the reader (add -- --offline for the keyword read
 
 ## Deploy (Render)
 
-**New → Blueprint**, pick this repo, fill in the secrets you have, deploy. The start command seeds both demo circles on first boot. The cron job is optional (Render cron jobs are a paid service type); delete its block to stay on the free tier, and holds will still settle whenever someone opens the app. Set `TEND_ALLOW_RESET=0` to hide the reset button on a public deploy.
+**New → Blueprint**, pick this repo, fill in the secrets you have, deploy. The start command seeds both demo circles on first boot. The cron job is optional (Render cron jobs are a paid service type); delete its block to stay on the free tier, and holds will still settle whenever someone opens the app. Set `TEND_ALLOW_RESET=0` to hide the reset button on a public deploy. No `APP_URL` is needed on Render: Tend uses the `RENDER_EXTERNAL_URL` Render sets for invite links, redirects and PayPal return URLs. If you paste your local `.env` into the Environment tab, leave out `APP_URL`, `DATABASE_URL` and `CRON_SECRET`. For PayPal webhooks, add one in the sandbox app pointing at `<url>/api/webhooks/paypal` and set `PAYPAL_WEBHOOK_ID` to its id.
 
 ## Tech
 
-Next.js 16 · React 19 · Tailwind 4 · Drizzle ORM on Postgres (PGlite locally) · Vercel AI SDK 7 (Claude Sonnet 5.5 by default, via OpenRouter or Anthropic) · Model Context Protocol (Streamable HTTP) · PayPal Orders v2 (authorize, capture, void), Vault v3, Payouts, Invoicing, Agent Toolkit, JS SDK v6, Webhooks · AG Grid Community 36 · AG Studio 3 · Channel3 · Render · Vitest.
+Next.js 16 · React 19 · Tailwind 4 · Drizzle ORM on Postgres (PGlite locally) · Vercel AI SDK 7 (Claude Sonnet 5.5 by default, on the Claude API or through OpenRouter) · Model Context Protocol (Streamable HTTP) · PayPal Orders v2 (authorize, capture, void), Vault v3, Payouts, Invoicing, Agent Toolkit, JS SDK v6, Webhooks · AG Grid Community 36 · AG Studio 3 · Channel3 · Render · Vitest.
 
 ## Limits of this hackathon build
 
 - "Viewing as" stands in for sign-in. All people, payees and history are seed data.
 - PayPal sandbox only. When a held payment is released, Tend captures it to its own sandbox merchant account and forwards it to the payee by Payout. A production version would make the payee the merchant of record (PayPal's partner and platform APIs) so the money moves once.
-- The circle is told on screen. Tend shows who's awake; it doesn't send push notifications or texts yet.
+- Alerts are Web Push to browsers and Home Screen apps; there are no text messages yet.
 - Shopping pays the shop by Payout to a merchant account the circle has verified. A production version would check out through the retailer.
 
 ## License

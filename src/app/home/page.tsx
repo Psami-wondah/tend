@@ -12,6 +12,12 @@ import { Fairness, OwnRows, RecentRows, Stopped } from "@/components/home-parts"
 import { Money, SectionHeading } from "@/components/ui";
 import { formatMoney } from "@/lib/money";
 import { Txt } from "@/components/figures-text";
+import { AlertsToggle, StayCurrent } from "@/components/alerts-toggle";
+import { isFamily } from "@/lib/people";
+import { GettingStarted } from "@/components/getting-started";
+import { activeMandate, listPayees } from "@/lib/circle";
+import { holdFor } from "@/lib/time";
+import { inviteLink } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Home" };
@@ -30,11 +36,15 @@ export default async function CircleHome() {
   const person = ctx.mum;
   const who = d.circle.careRecipientName;
   const nothingWaiting = mine.length === 0 && d.held.length === 0;
+  // A circle that was just set up: no payments yet, so show the first steps.
+  const isNew = !d.circle.potEnabled && d.ownRecent.length === 0 && d.stopped.length === 0 && d.held.length === 0;
+  const payeeCount = isNew ? (await listPayees(d.circle.id)).length : 0;
+  const hold = holdFor((await activeMandate(d.circle.id)).ownPayments?.coolingOffHours ?? 24);
+  const personLink = isNew && person ? await inviteLink(person.id) : "";
 
   return (
     <Shell
       me={personProps(ctx.me)}
-      people={ctx.members.map(personProps)}
       demo={ctx.demo}
       band={
         <div className="mt-4 grid gap-5 md:grid-cols-[1fr_minmax(0,22rem)] md:items-end">
@@ -74,6 +84,8 @@ export default async function CircleHome() {
 
         <div className="space-y-8 lg:col-start-1 lg:row-span-2 lg:row-start-1">
           <LiveRefresh active={(d.payingCount > 0 || d.held.length > 0) && ctx.integrations.paypal !== "simulated"} />
+          <StayCurrent />
+          {isNew && person && isFamily(ctx.me) && <GettingStarted person={who} link={personLink} payees={payeeCount} />}
 
           <section aria-labelledby="waiting">
             <SectionHeading id="waiting">{nothingWaiting ? "Nothing waiting on you" : "Waiting on you"}</SectionHeading>
@@ -81,7 +93,7 @@ export default async function CircleHome() {
               <p className="max-w-prose text-ink-soft">
                 {d.circle.potEnabled
                   ? `Tend is paying routine bills within the limits you agreed. Anything bigger or unusual, from the pot or from ${who}'s own PayPal, will appear here.`
-                  : `${who} pays ordinary bills from their own PayPal. Anything unusual is held there for a day and appears here, so you can look before it goes.`}
+                  : `${who} pays ordinary bills from their own PayPal. Anything unusual is held there ${hold} and appears here, so you can look before it goes.`}
               </p>
             ) : (
               <div className="space-y-4">
@@ -190,6 +202,7 @@ export default async function CircleHome() {
         </div>
 
         <div className="space-y-8 lg:col-start-2 lg:row-start-2">
+          {isFamily(ctx.me) && <AlertsToggle memberId={ctx.me.id} person={who} />}
           {d.circle.potEnabled && (
             <>
               <section aria-labelledby="fair">
@@ -227,7 +240,7 @@ export default async function CircleHome() {
                   <span className="font-bold">Ordinary bills</span> to people {who} has paid before go straight through.
                 </li>
                 <li>
-                  <span className="font-bold">Anything unusual</span> (someone new, a big amount, warning signs) is held in {who}&apos;s PayPal for a day. Anyone in the circle can stop it, and PayPal voids the hold.
+                  <span className="font-bold">Anything unusual</span> (someone new, a big amount, warning signs) is held in {who}&apos;s PayPal {hold}. Anyone in the circle can stop it, and PayPal voids the hold.
                 </li>
                 <li>
                   <span className="font-bold">Gift cards, crypto, wire transfers</span> and clear scams are refused before any money moves.

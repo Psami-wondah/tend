@@ -160,7 +160,7 @@ export function RulesEditor(props: {
           <label className="flex min-h-14 items-center justify-between gap-4 px-4 py-3">
             <span>
               <span className="block font-bold">Ask before paying someone new</span>
-              <span className="block text-sm text-ink-soft">The first payment to any payee waits for the family.</span>
+              <span className="block text-sm text-ink-soft">The first payment to any payee waits for the circle.</span>
             </span>
             <Toggle checked={draft.newPayeeRequiresApproval} onChange={(v) => set("newPayeeRequiresApproval", v)} label="Ask before paying someone new" />
           </label>

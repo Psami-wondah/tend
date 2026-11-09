@@ -92,3 +92,11 @@ export function whoIsAwake<T extends { timezone: string | null }>(people: T[], a
   for (const p of people) (isAwake(p.timezone, at) ? awake : asleep).push(p);
   return { awake, asleep };
 }
+
+/** How long the circle's hold lasts, as it reads in a sentence: "for a day", "for two days". */
+export function holdFor(hours: number): string {
+  if (hours >= 71) return "for up to three days";
+  if (hours === 48) return "for two days";
+  if (hours === 24) return "for a day";
+  return `for ${hours} hours`;
+}

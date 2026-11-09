@@ -21,7 +21,7 @@ export async function saveMandate(memberId: string, next: Mandate) {
   const db = await getDb();
   const circle = await getCircle();
   const member = await getMember(memberId);
-  if (!member || member.circleId !== circle.id || !isFamily(member)) throw new RulesError("Only the family can change the rules.");
+  if (!member || member.circleId !== circle.id || !isFamily(member)) throw new RulesError("Only people in the circle can change the rules.");
   const problems = validateMandate(next);
   if (problems.length) throw new RulesError(problems.join(" "));
   const current = await activeMandate(circle.id);

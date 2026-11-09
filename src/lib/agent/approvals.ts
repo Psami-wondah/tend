@@ -23,9 +23,9 @@ export async function recordVerdict(opts: {
   const intent = await load(opts.intentId);
   const member = await getMember(opts.memberId);
 
-  if (!member || member.circleId !== intent.circleId) throw new ApprovalError("Not a member of this care circle.");
+  if (!member || member.circleId !== intent.circleId) throw new ApprovalError("Not someone in this circle.");
   if (member.role !== "owner" && member.role !== "sibling") {
-    throw new ApprovalError("Only family members on the care circle can approve payments.");
+    throw new ApprovalError("Only the people in the circle can say yes to or stop a payment.");
   }
   // Own-wallet payments: "approve" lets the held money go now, "decline" stops it.
   if (intent.funding === "own") {

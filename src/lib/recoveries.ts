@@ -90,7 +90,7 @@ export async function requestRecovery(recoveryId: string, memberId: string) {
   const db = await getDb();
   const circle = await getCircle();
   const member = await getMember(memberId);
-  if (!member || member.circleId !== circle.id || !isFamily(member)) throw new RecoveryError("Only the family can ask for refunds.");
+  if (!member || member.circleId !== circle.id || !isFamily(member)) throw new RecoveryError("Only people in the circle can ask for refunds.");
   const [r] = await db.select().from(recoveries).where(and(eq(recoveries.id, recoveryId), eq(recoveries.circleId, circle.id)));
   if (!r) throw new RecoveryError("Not found.");
   if (r.status !== "found") throw new RecoveryError(`Already ${r.status}.`);
@@ -126,7 +126,7 @@ export async function requestRecovery(recoveryId: string, memberId: string) {
 export async function dismissRecovery(recoveryId: string, memberId: string) {
   const db = await getDb();
   const member = await getMember(memberId);
-  if (!member || !isFamily(member)) throw new RecoveryError("Only the family can dismiss this.");
+  if (!member || !isFamily(member)) throw new RecoveryError("Only people in the circle can dismiss this.");
   const [r] = await db
     .update(recoveries)
     .set({ status: "dismissed", updatedAt: new Date() })

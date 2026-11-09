@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { finishVault } from "@/lib/vault";
+import { originOf } from "@/lib/origin";
 
 export const runtime = "nodejs";
 
@@ -8,7 +9,7 @@ export async function GET(req: Request) {
   const url = new URL(req.url);
   const member = url.searchParams.get("member");
   const token = url.searchParams.get("approval_token_id") ?? url.searchParams.get("token");
-  const back = new URL("/me", url.origin);
+  const back = new URL("/me", originOf(req));
   if (!member) return NextResponse.redirect(back);
   try {
     await finishVault(member, token);

@@ -12,7 +12,7 @@ delete process.env.OPENROUTER_API_KEY;
 
 import { seedAll } from "./db/seed-demo";
 import { circleReport, clearDashboard, saveDashboard, savedDashboard, DashboardError } from "./report";
-import { toMessages } from "./agent/studio-turn";
+import { systemOf, toMessages } from "./agent/studio-turn";
 
 let all: Awaited<ReturnType<typeof seedAll>>;
 
@@ -106,16 +106,26 @@ describe("AG Studio's assistant, on Tend's model", () => {
       { type: "function_call_output", callId: "c2", output: "three sources" },
       { type: "message", role: "assistant", content: [{ type: "text", text: "Done." }] },
     ]);
-    expect(messages.map((m) => m.role)).toEqual(["system", "user", "assistant", "tool", "assistant"]);
-    expect(messages[2].content).toEqual([
+    expect(messages.map((m) => m.role)).toEqual(["user", "assistant", "tool", "assistant"]);
+    expect(messages[1].content).toEqual([
       { type: "text", text: "Reading the page first." },
       { type: "tool-call", toolCallId: "c1", toolName: "view_report", input: {} },
       { type: "tool-call", toolCallId: "c2", toolName: "read_schema", input: {} },
     ]);
-    expect(messages[3].content).toEqual([
+    expect(messages[2].content).toEqual([
       { type: "tool-result", toolCallId: "c1", toolName: "view_report", output: { type: "text", value: "two pages" } },
       { type: "tool-result", toolCallId: "c2", toolName: "read_schema", output: { type: "text", value: "three sources" } },
     ]);
+  });
+
+  it("sends system items as instructions, since the AI SDK won't take them as messages", () => {
+    const items = [
+      { type: "message" as const, role: "system" as const, content: [{ type: "text", text: "Dashboard rules." }] },
+      { type: "message" as const, role: "user" as const, content: [{ type: "text", text: "Hi" }] },
+      { type: "message" as const, role: "system" as const, content: [{ type: "text", text: "Be brief." }] },
+    ];
+    expect(systemOf(items)).toBe("Dashboard rules.\n\nBe brief.");
+    expect(toMessages(items)).toEqual([{ role: "user", content: "Hi" }]);
   });
 
   it("skips empty messages", () => {

@@ -187,6 +187,17 @@ select {
   animation: rise 220ms var(--ease-out) both;
 }
 
+/* An alert slides down from the top, like the phone's own. */
+@keyframes slide-down {
+  from {
+    transform: translateY(calc(-100% - 1rem));
+    opacity: 0;
+  }
+}
+.live-alert {
+  animation: slide-down 420ms var(--ease-out) both;
+}
+
 @keyframes pulse-dot {
   50% {
     opacity: 0.35;

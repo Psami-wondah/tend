@@ -241,6 +241,31 @@ export const dashboards = pgTable("dashboards", {
   savedAt: timestamp("saved_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
+/**
+ * A device that gets the circle's alerts (Web Push). One person can have
+ * several devices, and one browser can follow several people in the demo.
+ */
+export const pushSubscriptions = pgTable(
+  "push_subscriptions",
+  {
+    id: id(),
+    memberId: text("member_id")
+      .notNull()
+      .references(() => members.id, { onDelete: "cascade" }),
+    endpoint: text("endpoint").notNull(),
+    p256dh: text("p256dh").notNull(),
+    auth: text("auth").notNull(),
+    createdAt: createdAt(),
+  },
+  (t) => [uniqueIndex("push_member_endpoint").on(t.memberId, t.endpoint)],
+);
+
+/** Small server settings that must outlive a demo reset, such as the Web Push keys. */
+export const appSettings = pgTable("app_settings", {
+  key: text("key").primaryKey(),
+  value: text("value").notNull(),
+});
+
 export type Circle = typeof circles.$inferSelect;
 export type Member = typeof members.$inferSelect;
 export type Payee = typeof payees.$inferSelect;

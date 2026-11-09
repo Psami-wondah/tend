@@ -21,6 +21,7 @@ import {
 import { Dial, useNow } from "./clock";
 import { Txt } from "./figures-text";
 import { PayPalApprove } from "./paypal-approve";
+import { canSpeak, speak, stopSpeaking } from "./speak";
 import { isDaytimeHour, localTime } from "@/lib/time";
 
 type Outcome =
@@ -83,14 +84,6 @@ function writePref(key: string, value: string) {
   }
 }
 
-function speak(text: string) {
-  if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
-  window.speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text);
-  u.rate = 0.92;
-  window.speechSynthesis.speak(u);
-}
-
 async function post(url: string, data: unknown) {
   const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
   const json = await res.json().catch(() => ({}));
@@ -115,6 +108,8 @@ export function PersonScreen(props: {
   potEnabled: boolean;
   vault: { saved: boolean; summary: string | null; payees: { id: string; name: string }[] };
   vaultNotice: string | null;
+  /** How long unusual payments wait, in words: "for a day". */
+  hold: string;
 }) {
   const router = useRouter();
   const [mode, setMode] = useState<Mode>("home");
@@ -224,7 +219,7 @@ export function PersonScreen(props: {
 
   function reset() {
     recRef.current?.stop();
-    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+    stopSpeaking();
     setText("");
     setResult(null);
     setPlan(null);
@@ -253,7 +248,7 @@ export function PersonScreen(props: {
     const next = !voice;
     setVoice(next);
     writePref("tend.person.voice", next ? "on" : "off");
-    if (!next && "speechSynthesis" in window) window.speechSynthesis.cancel();
+    if (!next) stopSpeaking();
   }
 
   const bigButton = "flex min-h-24 items-center gap-4 rounded-3xl px-6 text-left text-[1.45em] font-bold";
@@ -317,7 +312,7 @@ export function PersonScreen(props: {
             <p className="mt-6 text-[1em]">
               {props.potEnabled
                 ? `I pay what your circle agreed from the shared pot, and ask ${circleNames} about anything else.`
-                : `It's your money. I pay what you ask, and hold anything unusual for a day so ${circleNames} can take a look.`}{" "}
+                : `It's your money. I pay what you ask, and hold anything unusual ${props.hold} so ${circleNames} can take a look.`}{" "}
               I never send money to strangers who ask for gift cards, crypto or wire transfers.
             </p>
 
@@ -362,22 +357,25 @@ export function PersonScreen(props: {
               </ul>
             </section>
 
-            <details className="mt-auto pt-10 text-[0.85em]">
-              <summary className="cursor-pointer font-bold underline underline-offset-4">Try it with an example</summary>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {props.samples.map((s) => (
-                  <button key={s.id} type="button" onClick={() => sample(s)} className="min-h-12 rounded-full border-2 border-ink bg-dial px-4 font-bold">
-                    {s.label}
-                  </button>
-                ))}
-              </div>
-              <p className="mt-4">
-                <Link href="/" className="underline underline-offset-4">
-                  Switch to someone in the circle
-                </Link>
-                {props.demo && <span className="text-ink-soft">. Demo mode: PayPal is simulated.</span>}
-              </p>
-            </details>
+            {props.samples.length > 0 && (
+              <details className="mt-auto pt-10 text-[0.85em]">
+                <summary className="cursor-pointer font-bold underline underline-offset-4">Try it with an example</summary>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {props.samples.map((s) => (
+                    <button key={s.id} type="button" onClick={() => sample(s)} className="min-h-12 rounded-full border-2 border-ink bg-dial px-4 font-bold">
+                      {s.label}
+                    </button>
+                  ))}
+                </div>
+                <p className="mt-4">
+                  This is an example circle.{" "}
+                  <Link href="/demo" className="underline underline-offset-4">
+                    Open it as someone else
+                  </Link>
+                  {props.demo && <span className="text-ink-soft">. PayPal is simulated.</span>}
+                </p>
+              </details>
+            )}
           </>
         )}
 
@@ -498,7 +496,7 @@ export function PersonScreen(props: {
                 <button className="min-h-16 w-full rounded-3xl bg-action text-[1.3em] font-bold text-action-ink">Carry on</button>
               </form>
             )}
-            {"speechSynthesis" in globalThis && (
+            {canSpeak() && (
               <button type="button" onClick={() => speak(`${TONE[result.outcome as Exclude<Outcome, "approve">].heading}. ${result.message}`)} className="mt-4 flex min-h-16 items-center justify-center gap-3 rounded-3xl border-2 border-ink bg-dial text-[1.2em] font-bold">
                 <Volume2 aria-hidden size={26} /> Read it again
               </button>

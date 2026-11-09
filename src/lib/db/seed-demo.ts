@@ -24,12 +24,14 @@ const CLEAN: ScamSignals = { impersonation: false, urgency: false, secrecy: fals
  * pharmacy bill paid twice by mistake, a rules change) so the app opens on a
  * lived-in month. Tests seed without it.
  */
-export async function seedDemo(opts: { history?: boolean } = {}) {
+export async function seedDemo(opts: { history?: boolean; stable?: boolean } = {}) {
   const db = await getDb();
+  const sid = stableId(opts.stable);
   const currency = appCurrency();
   const [circle] = await db
     .insert(schema.circles)
     .values({
+      ...sid("okafor"),
       name: "The Okafor family",
       careRecipientName: "Mum",
       currency,
@@ -40,10 +42,10 @@ export async function seedDemo(opts: { history?: boolean } = {}) {
   const [ada, tunde, chioma, mum] = await db
     .insert(schema.members)
     .values([
-      { circleId: circle.id, name: "Ada", role: "owner", relation: "daughter", email: env("SANDBOX_ADA_EMAIL", "ada@tend-family.example.com"), city: "London", timezone: "Europe/London", color: "cobalt", homeCurrency: "GBP" },
-      { circleId: circle.id, name: "Tunde", role: "sibling", relation: "son", email: env("SANDBOX_TUNDE_EMAIL", "tunde@tend-family.example.com"), city: "Toronto", timezone: "America/Toronto", color: "violet", homeCurrency: "CAD" },
-      { circleId: circle.id, name: "Chioma", role: "sibling", relation: "daughter", email: env("SANDBOX_CHIOMA_EMAIL", "chioma@tend-family.example.com"), city: "Lagos", timezone: "Africa/Lagos", color: "magenta", homeCurrency: "NGN" },
-      { circleId: circle.id, name: "Mum", role: "care_recipient", email: env("SANDBOX_MUM_EMAIL", "mum@tend-family.example.com"), city: "Houston", timezone: "America/Chicago", color: "brass", homeCurrency: currency },
+      { ...sid("ada"), circleId: circle.id, name: "Ada", role: "owner", relation: "daughter", email: env("SANDBOX_ADA_EMAIL", "ada@tend-family.example.com"), city: "London", timezone: "Europe/London", color: "cobalt", homeCurrency: "GBP" },
+      { ...sid("tunde"), circleId: circle.id, name: "Tunde", role: "sibling", relation: "son", email: env("SANDBOX_TUNDE_EMAIL", "tunde@tend-family.example.com"), city: "Toronto", timezone: "America/Toronto", color: "violet", homeCurrency: "CAD" },
+      { ...sid("chioma"), circleId: circle.id, name: "Chioma", role: "sibling", relation: "daughter", email: env("SANDBOX_CHIOMA_EMAIL", "chioma@tend-family.example.com"), city: "Lagos", timezone: "Africa/Lagos", color: "magenta", homeCurrency: "NGN" },
+      { ...sid("mum"), circleId: circle.id, name: "Mum", role: "care_recipient", email: env("SANDBOX_MUM_EMAIL", "mum@tend-family.example.com"), city: "Houston", timezone: "America/Chicago", color: "brass", homeCurrency: currency },
     ])
     .returning();
 
@@ -299,12 +301,14 @@ async function refusedScam(circleId: string, currency: string, at: Date) {
  * shared pot: Walter pays his own bills from his own PayPal, and Tend gives
  * Priya and Dolores time to look at anything unusual before it leaves.
  */
-export async function seedWalter(opts: { history?: boolean } = { history: true }) {
+export async function seedWalter(opts: { history?: boolean; stable?: boolean } = { history: true }) {
   const db = await getDb();
+  const sid = stableId(opts.stable);
   const currency = appCurrency();
   const [circle] = await db
     .insert(schema.circles)
     .values({
+      ...sid("walter-circle"),
       name: "Walter's circle",
       careRecipientName: "Walter",
       currency,
@@ -315,9 +319,9 @@ export async function seedWalter(opts: { history?: boolean } = { history: true }
   const [walter, priya, dolores] = await db
     .insert(schema.members)
     .values([
-      { circleId: circle.id, name: "Walter", role: "care_recipient", email: env("SANDBOX_WALTER_EMAIL", "walter@tend-family.example.com"), city: "Tucson", timezone: "America/Phoenix", color: "brass", homeCurrency: currency },
-      { circleId: circle.id, name: "Priya", role: "owner", relation: "niece", email: env("SANDBOX_PRIYA_EMAIL", "priya@tend-family.example.com"), city: "Seattle", timezone: "America/Los_Angeles", color: "teal", homeCurrency: currency },
-      { circleId: circle.id, name: "Dolores", role: "sibling", relation: "neighbour", email: env("SANDBOX_DOLORES_EMAIL", "dolores@tend-family.example.com"), city: "Tucson", timezone: "America/Phoenix", color: "rust", homeCurrency: currency },
+      { ...sid("walter"), circleId: circle.id, name: "Walter", role: "care_recipient", email: env("SANDBOX_WALTER_EMAIL", "walter@tend-family.example.com"), city: "Tucson", timezone: "America/Phoenix", color: "brass", homeCurrency: currency },
+      { ...sid("priya"), circleId: circle.id, name: "Priya", role: "owner", relation: "niece", email: env("SANDBOX_PRIYA_EMAIL", "priya@tend-family.example.com"), city: "Seattle", timezone: "America/Los_Angeles", color: "teal", homeCurrency: currency },
+      { ...sid("dolores"), circleId: circle.id, name: "Dolores", role: "sibling", relation: "neighbour", email: env("SANDBOX_DOLORES_EMAIL", "dolores@tend-family.example.com"), city: "Tucson", timezone: "America/Phoenix", color: "rust", homeCurrency: currency },
     ])
     .returning();
   const [pharmacy, electric, housekeeper] = await db
@@ -553,8 +557,17 @@ const formatMoneyPlain = (minor: number, currency: string) =>
   new Intl.NumberFormat("en-US", { style: "currency", currency }).format(minor / 100);
 
 /** Both demo circles, with history: the Okafor family and Walter. */
+/**
+ * The demo itself keeps the same ids across resets, so everyone stays signed
+ * in, invite links and Home Screen apps keep working, and a take can be
+ * re-recorded without setting the phones up again.
+ */
+function stableId(on?: boolean) {
+  return (key: string) => (on ? { id: `demo-${key}` } : {});
+}
+
 export async function seedAll() {
-  const okafor = await seedDemo({ history: true });
-  const walter = await seedWalter();
+  const okafor = await seedDemo({ history: true, stable: true });
+  const walter = await seedWalter({ history: true, stable: true });
   return { okafor, walter };
 }

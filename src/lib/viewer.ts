@@ -1,11 +1,13 @@
 import { cookies } from "next/headers";
+import { readSession, SESSION_COOKIE } from "./session";
 
-/**
- * Demo identity. The hackathon build has no sign-in: the welcome screen sets
- * who you're viewing as, and every page reads it from this cookie.
- */
-export const VIEWER_COOKIE = "tend_as";
+/** The signed-in person on this device, from the session their invite link set. */
+export const VIEWER_COOKIE = SESSION_COOKIE;
 
 export async function viewerId(): Promise<string | null> {
-  return (await cookies()).get(VIEWER_COOKIE)?.value ?? null;
+  try {
+    return await readSession((await cookies()).get(VIEWER_COOKIE)?.value);
+  } catch {
+    return null; // not in a request
+  }
 }

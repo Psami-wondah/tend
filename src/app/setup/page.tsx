@@ -1,27 +1,34 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CircleCheck, CircleDashed } from "lucide-react";
-import { headers } from "next/headers";
+import { pageOrigin } from "@/lib/origin";
 import { familyContext, personProps } from "@/lib/page-context";
+import { integrations } from "@/lib/setup";
+import { viewerId } from "@/lib/viewer";
 import { Shell } from "@/components/shell";
-import { ResetDemo } from "@/components/reset-demo";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "Setup" };
+export const metadata: Metadata = { title: "What's connected" };
 
+/** What this Tend is connected to, for whoever runs it. Open to anyone, signed in or not. */
 export default async function SetupPage() {
-  const ctx = await familyContext();
-  const i = ctx.integrations;
-  const h = await headers();
-  const mcpUrl = `${h.get("x-forwarded-proto") ?? "http"}://${h.get("host") ?? "localhost:3000"}/api/mcp`;
+  const ctx = (await viewerId()) ? await familyContext() : null;
+  const i = ctx?.integrations ?? integrations();
+  const mcpUrl = `${await pageOrigin()}/api/mcp`;
   const items = [
     {
       ok: i.ai,
       title: "AI reads bills and answers questions",
       body: i.ai
-        ? `Connected, using ${i.model}${i.aiProvider === "openrouter" ? " through OpenRouter" : ""}.`
+        ? `Connected, using ${i.model} through ${i.aiProvider === "openrouter" ? "OpenRouter" : "the Claude API"}.`
         : "Not connected. The examples and typed messages still work with a keyword reader, but photos need an AI model.",
       fix: "Add OPENROUTER_API_KEY (openrouter.ai, Keys) or ANTHROPIC_API_KEY (console.anthropic.com) to .env, then restart. Pick any model with TEND_MODEL; the default is Claude Sonnet 5.5.",
+    },
+    {
+      ok: i.voice,
+      title: "Answers read aloud in a natural voice",
+      body: i.voice ? `On, with ${i.voiceLabel} through OpenRouter.` : "The person's screen uses the browser's own voice, which can sound robotic.",
+      fix: "Comes with OPENROUTER_API_KEY. Pick another voice with TEND_VOICE_MODEL and TEND_VOICE (any OpenRouter speech model), or set TEND_VOICE=off.",
     },
     {
       ok: i.paypal !== "simulated",
@@ -81,20 +88,15 @@ export default async function SetupPage() {
     },
   ];
 
-  return (
-    <Shell
-      me={personProps(ctx.me)}
-      people={ctx.members.map(personProps)}
-      demo={ctx.demo}
-      band={
-        <div className="mt-6">
-          <h1 className="font-display text-[2rem] leading-none font-semibold tracking-[-0.01em]">Setup</h1>
-          <p className="mt-2 max-w-2xl text-night-soft">
-            Tend runs with no keys at all, in a clearly labelled demo mode. Each key you add switches part of it to the real thing.
-          </p>
-        </div>
-      }
-    >
+  const heading = (
+    <div className="mt-6">
+      <h1 className="font-display text-[2rem] leading-none font-semibold tracking-[-0.01em]">What&apos;s connected</h1>
+      <p className="mt-2 max-w-2xl text-night-soft">
+        Tend runs with no keys at all, in a clearly labelled demo mode. Each key you add switches part of it to the real thing.
+      </p>
+    </div>
+  );
+  const body = (
       <div className="mx-auto max-w-3xl space-y-8">
         <ul className="divide-y divide-rule rounded-2xl bg-dial">
           {items.map((it) => (
@@ -139,21 +141,27 @@ export default async function SetupPage() {
           </p>
         </section>
 
-        <section aria-labelledby="demo" className="rounded-2xl bg-dial p-4">
-          <h2 id="demo" className="font-bold">Start the demo again</h2>
-          <p className="mt-1 text-[0.9375rem] text-ink-soft">
-            Wipes everything and reloads both circles: the Okafor family with five weeks of history, and Walter with twelve. Handy before recording a take.
-          </p>
-          <div className="mt-3">
-            <ResetDemo />
-          </div>
-        </section>
-
-        <p className="text-[0.9375rem] text-ink-soft">
-          Then try <Link href="/me" className="font-bold text-ink underline">the screen for the person at the centre</Link> with the examples, or{" "}
-          <Link href="/home" className="font-bold text-ink underline">the circle&apos;s home</Link>.
-        </p>
       </div>
-    </Shell>
+  );
+
+  if (ctx) {
+    return (
+      <Shell me={personProps(ctx.me)} demo={ctx.demo} band={heading}>
+        {body}
+      </Shell>
+    );
+  }
+  return (
+    <div className="min-h-dvh pb-16">
+      <header className="on-night bg-night text-night-ink">
+        <div className="mx-auto max-w-5xl px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-4 sm:px-6">
+          <Link href="/" className="font-display text-[1.75rem] font-semibold tracking-[-0.01em]">
+            Tend
+          </Link>
+          {heading}
+        </div>
+      </header>
+      <main className="mx-auto max-w-5xl px-4 pt-5 sm:px-6">{body}</main>
+    </div>
   );
 }

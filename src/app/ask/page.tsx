@@ -11,14 +11,13 @@ export default async function AskPage() {
   return (
     <Shell
       me={personProps(ctx.me)}
-      people={ctx.members.map(personProps)}
       demo={ctx.demo}
       band={
         <div className="mt-6">
           <h1 className="font-display text-[2rem] leading-none font-semibold tracking-[-0.01em]">Ask Tend</h1>
           <p className="mt-2 max-w-xl text-night-soft">
             {ctx.integrations.ai
-              ? `${ctx.integrations.model}, with Tend's ledger${ctx.integrations.paypal !== "simulated" ? " and read-only PayPal tools" : ""}. It can propose payments and stop held ones; the circle's rules decide.`
+              ? `Ask in plain words. Tend looks it up in the passbook${ctx.integrations.paypal !== "simulated" ? " and PayPal" : ""}, can stop a held payment, and can suggest a payment or a rule change; the circle's rules still decide.`
               : "Demo mode: answers come from the ledger without AI. Add an Anthropic or OpenRouter key on Setup for open questions."}
           </p>
         </div>

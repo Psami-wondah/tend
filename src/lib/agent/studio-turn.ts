@@ -24,9 +24,22 @@ function textOf(content: { type: string; text?: string; refusal?: string }[] = [
 }
 
 /**
+ * System items in AG Studio's conversation, joined. The AI SDK takes system
+ * text only as instructions, never inside the messages, so the route sends
+ * these alongside the turn's own instructions.
+ */
+export function systemOf(items: StudioItem[]): string {
+  return items
+    .flatMap((i) => (i.type === "message" && i.role === "system" ? [textOf(i.content)] : []))
+    .filter(Boolean)
+    .join("\n\n");
+}
+
+/**
  * The conversation as AI SDK messages. An assistant's text and tool calls in
  * a row become one assistant message, and consecutive tool results one tool
- * message, which is the shape every provider accepts. Reasoning is dropped.
+ * message, which is the shape every provider accepts. Reasoning is dropped,
+ * and system items go to systemOf.
  */
 export function toMessages(items: StudioItem[]): ModelMessage[] {
   const out: ModelMessage[] = [];
@@ -35,12 +48,12 @@ export function toMessages(items: StudioItem[]): ModelMessage[] {
     const last = out[out.length - 1];
     if (item.type === "message") {
       const text = textOf(item.content);
-      if (!text) continue;
+      if (!text || item.role === "system") continue;
       if (item.role === "assistant") {
         if (last?.role === "assistant" && Array.isArray(last.content)) last.content.push({ type: "text", text });
         else out.push({ role: "assistant", content: [{ type: "text", text }] });
       } else {
-        out.push({ role: item.role, content: text });
+        out.push({ role: "user", content: text });
       }
     } else if (item.type === "function_call") {
       names.set(item.callId, item.name);

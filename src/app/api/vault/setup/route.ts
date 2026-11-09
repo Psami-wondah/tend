@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { startVault, VaultError } from "@/lib/vault";
 import { bad, body, fail } from "@/lib/http";
+import { originOf } from "@/lib/origin";
 
 export const runtime = "nodejs";
 
@@ -12,7 +13,7 @@ export async function POST(req: Request) {
   const [input, err] = await body(req, Input);
   if (err) return err;
   try {
-    const appUrl = process.env.APP_URL?.startsWith("http") ? process.env.APP_URL.replace(/\/$/, "") : new URL(req.url).origin;
+    const appUrl = originOf(req);
     return NextResponse.json(await startVault({ memberId: input.memberId, maxPerPaymentMinor: Math.round(input.maxPerPayment * 100), payeeIds: input.payeeIds, appUrl }));
   } catch (e) {
     if (e instanceof VaultError) return bad(e.message, 422);

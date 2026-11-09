@@ -1,5 +1,6 @@
 import { aiConfigured, aiProvider, modelId } from "./agent/model";
 import { paypalMode } from "./paypal/rest";
+import { voiceConfigured, voiceLabel } from "./voice";
 
 /** What's connected. Drives the demo-mode labels and the Setup page. */
 export function integrations() {
@@ -8,6 +9,8 @@ export function integrations() {
     ai: aiConfigured(),
     model: modelId(),
     aiProvider: aiProvider(),
+    voice: voiceConfigured(),
+    voiceLabel: voiceLabel(),
     paypal,
     mcpToken: Boolean(process.env.TEND_MCP_TOKEN),
     webhook: Boolean(process.env.PAYPAL_WEBHOOK_ID),

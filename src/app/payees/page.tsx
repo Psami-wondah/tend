@@ -16,13 +16,12 @@ export default async function PayeesPage() {
   return (
     <Shell
       me={personProps(ctx.me)}
-      people={ctx.members.map(personProps)}
       demo={ctx.demo}
       band={
         <div className="mt-6">
           <h1 className="font-display text-[2rem] leading-none font-semibold tracking-[-0.01em]">Who Tend can pay</h1>
           <p className="mt-2 max-w-2xl text-night-soft">
-            {list.length} payees{unverified ? `, ${unverified} still to verify` : ", all verified"}. Tend only sends money to PayPal accounts the family has checked.
+            {list.length} payees{unverified ? `, ${unverified} still to verify` : ", all verified"}. Tend only sends money to PayPal accounts the circle has checked.
           </p>
         </div>
       }

@@ -8,6 +8,10 @@
 # its embedded database and reseeds the demo on boot (see /api/health). To keep
 # history across restarts instead, upgrade tend-db to a paid plan or point
 # DATABASE_URL at another Postgres.
+#
+# No APP_URL needed: Render sets RENDER_EXTERNAL_URL, which Tend uses for
+# invite links and PayPal return URLs. When pasting a laptop .env into the
+# Environment tab, leave out APP_URL, DATABASE_URL and CRON_SECRET.
 
 databases:
   - name: tend-db
@@ -18,7 +22,8 @@ services:
     name: tend
     runtime: node
     plan: free
-    buildCommand: npm ci && npm run build
+    # --include=dev: the build needs Tailwind and TypeScript, and the seed runs on tsx.
+    buildCommand: npm ci --include=dev && npm run build
     # Seeds the demo circle on first boot (no-op if it already exists).
     startCommand: npm run db:seed && npm start
     # Checks the database answers and a care circle exists.
@@ -29,6 +34,8 @@ services:
           name: tend-db
           property: connectionString
       - key: CRON_SECRET
+        generateValue: true
+      - key: TEND_SESSION_SECRET
         generateValue: true
       - key: PAYPAL_CLIENT_ID
         sync: false

@@ -8,6 +8,13 @@ import { categoryLabel } from "@/lib/mandate/edit";
 import { formatMoney } from "@/lib/money";
 import { btn, field } from "./ui";
 
+/** "gr•••ce@example.com": enough to recognise the account, not enough to copy it off a screen. */
+function maskEmail(email: string): string {
+  const [local, domain] = email.split("@");
+  if (!domain || local.length <= 4) return email;
+  return `${local.slice(0, 2)}•••${local.slice(-2)}@${domain}`;
+}
+
 type Row = {
   id: string;
   name: string;
@@ -71,7 +78,7 @@ function PayeeItem({ r, memberId, currency, simulated }: { r: Row; memberId: str
           ok: true,
           text: j.simulated
             ? `Sent one cent (simulated). In demo mode the code is ${j.code}; in real life ${r.name} reads it from their PayPal note.`
-            : `Sent one cent by PayPal to ${r.paypalEmail}. Ask ${r.name} for the four-digit code in the note.`,
+            : `Sent one cent by PayPal to ${maskEmail(r.paypalEmail)}. Ask ${r.name} for the four-digit code in the note.`,
         });
       } else if (what === "confirm") {
         await post(`/api/payees/${r.id}/confirm`, { memberId, code });
@@ -93,7 +100,7 @@ function PayeeItem({ r, memberId, currency, simulated }: { r: Row; memberId: str
         <div className="min-w-0">
           <h3 className="text-lg font-bold">{r.name}</h3>
           <p className="text-[0.9375rem] text-ink-soft">
-            {categoryLabel(r.kind)}, <span className="break-all">{r.paypalEmail}</span>
+            {categoryLabel(r.kind)}, PayPal <span className="break-all">{maskEmail(r.paypalEmail)}</span>
           </p>
           {r.aliases.length > 0 && <p className="text-sm text-ink-soft">Also appears on bills as {r.aliases.join(", ")}</p>}
         </div>

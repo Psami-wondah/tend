@@ -114,6 +114,18 @@ export async function previewOwnPayment(circleId: string, text: string) {
 }
 
 /** Read what they want to pay, decide, and prepare the PayPal order for them to approve. */
+/**
+ * Why a refused payment was refused, for the person: the reader's own words
+ * about this message ("Medicare never charges for a new card") when it was a
+ * scam, otherwise the rule that refused it.
+ */
+function refusalWhy(reasons: { code: string; message: string }[], extraction: Extraction): string {
+  const scam = reasons.find((r) => r.code === "scam_refuse");
+  const said = extraction.scam.explanation.trim().match(/^[^.!?]+[.!?]/)?.[0];
+  if (scam && said && extraction.scam.riskScore >= 0.5) return `${said} It looks like a scam.`;
+  return reasons.find((r) => r.code !== "new_payee")?.message ?? reasons[0]?.message ?? "";
+}
+
 export async function startOwnPayment(input: {
   payerId: string;
   source: "photo" | "voice" | "text";
@@ -179,7 +191,7 @@ export async function startOwnPayment(input: {
     return {
       outcome: "refused",
       intent: refused,
-      message: paypalScamMessage(extraction, names) ?? `I haven't paid this. ${evaluation.reasons[0]?.message ?? ""} Please don't send them anything another way. I've let ${names} know.`,
+      message: paypalScamMessage(extraction, names) ?? `I haven't paid this. ${refusalWhy(evaluation.reasons, extraction)} Please don't send them anything another way. I've let ${names} know.`,
     };
   }
 

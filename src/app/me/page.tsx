@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { settleDueHolds } from "@/lib/own-payments";
 import { and, desc, eq, inArray, isNull, or } from "drizzle-orm";
 import { getDb, schema } from "@/lib/db/client";
-import { listPayees } from "@/lib/circle";
+import { activeMandate, listPayees } from "@/lib/circle";
+import { holdFor } from "@/lib/time";
 import { familyContext, personProps } from "@/lib/page-context";
 import { PersonScreen, type PersonRecent, type Sample } from "@/components/person-screen";
 import { formatMoney } from "@/lib/money";
@@ -48,7 +49,7 @@ export default async function PersonPage({ searchParams }: { searchParams: Promi
   const { vault } = await searchParams;
   // Holds whose time is up go (or lapse) now, even without the cron job.
   await settleDueHolds().catch(() => undefined);
-  const ctx = await familyContext();
+  const ctx = await familyContext({ forPerson: true });
   const person = ctx.mum;
   if (!person) return <p className="p-8">This circle has no one at the centre yet.</p>;
   const db = await getDb();
@@ -101,12 +102,13 @@ export default async function PersonPage({ searchParams }: { searchParams: Promi
       name={ctx.circle.careRecipientName}
       circle={ctx.family.map((m) => ({ ...personProps(m), relation: m.relation }))}
       recent={recent}
-      samples={samplesFor(ctx.circle.potEnabled, ctx.circle.careRecipientName)}
+      samples={ctx.example ? samplesFor(ctx.circle.potEnabled, ctx.circle.careRecipientName) : []}
       initialNow={ctx.now}
       demo={ctx.demo.paypal}
       paypalMode={ctx.integrations.paypal}
       currency={ctx.circle.currency}
       potEnabled={ctx.circle.potEnabled}
+      hold={holdFor((await activeMandate(ctx.circle.id)).ownPayments?.coolingOffHours ?? 24)}
       vault={{ saved, summary, payees: regular.map((p) => ({ id: p.id, name: p.name })) }}
       vaultNotice={vault === "saved" ? "Saved. I'll pay your regular bills from your PayPal." : vault === "failed" ? "That didn't save. Nothing changed." : null}
     />

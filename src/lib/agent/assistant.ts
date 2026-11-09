@@ -432,7 +432,7 @@ async function askOffline(act: ReturnType<typeof actions>, circle: Circle, text:
     const pick = r.products.find((p) => p.id === r.pick?.productId);
     return done(
       pick
-        ? `I found ${r.products.length} option${r.products.length > 1 ? "s" : ""}${r.source === "sample" ? " in the sample catalogue (demo mode)" : ""}. I'd pick the ${pick.title.toLowerCase()} at ${money(pick.best.priceMinor)} from ${pick.best.domain}. ${r.pick?.why} Tap Buy to send it to the family for an OK.`
+        ? `I found ${r.products.length} option${r.products.length > 1 ? "s" : ""}${r.source === "sample" ? " in the sample catalogue (demo mode)" : ""}. I'd pick the ${pick.title.toLowerCase()} at ${money(pick.best.priceMinor)} from ${pick.best.domain}. ${r.pick?.why} Tap Buy to send it to the circle for an OK.`
         : `I couldn't find anything in stock for that${maxPrice ? ` under ${money(maxPrice * 100)}` : ""}.`,
       ["shop_for_mum"],
       r.products.length ? [{ type: "products", ...r, maxPrice }] : [],
@@ -450,7 +450,7 @@ async function askOffline(act: ReturnType<typeof actions>, circle: Circle, text:
   }
 
   const s = await act.careSummary();
-  const waiting = s.awaitingApproval.length ? ` ${s.awaitingApproval.length} payment${s.awaitingApproval.length > 1 ? "s are" : " is"} waiting for the family.` : "";
+  const waiting = s.awaitingApproval.length ? ` ${s.awaitingApproval.length} payment${s.awaitingApproval.length > 1 ? "s are" : " is"} waiting for the circle.` : "";
   const contributed = s.members.filter((m) => m.role === "owner" || m.role === "sibling").map((m) => `${m.name} ${m.contributed}`).join(", ");
   return done(
     `The pot has ${s.potBalance}${s.reserved !== money(0) ? ` (${s.reserved} set aside for payments going out)` : ""}. So far: ${contributed}.${waiting} I'm answering from the ledger without AI; connect an AI model for open questions.`,

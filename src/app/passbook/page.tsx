@@ -23,7 +23,6 @@ export default async function PassbookPage() {
   return (
     <Shell
       me={personProps(ctx.me)}
-      people={ctx.members.map(personProps)}
       demo={ctx.demo}
       wide
       band={

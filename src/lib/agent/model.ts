@@ -1,5 +1,6 @@
 import { anthropic } from "@ai-sdk/anthropic";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
+import { configuredOrigin } from "../origin";
 
 /**
  * Tend's AI model, reached directly (ANTHROPIC_API_KEY) or through OpenRouter
@@ -28,7 +29,7 @@ export function model() {
     const openrouter = createOpenRouter({
       apiKey: process.env.OPENROUTER_API_KEY,
       appName: "Tend",
-      appUrl: process.env.APP_URL || "http://localhost:3000",
+      appUrl: configuredOrigin() || "http://localhost:3000",
     });
     return openrouter(modelId());
   }

@@ -3,6 +3,7 @@ import { getDb, schema } from "./db/client";
 import type { Mandate } from "./mandate/types";
 import { DEFAULT_MANDATE } from "./mandate/defaults";
 import type { Payee } from "./db/schema";
+import { pushAlert } from "./push";
 
 const { circles, members, payees, mandates, paymentIntents, ledgerEntries, auditEvents, alerts } = schema;
 
@@ -39,12 +40,8 @@ export async function listCircles() {
 }
 
 async function viewerFromCookie(): Promise<string | null> {
-  try {
-    const { cookies } = await import("next/headers");
-    return (await cookies()).get("tend_as")?.value ?? null;
-  } catch {
-    return null; // not in a request
-  }
+  const { viewerId } = await import("./viewer");
+  return viewerId();
 }
 
 export async function getMembers(circleId: string) {
@@ -222,4 +219,6 @@ export async function alert(
 ) {
   const db = await getDb();
   await db.insert(alerts).values({ circleId, severity, title, body, intentId });
+  // Phones are buzzed in the background; a slow push service never holds up a payment.
+  void pushAlert(circleId, severity, title, body, intentId).catch((e) => console.error("push alert failed", e));
 }
