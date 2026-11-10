@@ -26,7 +26,7 @@ export const SAMPLES = {
     method: "paypal",
     reference: "RX-1042",
     dueDate: "2026-11-04",
-    summary: "Your blood pressure and cholesterol tablets from Riverside Pharmacy.",
+    summary: "Blood pressure and cholesterol tablets from Riverside Pharmacy.",
     scam: { impersonation: false, urgency: false, secrecy: false, unusualMethod: false, unsolicited: false, riskScore: 0.03, explanation: `A normal pharmacy receipt with a prescription number. ${OFFLINE_NOTE}` },
     confidence: 0.97,
   },
@@ -176,7 +176,7 @@ export function heuristicExtract(text: string, knownPayees: { name: string; alia
 
 function summarise(o: { amount: number | null; payeeName: string; category: Category; risky: boolean; currency: string }) {
   const money = o.amount === null ? "" : new Intl.NumberFormat("en-US", { style: "currency", currency: o.currency }).format(o.amount);
-  if (o.risky) return `Someone is asking you for ${money || "money"} in a way that looks like a scam.`;
+  if (o.risky) return `A request for ${money || "money"} that looks like a scam.`;
   if (o.payeeName && money) return o.category === "other" ? `${money} for ${o.payeeName}.` : `${money} for ${o.payeeName} (${categoryLabel(o.category).toLowerCase()}).`;
   if (money) return `A request for ${money}.`;
   return "";

@@ -18,6 +18,7 @@ import {
 import { formatMoney, toMinor } from "./money";
 import { isFamily, joinNames } from "./people";
 import type { Extraction } from "./agent/schemas";
+import { forCircle } from "./wording";
 import type { Member, PaymentIntent } from "./db/schema";
 
 const { intakes, paymentIntents } = schema;
@@ -153,7 +154,7 @@ export async function startOwnPayment(input: {
   const mandate = await activeMandate(circle.id);
   if (!extraction.isPaymentRequest || extraction.amount === null) {
     if (extraction.scam.riskScore >= mandate.scamReviewThreshold) {
-      await alert(circle.id, "danger", `Possible scam sent to ${me.name}`, extraction.scam.explanation);
+      await alert(circle.id, "danger", `Possible scam sent to ${me.name}`, forCircle(extraction.scam.explanation, me.name));
       return { outcome: "warning", message: paypalScamMessage(extraction, names) ?? `Please be careful with this one. ${extraction.scam.explanation} I've let ${names} know.` };
     }
     return { outcome: "nothing_to_pay", message: `I read it, and there's nothing to pay. ${extraction.summary}`.trim() };
@@ -187,7 +188,7 @@ export async function startOwnPayment(input: {
   if (evaluation.decision === "refuse") {
     const [refused] = await db.insert(paymentIntents).values({ ...base, status: "refused" }).returning();
     await audit(circle.id, "agent", "decided", { proposal, evaluation, own: true }, refused.id);
-    await alert(circle.id, "danger", `Tend stopped a ${amount} payment from ${me.name}`, `${evaluation.reasons[0]?.message ?? ""} ${extraction.scam.explanation}`, refused.id);
+    await alert(circle.id, "danger", `Tend stopped a ${amount} payment from ${me.name}`, `${evaluation.reasons[0]?.message ?? ""} ${forCircle(extraction.scam.explanation, me.name)}`, refused.id);
     return {
       outcome: "refused",
       intent: refused,

@@ -37,7 +37,9 @@ export const ExtractionSchema = z.object({
   dueDate: z.string().nullable().describe("Due date as YYYY-MM-DD if shown."),
   summary: z
     .string()
-    .describe("One short, plain-English sentence for an older person, e.g. 'Your blood pressure tablets from Riverside Pharmacy.'"),
+    .describe(
+      "One short, plain-English sentence that reads right to the person and to their circle, with no 'you' or 'your', e.g. 'Blood pressure tablets from Riverside Pharmacy.'",
+    ),
   scam: z.object({
     impersonation: z.boolean().describe("Claims to be a relative, bank, government, police or tech support."),
     urgency: z.boolean().describe("Pressure to pay immediately or face consequences."),
@@ -45,7 +47,7 @@ export const ExtractionSchema = z.object({
     unusualMethod: z.boolean().describe("Asks for gift cards, crypto, wire, or cash collection."),
     unsolicited: z.boolean().describe("A request they didn't start (not a normal bill for a service they use)."),
     riskScore: z.number().min(0).max(1).describe("Overall probability this is a scam."),
-    explanation: z.string().describe("Why, in one or two plain sentences."),
+    explanation: z.string().describe("Why, in one or two plain sentences, with no 'you' or 'your' (the circle reads it too)."),
   }),
   confidence: z.number().min(0).max(1).describe("Confidence in the extracted amount and payee."),
   paypalNative: z

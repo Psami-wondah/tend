@@ -24,18 +24,22 @@ import type { Circle } from "../db/schema";
 const json = (value: unknown) => ({ content: [{ type: "text" as const, text: JSON.stringify(value, null, 2) }] });
 const fail = (message: string) => ({ content: [{ type: "text" as const, text: message }], isError: true });
 
-/** By id, by circle name, or by the person's name ("Walter"). Defaults to the first circle. */
+/**
+ * By id, by circle name, or by the person's name ("Walter"). With none, the
+ * example on the front page (Walter's circle), the one people trying Tend meet
+ * first; on a Tend with no examples, the first circle.
+ */
 async function resolveCircle(ref?: string | null): Promise<Circle> {
   const all = await listCircles();
   if (!all.length) throw new Error("No circles yet. Run npm run db:seed.");
-  if (!ref) return all[0];
+  if (!ref) return all.find((c) => c.story && !c.potEnabled) ?? all[0];
   const r = ref.trim().toLowerCase();
   const hit = all.find((c) => c.id === ref || c.name.toLowerCase().includes(r) || c.careRecipientName.toLowerCase() === r);
   if (!hit) throw new Error(`No circle matches "${ref}". Try list_circles.`);
   return hit;
 }
 
-const circleArg = z.string().optional().describe("Circle id, circle name, or the person's name, e.g. \"Walter\". Defaults to the first circle.");
+const circleArg = z.string().optional().describe("Circle id, circle name, or the person's name, e.g. \"Walter\". Defaults to the main example circle (Walter's) when there is one.");
 
 export function buildTendMcp() {
   const server = new McpServer({ name: "tend", version: "1.0.0" }, {

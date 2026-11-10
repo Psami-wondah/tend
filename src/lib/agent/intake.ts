@@ -27,7 +27,10 @@ Guidance:
   12 hours to dispute this $499 charge"). If you see that, fill paypalNative with the phone
   number and score the scam risk high. A normal PayPal invoice from a business they use, with
   no phone number to call, is not suspicious.
-- Write the summary for the older person: short, warm, no jargon.`;
+- Write the summary and the scam explanation so they read right both to the older person
+  and to the people in their circle, who see them too: short, warm, no jargon, and no
+  "you" or "your". Say "Heart tablets from Saguaro Pharmacy.", not "Your heart tablets…";
+  "A man at the door wants a $650 roof deposit today.", not "…asking you for…".`;
 
 export interface IntakeInput {
   source: "photo" | "voice" | "text";

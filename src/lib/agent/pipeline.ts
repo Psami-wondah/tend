@@ -25,6 +25,7 @@ import type { Extraction } from "./schemas";
 import type { IntentStatus, Member, Payee, PaymentIntent } from "../db/schema";
 import { whoIsAwake, localTime } from "../time";
 import { isFamily, joinNames } from "../people";
+import { forCircle } from "../wording";
 
 const { intakes, paymentIntents } = schema;
 
@@ -98,7 +99,7 @@ export async function handleIntake(input: {
   // Not a bill — but it might still be a scam worth warning about.
   if (!extraction.isPaymentRequest || extraction.amount === null) {
     if (extraction.scam.riskScore >= (await activeMandate(circle.id)).scamReviewThreshold) {
-      await alert(circle.id, "danger", "Possible scam sent to " + circle.careRecipientName, extraction.scam.explanation);
+      await alert(circle.id, "danger", "Possible scam sent to " + circle.careRecipientName, forCircle(extraction.scam.explanation, circle.careRecipientName));
       return {
         outcome: "warning",
         extraction,
@@ -187,7 +188,7 @@ export async function handleIntake(input: {
         circle.id,
         "danger",
         `Tend refused a ${amount} request to ${circle.careRecipientName}`,
-        `${headline} ${extraction.scam.explanation}`,
+        `${headline} ${forCircle(extraction.scam.explanation, circle.careRecipientName)}`,
         created.id,
       );
       return {
@@ -215,7 +216,7 @@ export async function handleIntake(input: {
         circle.id,
         "action",
         `Approve ${amount} to ${proposal.payee.name}?`,
-        `${summary} ${n > 1 ? `Needs ${n} approvals.` : "Needs 1 approval."} ${headline} ${awakeNote}`.trim(),
+        `${forCircle(summary, circle.careRecipientName)} ${n > 1 ? `Needs ${n} approvals.` : "Needs 1 approval."} ${headline} ${awakeNote}`.trim(),
         created.id,
       );
       return {

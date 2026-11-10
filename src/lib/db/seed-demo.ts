@@ -276,7 +276,7 @@ async function refusedScam(circleId: string, currency: string, at: Date) {
       currency,
       category: "other",
       method: "gift_card",
-      summary: "Someone saying they're your grandson and asking for gift cards.",
+      summary: "Someone saying they're Mum's grandson and asking for gift cards.",
       decision: evaluation.decision,
       evaluation,
       status: "refused",

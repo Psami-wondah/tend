@@ -54,6 +54,12 @@ describe("Tend MCP server", () => {
     expect(r.data.payee).toBe("Norton Security");
   });
 
+  it("answers for Walter's circle, the one people meet first, when no circle is named", async () => {
+    const refill = await call("check_payment_request", { text: "Saguaro Pharmacy refill ready, heart tablets, $38.20, ref SR-2361." });
+    expect(refill.data.circle).toMatch(/Walter/);
+    expect(refill.data.decision).toBe("auto_pay");
+  });
+
   it("lets a routine refill through and holds a stranger at the door", async () => {
     const refill = await call("check_payment_request", { circle: "Walter", text: "Saguaro Pharmacy refill ready, heart tablets, $38.20, ref SR-2361." });
     expect(refill.data.decision).toBe("auto_pay");

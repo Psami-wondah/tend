@@ -5,6 +5,7 @@ import { listRecoveries } from "./recoveries";
 import { pendingShares } from "./contributions";
 import { isFamily } from "./people";
 import type { Member } from "./db/schema";
+import { circleSummary, forCircle } from "./wording";
 
 const { paymentIntents, approvals, ledgerEntries, alerts, auditEvents, intakes, recoveries } = schema;
 
@@ -22,6 +23,8 @@ export async function dashboard(asMemberId?: string | null) {
   const family = members.filter(isFamily);
   const me = pickViewer(members, asMemberId);
   const mum = members.find((m) => m.role === "care_recipient") ?? null;
+  // Summaries were written for the person; the circle reads them with their name in.
+  const said = <T extends { summary: string }>(rows: T[]) => rows.map((r) => circleSummary(r, circle.careRecipientName));
 
   const waiting = await db
     .select()
@@ -88,7 +91,7 @@ export async function dashboard(asMemberId?: string | null) {
     members,
     balanceMinor: await potBalanceMinor(circle.id),
     reservedMinor: await reservedMinor(circle.id),
-    waiting: waiting.map((w) => ({
+    waiting: said(waiting).map((w) => ({
       intent: w,
       approvals: votes
         .filter((v) => v.intentId === w.id && v.verdict === "approve")
@@ -96,13 +99,13 @@ export async function dashboard(asMemberId?: string | null) {
       myVote: votes.find((v) => v.intentId === w.id && v.memberId === me.id)?.verdict ?? null,
     })),
     passbook,
-    stopped,
+    stopped: said(stopped),
     payingCount: paying.length,
     alerts: recent,
     contributedBy,
     recoveries: await listRecoveries(circle.id),
-    held,
-    ownRecent: own.filter((i) => i.status !== "awaiting_payer").slice(0, 6),
+    held: said(held),
+    ownRecent: said(own.filter((i) => i.status !== "awaiting_payer").slice(0, 6)),
     /** Money that stayed in the person's account in the last 30 days: holds stopped and scams refused. */
     keptMinor: own.filter((i) => (i.status === "voided" || i.status === "refused") && i.createdAt >= since).reduce((a, i) => a + i.amountMinor, 0),
     heldMinor: held.reduce((a, i) => a + i.amountMinor, 0),
@@ -124,8 +127,9 @@ export async function paymentDetail(id: string) {
   const trail = await db.select().from(auditEvents).where(eq(auditEvents.intentId, id)).orderBy(asc(auditEvents.createdAt));
   const [intake] = intent.intakeId ? await db.select().from(intakes).where(eq(intakes.id, intent.intakeId)) : [];
   const [recovery] = await db.select().from(recoveries).where(eq(recoveries.intentId, id));
+  const circle = await getCircleById(intent.circleId);
   return {
-    intent,
+    intent: circleSummary(intent, circle.careRecipientName),
     votes: votes.map((v) => ({ ...v, name: members.find((m) => m.id === v.memberId)?.name ?? "?" })),
     trail,
     intake: intake ?? null,
@@ -178,7 +182,7 @@ export async function passbookRows(circleId?: string) {
       at: e.createdAt.toISOString(),
       type: e.type,
       status: e.type === "contribution" ? "in" : e.type === "refund" ? "refunded" : "paid",
-      description: e.description,
+      description: forCircle(e.description, circle.careRecipientName),
       who,
       payee: intent?.payeeName ?? null,
       category: e.type === "contribution" ? "top-up" : e.type === "refund" ? "refund" : e.type === "verification" ? "verification" : intent?.category ?? "other",
@@ -204,7 +208,7 @@ export async function passbookRows(circleId?: string) {
       at: i.createdAt.toISOString(),
       type: "own",
       status: ownWord[i.status] ?? i.status,
-      description: `${i.payeeName} — ${i.summary}`,
+      description: `${i.payeeName} — ${forCircle(i.summary, circle.careRecipientName)}`,
       who: i.status === "voided" && stopper ? `${payer}, stopped by ${stopper}` : payer,
       payee: i.payeeName,
       category: i.category,
