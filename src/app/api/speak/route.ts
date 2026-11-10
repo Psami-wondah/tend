@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { speech, voiceConfigured } from "@/lib/voice";
+import { speech, SpeechError, voiceConfigured } from "@/lib/voice";
 
 export const runtime = "nodejs";
 
@@ -43,6 +43,8 @@ export async function POST(req: Request) {
     return new NextResponse(new Uint8Array(audio), { headers: { "Content-Type": type, "Cache-Control": "private, max-age=3600" } });
   } catch (e) {
     console.error("speech failed", e);
-    return NextResponse.json({ error: "The voice didn't answer." }, { status: 502 });
+    // Say why, so a deploy with the wrong key or no credit is easy to spot. The page falls back to the browser's voice either way.
+    const why = e instanceof SpeechError ? { upstream: e.status, reason: e.reason } : { reason: e instanceof Error ? e.message.slice(0, 160) : "unknown" };
+    return NextResponse.json({ error: "The voice didn't answer.", ...why }, { status: 502 });
   }
 }

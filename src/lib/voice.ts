@@ -53,6 +53,16 @@ function wav(pcm: Buffer, rate = 24000): Buffer {
 
 const PCM_ONLY = /^(google|heygen)\//;
 
+/** The voice service said no. `reason` is its own message, which never includes the key. */
+export class SpeechError extends Error {
+  constructor(
+    readonly status: number,
+    readonly reason: string,
+  ) {
+    super(`Speech failed (${status}): ${reason}`);
+  }
+}
+
 export async function speech(text: string): Promise<{ audio: Buffer; type: string }> {
   const model = voiceModel();
   const voice = voiceName();
@@ -78,7 +88,14 @@ export async function speech(text: string): Promise<{ audio: Buffer; type: strin
     }),
     signal: AbortSignal.timeout(20_000),
   });
-  if (!res.ok) throw new Error(`Speech failed (${res.status}): ${(await res.text()).slice(0, 200)}`);
+  if (!res.ok) {
+    const body = await res.text();
+    let reason = body.slice(0, 160);
+    try {
+      reason = String((JSON.parse(body) as { error?: { message?: string } }).error?.message ?? reason).slice(0, 160);
+    } catch {}
+    throw new SpeechError(res.status, reason);
+  }
   const raw = Buffer.from(await res.arrayBuffer());
   const rate = Number(/rate=(\d+)/.exec(res.headers.get("content-type") ?? "")?.[1] ?? 24000);
   const out = pcm ? { audio: wav(raw, rate), type: "audio/wav" } : { audio: raw, type: "audio/mpeg" };
