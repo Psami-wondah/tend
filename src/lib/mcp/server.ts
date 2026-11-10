@@ -31,7 +31,7 @@ const fail = (message: string) => ({ content: [{ type: "text" as const, text: me
  */
 async function resolveCircle(ref?: string | null): Promise<Circle> {
   const all = await listCircles();
-  if (!all.length) throw new Error("No circles yet. Run npm run db:seed.");
+  if (!all.length) throw new Error("No circles yet. Set Tend up for someone at /start.");
   if (!ref) return all.find((c) => c.story && !c.potEnabled) ?? all[0];
   const r = ref.trim().toLowerCase();
   const hit = all.find((c) => c.id === ref || c.name.toLowerCase().includes(r) || c.careRecipientName.toLowerCase() === r);

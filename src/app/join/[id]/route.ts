@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getCircleById, getMember, getMembers, listCircles } from "@/lib/circle";
 import { readInvite, sessionCookie, sessionFor, SESSION_COOKIE } from "@/lib/session";
 import { originOf } from "@/lib/origin";
+import { examplesOn } from "@/lib/examples";
 
 export const runtime = "nodejs";
 
@@ -20,7 +21,8 @@ export async function GET(req: Request, ctx: { params: Promise<{ id: string }> }
   const base = originOf(req);
   const fromInvite = await readInvite(decodeURIComponent(id));
   let m = fromInvite ? await getMember(fromInvite) : null;
-  if (!m) {
+  // Unsigned links (a first name, a bare id) only ever open the example circles, and only while they're on.
+  if (!m && examplesOn()) {
     const demo = (await listCircles()).filter((c) => c.story);
     const people = (await Promise.all(demo.map((c) => getMembers(c.id)))).flat();
     m = people.find((p) => p.name.toLowerCase() === decodeURIComponent(id).toLowerCase()) ?? null;

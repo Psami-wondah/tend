@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Link2 } from "lucide-react";
+import { examplesOn } from "@/lib/examples";
 
 export const metadata: Metadata = { title: "Sign in" };
 
@@ -31,12 +32,14 @@ export default async function SignIn({ searchParams }: { searchParams: Promise<{
             Set up Tend for someone
             <ArrowRight aria-hidden size={20} />
           </Link>
-          <Link
-            href="/demo"
-            className="inline-flex min-h-14 items-center justify-center rounded-xl border-2 border-night-ink/30 px-6 text-lg font-bold hover:border-night-ink"
-          >
-            Try it with an example circle
-          </Link>
+          {examplesOn() && (
+            <Link
+              href="/demo"
+              className="inline-flex min-h-14 items-center justify-center rounded-xl border-2 border-night-ink/30 px-6 text-lg font-bold hover:border-night-ink"
+            >
+              Try it with an example circle
+            </Link>
+          )}
         </div>
       </div>
     </main>

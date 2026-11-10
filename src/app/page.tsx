@@ -6,6 +6,7 @@ import { integrations } from "@/lib/setup";
 import { personProps } from "@/lib/page-context";
 import { PersonPicker } from "@/components/person-picker";
 import { HeroPhones, OUTCOMES, Verdict } from "@/components/landing";
+import { examplesOn } from "@/lib/examples";
 
 export const dynamic = "force-dynamic";
 
@@ -53,7 +54,7 @@ const PAYPAL = ["Orders: authorize, capture, void", "JS SDK v6", "Vault", "Payou
 
 export default async function Welcome() {
   // The front shows the example circle for Tend itself; /demo has the rest, and a reset.
-  const circles = (await listCircles()).filter((c) => c.story && !c.potEnabled);
+  const circles = examplesOn() ? (await listCircles()).filter((c) => c.story && !c.potEnabled) : [];
   const viewer = await viewerId().then((id) => (id ? getMember(id) : null));
   const yours = viewer ? (viewer.role === "care_recipient" ? "/me" : "/home") : null;
   const withPeople = await Promise.all(
@@ -67,6 +68,8 @@ export default async function Welcome() {
   const i = integrations();
   const demo = i.paypal === "simulated" || !i.ai;
   const now = Date.now();
+  // With the example circles off (live PayPal), there's nothing to try: the page is for setting Tend up.
+  const tryIt = withPeople.length > 0;
 
   return (
     <div className="min-h-dvh">
@@ -86,9 +89,11 @@ export default async function Welcome() {
               <a href="#safety" className="hover:text-night-ink">
                 Safety
               </a>
-              <a href="#try" className="hover:text-night-ink">
-                Try it
-              </a>
+              {tryIt && (
+                <a href="#try" className="hover:text-night-ink">
+                  Try it
+                </a>
+              )}
             </div>
             <Link
               href={yours ?? "/start"}
@@ -112,9 +117,11 @@ export default async function Welcome() {
                 <Link href="/start" className="inline-flex min-h-12 items-center gap-2 rounded-xl bg-day px-5 font-bold text-night hover:brightness-105">
                   Set up Tend for someone <ArrowRight aria-hidden size={18} />
                 </Link>
-                <a href="#try" className="inline-flex min-h-12 items-center rounded-xl border-2 border-night-ink/30 px-5 font-bold hover:border-night-ink">
-                  Try the demo
-                </a>
+                {tryIt && (
+                  <a href="#try" className="inline-flex min-h-12 items-center rounded-xl border-2 border-night-ink/30 px-5 font-bold hover:border-night-ink">
+                    Try the demo
+                  </a>
+                )}
               </div>
             </div>
             <HeroPhones />
@@ -170,6 +177,7 @@ export default async function Welcome() {
         </ul>
       </section>
 
+      {tryIt && (
       <section id="try" className="on-night bg-night text-night-ink" aria-labelledby="try-h">
         <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
           <h2 id="try-h" className="font-display text-[1.75rem] leading-tight font-semibold tracking-[-0.01em] sm:text-[2.25rem]">
@@ -200,6 +208,7 @@ export default async function Welcome() {
           </p>
         </div>
       </section>
+      )}
 
       <section id="safety" className="mx-auto max-w-6xl px-4 py-14 sm:px-6" aria-labelledby="safety-h">
         <h2 id="safety-h" className="font-display text-[1.75rem] leading-tight font-semibold tracking-[-0.01em] sm:text-[2.25rem]">

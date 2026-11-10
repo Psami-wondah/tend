@@ -213,7 +213,7 @@ Diaspora homes and bank halls have a row of clocks labelled with cities. Tend's 
 ## Scripts
 
 ```bash
-npm test               # 89 tests: rules engine, own payments and holds, Vault, MCP server, pipeline, sign-in, phone alerts, dashboard data and its assistant, demo mode end to end
+npm test               # 91 tests: rules engine, own payments and holds, Vault, MCP server, pipeline, sign-in, phone alerts, dashboard data and its assistant, demo mode end to end
 npm run typecheck
 npm run db:reset       # wipe and reseed both circles (Okafors: five weeks of history, Walter: twelve)
 npm run mcp:demo       # talk to the MCP server the way an AI assistant would
@@ -223,6 +223,18 @@ npm run eval:intake    # score the reader (add -- --offline for the keyword read
 ## Deploy (Render)
 
 **New → Blueprint**, pick this repo, fill in the secrets you have, deploy. The start command seeds both demo circles on first boot. It uses paid plans so the demo never sleeps and its database never expires: a Starter web service, a Basic database and the cron job. To run it free, set both plans to `free` and delete the cron block; holds still settle whenever someone opens the app, but the app sleeps after 15 minutes idle. Set `TEND_ALLOW_RESET=0` to hide the reset button on a public deploy. No `APP_URL` is needed on Render: Tend uses the `RENDER_EXTERNAL_URL` Render sets for invite links, redirects and PayPal return URLs. If you paste your local `.env` into the Environment tab, leave out `APP_URL`, `DATABASE_URL` and `CRON_SECRET`. For PayPal webhooks, add one in the sandbox app pointing at `<url>/api/webhooks/paypal` and set `PAYPAL_WEBHOOK_ID` to its id.
+
+## Going live
+
+Tend runs on PayPal sandbox until its settings say otherwise; going live needs no code changes. On the live deploy:
+
+- `PAYPAL_ENV=live`, with the live app's `PAYPAL_CLIENT_ID` and `PAYPAL_CLIENT_SECRET` (developer.paypal.com → Apps & Credentials → Live).
+- `PAYPAL_WEBHOOK_ID` from a webhook on the live app pointing at `<url>/api/webhooks/paypal`.
+- `TEND_MCP_TOKEN`: Tend keeps the MCP server closed on live PayPal without one.
+- No `SANDBOX_*_EMAIL` values: they only feed the example circles.
+- A database that doesn't expire (the Blueprint's Basic plan doesn't).
+
+The example circles switch themselves off on live PayPal, and anywhere else with `TEND_EXAMPLES=0`. Nothing made up is loaded on boot, the front page only offers **Set up Tend for someone**, `/demo` and the reset are closed, `db:reset` refuses to wipe anything, and links by first name stop working. Everyone gets in from their own signed invite link.
 
 ## Tech
 

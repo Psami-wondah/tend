@@ -23,7 +23,7 @@ export async function getCircle() {
     }
   }
   const [circle] = await db.select().from(circles).orderBy(asc(circles.createdAt)).limit(1);
-  if (!circle) throw new Error("No circle found. Run `npm run db:seed` first.");
+  if (!circle) throw new Error("No circle found. Set Tend up for someone at /start, or run `npm run db:seed` for the example circles.");
   return circle;
 }
 

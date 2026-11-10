@@ -5,6 +5,8 @@ import { integrations } from "@/lib/setup";
 import { personProps } from "@/lib/page-context";
 import { PersonPicker } from "@/components/person-picker";
 import { ResetDemo } from "@/components/reset-demo";
+import { redirect } from "next/navigation";
+import { examplesOn } from "@/lib/examples";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Try Tend" };
@@ -14,6 +16,7 @@ export const metadata: Metadata = { title: "Try Tend" };
  * can open as any of their people, and put back the way they started.
  */
 export default async function Demo() {
+  if (!examplesOn()) redirect("/");
   // Example circles carry a story; circles people set up themselves never show here.
   const circles = (await listCircles()).filter((c) => c.story);
   const all = await Promise.all(

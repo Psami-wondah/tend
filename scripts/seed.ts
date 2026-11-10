@@ -17,8 +17,15 @@ import { sql } from "drizzle-orm";
 import { getDb, schema } from "../src/lib/db/client";
 import { seedAll, seedDemo } from "../src/lib/db/seed-demo";
 import { scanForDuplicates } from "../src/lib/recoveries";
+import { examplesOn } from "../src/lib/examples";
 
 async function main() {
+  // Live PayPal, or TEND_EXAMPLES=0: no made-up people, and never wipe the real circles.
+  if (!examplesOn()) {
+    if (process.argv.includes("--reset")) throw new Error("Example circles are off here (live PayPal or TEND_EXAMPLES=0), so db:reset won't wipe anything.");
+    console.log("Example circles are off (live PayPal or TEND_EXAMPLES=0). Nothing to seed; set Tend up for someone at /start.");
+    return;
+  }
   const db = await getDb();
   if (process.argv.includes("--reset")) {
     await db.execute(sql`TRUNCATE push_subscriptions, dashboards, recoveries, alerts, audit_events, ledger_entries, contributions, approvals,

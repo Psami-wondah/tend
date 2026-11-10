@@ -5,6 +5,7 @@ import { seedAll } from "@/lib/db/seed-demo";
 import { scanForDuplicates } from "@/lib/recoveries";
 import { fail } from "@/lib/http";
 import { pushRestore, pushSnapshot } from "@/lib/push";
+import { examplesOn } from "@/lib/examples";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -15,6 +16,7 @@ export const maxDuration = 60;
  * Turn it off on a public deploy with TEND_ALLOW_RESET=0.
  */
 export async function POST() {
+  if (!examplesOn()) return NextResponse.json({ error: "There are no example circles on this Tend." }, { status: 403 });
   if (process.env.TEND_ALLOW_RESET === "0") return NextResponse.json({ error: "Reset is turned off on this deploy." }, { status: 403 });
   try {
     const db = await getDb();
