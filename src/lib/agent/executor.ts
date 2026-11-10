@@ -91,13 +91,18 @@ export async function refreshPayout(intentId: string): Promise<PaymentIntent> {
 
   if (status === "SUCCESS") {
     await markPaid(intent, item?.payout_item_id ?? null, item?.transaction_id ?? null);
+  } else if (status === "UNCLAIMED") {
+    // Sent, but the address has no PayPal account yet. PayPal emails them a
+    // link and holds the money for 30 days, then returns it. Nothing more for
+    // Tend to send, so it counts as paid, with that said plainly.
+    await markPaid(intent, item?.payout_item_id ?? null, item?.transaction_id ?? null, { unclaimed: true });
   } else if (["FAILED", "RETURNED", "BLOCKED", "DENIED", "REFUNDED"].includes(status)) {
     await fail(intent, item?.errors?.message ?? `PayPal status ${status}`);
   }
   return load(intentId);
 }
 
-export async function markPaid(intent: PaymentIntent, itemId: string | null, txId: string | null) {
+export async function markPaid(intent: PaymentIntent, itemId: string | null, txId: string | null, opts: { unclaimed?: boolean } = {}) {
   const db = await getDb();
   const updated = await db
     .update(paymentIntents)
@@ -116,12 +121,14 @@ export async function markPaid(intent: PaymentIntent, itemId: string | null, txI
       description: `${intent.payeeName} — ${intent.summary}`,
     });
   }
-  await audit(intent.circleId, "paypal", "payout_succeeded", { itemId, txId }, intent.id);
+  await audit(intent.circleId, "paypal", opts.unclaimed ? "payout_unclaimed" : "payout_succeeded", { itemId, txId, to: intent.payeeEmail }, intent.id);
   await alert(
     intent.circleId,
     "info",
     `Paid ${intent.payeeName}`,
-    `${formatMoney(intent.amountMinor, intent.currency)} · ${intent.summary}`,
+    `${formatMoney(intent.amountMinor, intent.currency)} · ${intent.summary}${
+      opts.unclaimed ? ` ${intent.payeeName} has no PayPal account yet, so PayPal is holding it until they claim it. If they don't within 30 days, it comes back.` : ""
+    }`,
     intent.id,
   );
 }

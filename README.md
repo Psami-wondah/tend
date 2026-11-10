@@ -213,7 +213,7 @@ Diaspora homes and bank halls have a row of clocks labelled with cities. Tend's 
 ## Scripts
 
 ```bash
-npm test               # 87 tests: rules engine, own payments and holds, Vault, MCP server, pipeline, sign-in, phone alerts, dashboard data and its assistant, demo mode end to end
+npm test               # 89 tests: rules engine, own payments and holds, Vault, MCP server, pipeline, sign-in, phone alerts, dashboard data and its assistant, demo mode end to end
 npm run typecheck
 npm run db:reset       # wipe and reseed both circles (Okafors: five weeks of history, Walter: twelve)
 npm run mcp:demo       # talk to the MCP server the way an AI assistant would

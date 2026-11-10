@@ -74,10 +74,18 @@ async function paidBefore(circleId: string, payeeId: string | null, email: strin
 
 type Payees = Awaited<ReturnType<typeof listPayees>>;
 
+/**
+ * The example strangers' addresses are made up, so a payout to one would sit
+ * unclaimed at PayPal. With a spare sandbox account set for the roofer, a yes
+ * to the roofer ends in "Paid" like any other payment.
+ */
+const EXAMPLE_ADDRESSES: Record<string, string> = { "jobs@ridgeline-roof.example.com": "SANDBOX_ROOFER_EMAIL" };
+const sandboxAddress = (email: string | null) => (email ? process.env[EXAMPLE_ADDRESSES[email.toLowerCase()] ?? ""]?.trim() || email : null);
+
 /** The mandate's view of a payment, from what Claude (or the keyword reader) read. */
 async function proposalFor(circle: { id: string; currency: string }, extraction: Extraction & { amount: number }, payeeList: Payees, payToEmail?: string | null) {
   const payee = matchPayee(payeeList, extraction.payeeName, extraction.payeeEmail);
-  const payeeEmail = payee?.paypalEmail ?? extraction.payeeEmail ?? payToEmail?.trim() ?? null;
+  const payeeEmail = sandboxAddress(payee?.paypalEmail ?? extraction.payeeEmail ?? payToEmail?.trim() ?? null);
   const proposal: PaymentProposal = {
     amountMinor: toMinor(extraction.amount),
     currency: (extraction.currency || circle.currency).toUpperCase(),

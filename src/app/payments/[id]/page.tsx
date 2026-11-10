@@ -28,6 +28,7 @@ const EVENT: Record<string, string> = {
   payee_attached: "The payee was added",
   payout_sent: "Sent to PayPal",
   payout_succeeded: "PayPal confirmed the payment",
+  payout_unclaimed: "PayPal sent it, and is holding it until the payee claims it",
   payout_failed: "PayPal rejected the payment",
   payment_failed: "The payment failed",
   duplicate_found: "Tend spotted it was paid twice",
@@ -73,6 +74,8 @@ export default async function PaymentPage({ params }: { params: Promise<{ id: st
     (t) => !((t.type === "rejected" && d.trail.some((s) => s.type === "stopped" && s.actor === t.actor)) || (t.type === "approved" && d.trail.some((s) => s.type === "released" && s.actor === t.actor))),
   );
   const stoppedNote = (d.trail.find((t) => t.type === "stopped")?.data as { note?: string } | undefined)?.note;
+  // Paid to an address with no PayPal account yet: PayPal holds it until they sign up and claim it.
+  const unclaimed = intent.status === "paid" && d.trail.some((t) => t.type === "payout_unclaimed");
 
   return (
     <Shell
@@ -130,6 +133,12 @@ export default async function PaymentPage({ params }: { params: Promise<{ id: st
                 <Stages status={intent.status} decision={intent.decision} approvalsRequired={intent.approvalsRequired} />
               </div>
               {intent.failureReason && <p className="mt-4 rounded-lg bg-stop-tint px-3 py-2 font-bold text-stop">{intent.failureReason}</p>}
+              {unclaimed && (
+                <p className="mt-4 rounded-lg bg-wait-tint px-3 py-2">
+                  <span className="font-bold">Waiting for {intent.payeeName} to claim it. </span>
+                  {intent.payeeEmail ?? "Their address"} has no PayPal account yet, so PayPal emailed them a link and is holding the money. If they don&apos;t claim it within 30 days, PayPal returns it.
+                </p>
+              )}
               <div className="mt-5 border-t border-rule pt-4">
                 <h2 className="mb-2.5 font-bold">Why Tend decided this</h2>
                 <Reasons reasons={intent.evaluation.reasons} />

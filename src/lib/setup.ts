@@ -30,6 +30,7 @@ export function integrations() {
       "SANDBOX_PRIYA_EMAIL",
       "SANDBOX_DOLORES_EMAIL",
       "SANDBOX_SHOP_EMAIL",
+      "SANDBOX_ROOFER_EMAIL",
     ].map(
       (k) => ({ key: k, set: Boolean(process.env[k]?.trim()) }),
     ),

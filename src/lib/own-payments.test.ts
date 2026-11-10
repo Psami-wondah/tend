@@ -147,3 +147,27 @@ describe("the cooling-off hold on someone's own PayPal", () => {
     await expect(finishVault(w.members.walter.id)).rejects.toThrow();
   });
 });
+
+describe("the example roofer", () => {
+  it("is paid at a real sandbox address when one is set, not the made-up one in the example", async () => {
+    process.env.SANDBOX_ROOFER_EMAIL = "roofer-sandbox@example.com";
+    try {
+      const start = await startOwnPayment({
+        payerId: w.members.walter.id,
+        source: "voice",
+        preExtracted: bill({
+          payeeName: "Ridgeline Roofing",
+          payeeEmail: "jobs@ridgeline-roof.example.com",
+          amount: 650,
+          category: "other",
+          reference: null,
+          summary: "A $650 roof deposit, asked for at the door.",
+          scam: { impersonation: false, urgency: true, secrecy: false, unusualMethod: false, unsolicited: true, riskScore: 0.45, explanation: "A stranger at the door wants money today." },
+        }),
+      });
+      expect(start.intent?.payeeEmail).toBe("roofer-sandbox@example.com");
+    } finally {
+      delete process.env.SANDBOX_ROOFER_EMAIL;
+    }
+  });
+});

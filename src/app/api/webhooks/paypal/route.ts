@@ -36,6 +36,7 @@ export async function POST(req: Request) {
       }
       break;
     }
+    case "PAYMENT.PAYOUTS-ITEM.UNCLAIMED":
     case "PAYMENT.PAYOUTS-ITEM.FAILED":
     case "PAYMENT.PAYOUTS-ITEM.RETURNED":
     case "PAYMENT.PAYOUTS-ITEM.BLOCKED": {
