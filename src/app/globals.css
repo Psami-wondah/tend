@@ -157,25 +157,6 @@ select {
   box-shadow: 0 2px 4px rgb(24 49 62 / 0.03), 0 12px 30px -22px rgb(24 49 62 / 0.3);
 }
 
-.tend-mark {
-  position: relative;
-  display: inline-block;
-  width: 1.35rem;
-  height: 1.35rem;
-  flex: none;
-  border: 1.5px solid currentColor;
-  border-radius: 50%;
-}
-
-.tend-mark::after {
-  content: "";
-  position: absolute;
-  inset: 3px;
-  border: 1.5px solid currentColor;
-  border-radius: 50%;
-  transform: translateX(4px);
-}
-
 @media (min-width: 640px) {
   .shell-band { padding-block: 0.5rem 1.5rem; }
 }

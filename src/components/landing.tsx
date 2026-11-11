@@ -1,4 +1,4 @@
-import { CircleCheck, Clock3, Hourglass, OctagonX, PauseCircle, Volume2 } from "lucide-react";
+import { CircleCheck, Hourglass, OctagonX, PauseCircle, Volume2 } from "lucide-react";
 
 /**
  * The front page's product shots, drawn in the app's own tokens rather than
@@ -59,9 +59,8 @@ export function HeroPhones() {
           <p className="figures font-display text-[4.4em] leading-none font-semibold">4:12</p>
           <div className="mt-[2.2em] w-full rounded-[1.1em] bg-white p-[0.9em] text-left text-feature-ink shadow-[0_8px_20px_-12px_rgb(0_0_0/0.4)]">
             <div className="flex items-center gap-[0.45em] text-[0.82em] text-feature-ink">
-              <span aria-hidden className="grid size-[1.6em] shrink-0 place-items-center rounded-[0.4em] bg-night text-white">
-                <Clock3 className="size-[1.15em]" strokeWidth={2} />
-              </span>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/icon-192.png" alt="" aria-hidden className="size-[1.6em] shrink-0 rounded-[0.4em]" />
               <span className="font-bold text-feature-ink">Tend</span>
               <span className="ml-auto">now</span>
             </div>

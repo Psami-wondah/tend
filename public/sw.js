@@ -16,7 +16,7 @@ self.addEventListener("push", (event) => {
     self.registration.showNotification(data.title || "Tend", {
       body: data.body || "",
       icon: "/icon-192.png",
-      badge: "/icon-192.png",
+      badge: "/badge-96.png",
       tag: data.tag,
       renotify: Boolean(data.tag),
       requireInteraction: Boolean(data.actions && data.actions.length),
@@ -53,7 +53,7 @@ self.addEventListener("notificationclick", (event) => {
         .then(async (res) => {
           const json = await res.json().catch(() => ({}));
           const msg = done(data, verdict, res.ok, json.error);
-          await self.registration.showNotification(msg.title, { body: msg.body, icon: "/icon-192.png", badge: "/icon-192.png", tag: data.tag, data: { url: data.url } });
+          await self.registration.showNotification(msg.title, { body: msg.body, icon: "/icon-192.png", badge: "/badge-96.png", tag: data.tag, data: { url: data.url } });
           const open = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
           for (const c of open) c.postMessage({ type: "tend-refresh" });
         })

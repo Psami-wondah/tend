@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, House, MessageCircle, ScrollText, Store, FlaskConical, Settings } from "lucide-react";
+import { BookOpen, Clock3, House, MessageCircle, ScrollText, Store, FlaskConical, Settings } from "lucide-react";
 import { personVar } from "@/lib/people";
 import { Live } from "./live";
 
@@ -42,7 +42,8 @@ export function Shell({
         <div className={`mx-auto ${width} px-4 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-8`}>
           <div className="flex min-h-16 flex-wrap items-center gap-x-3 gap-y-2 pb-3 sm:min-h-20 sm:gap-x-4">
             <Link href="/home" className="inline-flex min-h-12 items-center gap-3 font-display text-[1.875rem] font-medium tracking-[-0.04em]">
-              <span aria-hidden className="tend-mark text-day" />
+              {/* The same clock as the front page and the app icon. */}
+              <Clock3 aria-hidden size={26} strokeWidth={1.6} className="shrink-0 text-day" />
               Tend
             </Link>
             {(demo.paypal || demo.ai) && <DemoBadge demo={demo} />}
