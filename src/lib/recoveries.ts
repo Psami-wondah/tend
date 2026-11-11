@@ -165,10 +165,13 @@ export async function simulateRecoveryPaid(recoveryId: string) {
   return settleRecoveryInvoice(r.paypalInvoiceId);
 }
 
-/** Polling fallback for real sandbox invoices. */
-export async function syncRecoveries() {
+/** Polling fallback for real sandbox invoices: every circle's, or one circle's. */
+export async function syncRecoveries(circleId?: string) {
   const db = await getDb();
-  const open = await db.select().from(recoveries).where(eq(recoveries.status, "requested"));
+  const open = await db
+    .select()
+    .from(recoveries)
+    .where(and(eq(recoveries.status, "requested"), circleId ? eq(recoveries.circleId, circleId) : undefined));
   for (const r of open) {
     if (!r.paypalInvoiceId || isSimulatedId(r.paypalInvoiceId)) continue;
     try {

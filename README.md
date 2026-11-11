@@ -186,7 +186,7 @@ In Claude.ai or Claude Desktop: Settings → Connectors → Add custom connector
 - **The example circles live behind their own door** (`/demo`): open them as anyone, try the examples, reset them. The front page shows Walter's circle; a real circle never shows any of this.
 
 - **Alerts on the circle's phones** (`src/lib/push.ts`, `public/sw.js`): when Tend holds a payment or stops a scam, everyone in the circle who turned alerts on gets a Web Push notification. A held payment carries **Stop it** and **Say yes**, which act from the notification without opening Tend (Android and desktop; an iPhone shows the alert without buttons, and a tap opens the payment). The person at the centre is never buzzed. iPhones need Tend on the Home Screen first; the iOS Simulator can't receive web push at all.
-- **The same moment inside the app** (`src/components/live-alert.tsx`, `/api/alerts/live`): any circle screen that's open gets a banner the moment something is held or refused, and brings itself up to date, on any device, alerts on or not. Keys are made once and kept in the database (or set `VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY`).
+- **Every open screen stays current** (`src/components/live.tsx`, `/api/live`, `src/lib/live.ts`): every few seconds each page compares a fingerprint of its circle's data and reloads its data only when something changed, so a vote, a stop, a payout or a top-up shows up on every device without a reload. Something newly held or refused also slides in as a banner, alerts on or not. While PayPal still has a payout, an ended hold or an invoice in hand, the same check asks PayPal for news (throttled per circle), so nothing waits on a slow webhook. Keys are made once and kept in the database (or set `VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY`).
 - **Set up Tend for someone** (`/start`, `src/lib/onboarding.ts`): four short steps (who it's for, who their second key is, how careful, check it over) create a real circle with its own rules, and give everyone their own invite link. The new circle's home starts with a short list: send their link, add who they pay, turn on alerts. The example people also answer to their first names (`/join/walter`, `/join/dolores`); real circles only open with the signed link.
 
 ## The safety model
@@ -213,7 +213,7 @@ Diaspora homes and bank halls have a row of clocks labelled with cities. Tend's 
 ## Scripts
 
 ```bash
-npm test               # 96 tests: rules engine, own payments and holds, Vault, MCP server, pipeline, sign-in, phone alerts, dashboard data and its assistant, demo mode end to end
+npm test               # 101 tests: rules engine, own payments and holds, Vault, MCP server, pipeline, sign-in, phone alerts, dashboard data and its assistant, demo mode end to end
 npm run typecheck
 npm run db:reset       # wipe and reseed both circles (Okafors: five weeks of history, Walter: twelve)
 npm run mcp:demo       # talk to the MCP server the way an AI assistant would

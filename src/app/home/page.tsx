@@ -7,12 +7,12 @@ import { Shell } from "@/components/shell";
 import { ClockRow, DayBand } from "@/components/clock";
 import { ApprovalCard } from "@/components/approval-card";
 import { HeldCard } from "@/components/held-card";
-import { LiveRefresh, MyShare, RecoveryCard, ScanButton, ShareRequest, TopUp } from "@/components/money-actions";
+import { MyShare, RecoveryCard, ScanButton, ShareRequest, TopUp, WaitingForPayPal } from "@/components/money-actions";
 import { Fairness, OwnRows, RecentRows, Stopped } from "@/components/home-parts";
 import { Money, SectionHeading } from "@/components/ui";
 import { formatMoney } from "@/lib/money";
 import { Txt } from "@/components/figures-text";
-import { AlertsToggle, StayCurrent } from "@/components/alerts-toggle";
+import { AlertsToggle } from "@/components/alerts-toggle";
 import { isFamily } from "@/lib/people";
 import { GettingStarted } from "@/components/getting-started";
 import { activeMandate, listPayees } from "@/lib/circle";
@@ -83,8 +83,7 @@ export default async function CircleHome() {
         </section>
 
         <div className="space-y-8 lg:col-start-1 lg:row-span-2 lg:row-start-1">
-          <LiveRefresh active={(d.payingCount > 0 || d.held.length > 0) && ctx.integrations.paypal !== "simulated"} />
-          <StayCurrent />
+          {d.payingCount > 0 && <WaitingForPayPal />}
           {isNew && person && isFamily(ctx.me) && <GettingStarted person={who} link={personLink} payees={payeeCount} />}
 
           <section aria-labelledby="waiting">

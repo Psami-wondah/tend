@@ -103,13 +103,13 @@ export async function requestShares(totalMinor: number, note: string) {
   return { share, results };
 }
 
-/** Poll pending invoices (webhooks don't reach localhost). */
-export async function syncInvoices() {
+/** Poll pending invoices (webhooks don't reach localhost): every circle's, or one circle's. */
+export async function syncInvoices(circleId?: string) {
   const db = await getDb();
   const pending = await db
     .select()
     .from(contributions)
-    .where(and(eq(contributions.source, "invoice"), eq(contributions.status, "pending")));
+    .where(and(eq(contributions.source, "invoice"), eq(contributions.status, "pending"), circleId ? eq(contributions.circleId, circleId) : undefined));
   for (const c of pending) {
     if (!c.paypalInvoiceId || isSimulatedId(c.paypalInvoiceId)) continue;
     try {

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { Live } from "./live";
 import {
   Camera,
   Mic,
@@ -255,6 +256,7 @@ export function PersonScreen(props: {
 
   return (
     <div data-mum-size={size} className="min-h-dvh bg-enamel leading-snug text-ink">
+      <Live />
       <main className="mx-auto flex min-h-dvh max-w-xl flex-col px-5 pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))]">
         <header className="flex items-center gap-2">
           <span className="font-display text-[1.75em] font-semibold text-action">Tend</span>

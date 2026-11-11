@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Bell, BellOff, BellRing } from "lucide-react";
 import { btn } from "./ui";
@@ -126,26 +125,4 @@ export function AlertsToggle({ memberId, person }: { memberId: string; person: s
       )}
     </section>
   );
-}
-
-/**
- * Keeps the circle's home current without a reload: when an alert arrives or
- * is acted on (the service worker says so), and every so often while visible.
- */
-export function StayCurrent({ every = 15_000 }: { every?: number }) {
-  const router = useRouter();
-  useEffect(() => {
-    const onMessage = (e: MessageEvent) => {
-      if (e.data?.type === "tend-refresh") router.refresh();
-    };
-    navigator.serviceWorker?.addEventListener("message", onMessage);
-    const t = setInterval(() => {
-      if (document.visibilityState === "visible") router.refresh();
-    }, every);
-    return () => {
-      navigator.serviceWorker?.removeEventListener("message", onMessage);
-      clearInterval(t);
-    };
-  }, [router, every]);
-  return null;
 }

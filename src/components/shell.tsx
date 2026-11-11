@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BookOpen, House, MessageCircle, ScrollText, Store, FlaskConical, Settings } from "lucide-react";
 import { personVar } from "@/lib/people";
-import { LiveAlert } from "./live-alert";
+import { Live } from "./live";
 
 type Person = { id: string; name: string; city: string | null; color: string | null; role: string };
 
@@ -37,7 +37,7 @@ export function Shell({
   const width = wide ? "max-w-6xl" : "max-w-5xl";
   return (
     <div className="min-h-dvh pb-[calc(5rem+env(safe-area-inset-bottom))] md:pb-16">
-      <LiveAlert />
+      <Live />
       <header className="on-night bg-night text-night-ink">
         <div className={`mx-auto ${width} px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-4 sm:px-6`}>
           <div className="flex items-center gap-3">

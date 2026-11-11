@@ -5,36 +5,49 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { BellRing, ShieldAlert, X } from "lucide-react";
 
-type Live = { id: string; intentId: string | null; severity: "action" | "danger"; title: string; body: string };
+type Banner = { id: string; intentId: string | null; severity: "action" | "danger"; title: string; body: string };
 
 /**
- * The moment something is held, a banner slides in on whatever page the
- * circle has open, and the page brings itself up to date. Phones with alerts
- * on also get a notification; this covers every other screen.
+ * Keeps whatever page is open up to date, on every device. Every few seconds,
+ * the moment a phone alert arrives, and whenever the page comes back into
+ * view, it asks Tend whether anything in the circle has changed, and reloads
+ * the page's data only when it has (so nothing being typed or built is lost
+ * to a reload that changes nothing). Something newly held or refused also
+ * slides in as a banner for the circle's helpers.
  */
-export function LiveAlert({ every = 6_000 }: { every?: number }) {
+export function Live({ every = 4_000 }: { every?: number }) {
   const router = useRouter();
-  const [shown, setShown] = useState<Live | null>(null);
-  const since = useRef<number>(0);
+  const [shown, setShown] = useState<Banner | null>(null);
+  const since = useRef(0);
+  const version = useRef<string | null>(null);
   const seen = useRef<Set<string> | null>(null);
 
   useEffect(() => {
     let stop = false;
+    let busy = false;
     async function check() {
-      if (document.visibilityState !== "visible") return;
+      if (busy || document.visibilityState !== "visible") return;
+      busy = true;
       try {
-        const res = await fetch(`/api/alerts/live${since.current ? `?after=${since.current}` : ""}`, { cache: "no-store" });
-        const json = (await res.json()) as { now: number; alerts: Live[] };
+        const res = await fetch(`/api/live${since.current ? `?after=${since.current}` : ""}`, { cache: "no-store" });
+        if (!res.ok) return;
+        const json = (await res.json()) as { now: number; version: string | null; alerts: Banner[] };
         if (stop) return;
         since.current = json.now;
-        const fresh = json.alerts.filter((a) => !seen.current?.has(a.id));
+
         const first = seen.current === null;
+        const fresh = json.alerts.filter((a) => !seen.current?.has(a.id));
         seen.current = new Set([...(seen.current ?? []), ...json.alerts.map((a) => a.id)]);
-        if (!first && fresh.length) {
-          setShown(fresh[0]);
-          router.refresh();
-        }
-      } catch {}
+        if (!first && fresh.length) setShown(fresh[0]);
+
+        const moved = version.current !== null && json.version !== version.current;
+        version.current = json.version;
+        if (moved) router.refresh();
+      } catch {
+        /* offline for a moment; the next check catches up */
+      } finally {
+        busy = false;
+      }
     }
     void check();
     const t = setInterval(check, every);
@@ -44,11 +57,13 @@ export function LiveAlert({ every = 6_000 }: { every?: number }) {
     const onVisible = () => void check();
     navigator.serviceWorker?.addEventListener("message", onMessage);
     document.addEventListener("visibilitychange", onVisible);
+    window.addEventListener("online", onVisible);
     return () => {
       stop = true;
       clearInterval(t);
       navigator.serviceWorker?.removeEventListener("message", onMessage);
       document.removeEventListener("visibilitychange", onVisible);
+      window.removeEventListener("online", onVisible);
     };
   }, [router, every]);
 

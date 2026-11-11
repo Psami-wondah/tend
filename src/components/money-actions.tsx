@@ -237,23 +237,14 @@ export function MyShare({ c, memberId }: { c: Contribution; memberId: string }) 
   );
 }
 
-/** While a payout is in flight, ask PayPal for news every few seconds. */
-export function LiveRefresh({ active }: { active: boolean }) {
-  const router = useRouter();
-  useEffect(() => {
-    if (!active) return;
-    const t = setInterval(async () => {
-      await fetch("/api/sync", { method: "POST" }).catch(() => undefined);
-      router.refresh();
-    }, 8_000);
-    return () => clearInterval(t);
-  }, [active, router]);
-  return active ? (
+/** While a payout is in flight. The page itself stays current through <Live />. */
+export function WaitingForPayPal() {
+  return (
     <p role="status" className="flex items-center gap-2 text-sm text-ink-soft">
       <span aria-hidden className="pulse-dot size-2 rounded-full bg-wait" />
       Waiting for PayPal to confirm a payment…
     </p>
-  ) : null;
+  );
 }
 
 export function ScanButton() {
