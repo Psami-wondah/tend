@@ -350,7 +350,13 @@ export async function stopOwnPayment(intentId: string, memberId: string, note?: 
   if (!member || member.circleId !== intent.circleId) throw new OwnPaymentError("Not part of this circle.");
   if (intent.funding !== "own") throw new OwnPaymentError("This isn't a payment from their own PayPal.");
   if (intent.status !== "held" && intent.status !== "awaiting_payer") throw new OwnPaymentError(`This payment is already ${intent.status.replace("_", " ")}.`);
-  if (!(await transition(intentId, intent.status, "voided"))) return load(intentId);
+  // Who stopped it is saved in the same step, so an open page never shows it stopped by "someone".
+  const claimed = await db
+    .update(paymentIntents)
+    .set({ status: "voided", stoppedBy: member.id, updatedAt: new Date() })
+    .where(and(eq(paymentIntents.id, intentId), eq(paymentIntents.status, intent.status)))
+    .returning({ id: paymentIntents.id });
+  if (!claimed.length) return load(intentId); // someone else got there first
   if (intent.paypalAuthorizationId) {
     try {
       await voidAuthorization(intent.paypalAuthorizationId);
@@ -358,7 +364,6 @@ export async function stopOwnPayment(intentId: string, memberId: string, note?: 
       await audit(intent.circleId, "paypal", "void_failed", { reason: String(e).slice(0, 300) }, intentId);
     }
   }
-  await db.update(paymentIntents).set({ stoppedBy: member.id, updatedAt: new Date() }).where(eq(paymentIntents.id, intentId));
   await audit(intent.circleId, `member:${member.id}`, "stopped", { note }, intentId);
   const payerName = intent.payerId ? (await getMember(intent.payerId))?.name : null;
   await alert(

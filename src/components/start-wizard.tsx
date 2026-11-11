@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ArrowLeft, Check, Copy, Plus, Trash2 } from "lucide-react";
+import { ArrowLeft, Check, Plus, Trash2 } from "lucide-react";
 import { btn, field } from "./ui";
+import { InviteLink } from "./invite-link";
 
 type Person = { name: string; city: string; timezone: string };
 type Helper = Person & { relation: string };
@@ -70,7 +71,6 @@ export function StartWizard() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [links, setLinks] = useState<Invite[] | null>(null);
-  const [copied, setCopied] = useState<string | null>(null);
 
   useEffect(() => {
     const mine = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -105,15 +105,6 @@ export function StartWizard() {
     setLinks(json.links);
   }
 
-  async function copy(l: Invite) {
-    try {
-      await navigator.clipboard.writeText(l.url);
-      setCopied(l.id);
-    } catch {
-      setCopied(null);
-    }
-  }
-
   const setHelper = (n: number, patch: Partial<Helper>) => setHelpers((hs) => hs.map((h, i) => (i === n ? { ...h, ...patch } : h)));
 
   if (links) {
@@ -137,10 +128,8 @@ export function StartWizard() {
                 </span>
                 <span className="block truncate text-sm text-ink-soft">{l.url}</span>
               </span>
-              <button type="button" onClick={() => copy(l)} className={btn.secondary}>
-                {copied === l.id ? <Check aria-hidden size={18} /> : <Copy aria-hidden size={18} />}
-                {copied === l.id ? "Copied" : "Copy link"}
-              </button>
+              {/* A phone's share sheet (Messages, WhatsApp, email); a copy on a computer. */}
+              <InviteLink url={l.url} name={l.name} className={btn.secondary} />
             </li>
           ))}
         </ul>
