@@ -156,8 +156,12 @@ export async function circleReport(circleId: string): Promise<CircleReport> {
     };
   };
 
+  // Stopping or letting a payment go also records that person's vote; count what they did once.
+  const acted = new Set(events.filter((e) => e.actor.startsWith("member:") && e.intentId).map((e) => `${e.actor.slice("member:".length)}:${e.intentId}`));
   const actions = [
-    ...votes.map((v) => step(v.id, v.createdAt, v.memberId, v.verdict === "approve" ? "Said yes" : "Said no", v.intentId)),
+    ...votes
+      .filter((v) => !acted.has(`${v.memberId}:${v.intentId}`))
+      .map((v) => step(v.id, v.createdAt, v.memberId, v.verdict === "approve" ? "Said yes" : "Said no", v.intentId)),
     ...events
       .filter((e) => e.actor.startsWith("member:") && e.intentId)
       .map((e) => {

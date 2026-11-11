@@ -10,7 +10,9 @@ delete process.env.PAYPAL_CLIENT_SECRET;
 delete process.env.ANTHROPIC_API_KEY;
 delete process.env.OPENROUTER_API_KEY;
 
+import { and, eq } from "drizzle-orm";
 import { seedAll } from "./db/seed-demo";
+import { getDb, schema } from "./db/client";
 import { circleReport, clearDashboard, saveDashboard, savedDashboard, DashboardError } from "./report";
 import { systemOf, toMessages } from "./agent/studio-turn";
 
@@ -48,6 +50,19 @@ describe("circle report", () => {
     expect(stop.minutesToAct).toBe(95);
     expect(["In their daytime", "In their night"]).toContain(stop.awake);
     expect(r.shares).toHaveLength(0);
+  });
+
+  it("counts a stop once, though it also records that person's no", async () => {
+    const db = await getDb();
+    const [roofer] = await db
+      .select()
+      .from(schema.paymentIntents)
+      .where(and(eq(schema.paymentIntents.circleId, all.walter.circle.id), eq(schema.paymentIntents.payeeName, "Ridgeline Roofing")));
+    // Stopping from the app saves the vote as well as the stop.
+    await db.insert(schema.approvals).values({ intentId: roofer.id, memberId: all.walter.members.dolores.id, verdict: "reject" });
+    const r = await circleReport(all.walter.circle.id);
+    const onRoofer = r.actions.filter((a) => a.payee === "Ridgeline Roofing" && a.person === "Dolores").map((a) => a.action);
+    expect(onRoofer).toEqual(["Stopped it"]);
   });
 
   it("charts weeks in order and leaves out payments never approved in PayPal", async () => {
