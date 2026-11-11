@@ -4,7 +4,7 @@
 
 Tend lets an older adult keep paying from their own PayPal, and gives the people they trust time to stop anything that looks wrong. Routine bills go straight through. Anything unusual is **authorized but held** in their PayPal: for a day if it's simply new or large, until someone says yes if it shows warning signs. Anyone in their circle can stop it, and PayPal voids the hold so the money never leaves. Gift cards, crypto, wire transfers and clear scams are refused before any money moves. Built on **PayPal** (Orders authorize/capture/void, Vault, Payouts, Invoicing, Agent Toolkit, JS SDK v6, Webhooks), with an **AI model** reading every request (Claude Sonnet 5.5 by default, on the Claude API; any model through OpenRouter), and an **AG Studio** dashboard for the circle.
 
-![Welcome: two circles, the Okafor family and Walter's circle, as a wall of live clocks](docs/screenshots/welcome.png)
+![Tend's front page: Walter's "Before you pay" and Dolores's alert for a payment held in his PayPal](docs/screenshots/welcome.png)
 
 ## The problem
 
@@ -167,7 +167,7 @@ In Claude.ai or Claude Desktop: Settings → Connectors → Add custom connector
 ## Sponsor tools
 
 - **AG Studio**, AG Grid's embedded analytics (`src/components/circle-dashboard.tsx`, `src/lib/report.ts`): the circle's dashboard at `/passbook/dashboard`. Three data sources built from the ledger (every payment and what happened to it, every time someone in the circle stepped in, and shares paid into a pot). It opens on a finished report: figures, a stacked weekly chart of what happened to the money, donuts, grids, page filters and cross-filtering, with Tend's theme, its person-colour palette and a phone layout. **Build your own** gives the circle drag-and-drop editing and **AG Studio's AI assistant**, connected to Tend's model through a custom `AgLlmAdapter`. A dashboard someone builds can be **saved for the whole circle** (one per circle, in Postgres) or reset to Tend's. Without `AG_GRID_LICENSE_KEY` it runs as a full trial with a watermark.
-- **AG Grid Community** (`src/components/passbook-grid.tsx`): the passbook explorer, themed from Tend's tokens with the Theming API. Natural-language questions become an **external filter** with removable chips; a **pinned totals row** recomputes on every filter and keeps money that was held, stopped or refused out of the totals; status pills; struck-through amounts for money that never left; quick search; per-column filters; CSV export; person-coloured cells; responsive columns (one signed Amount column on phones); circles without a pot hide the pot-only columns.
+- **AG Grid Community** (`src/components/passbook-grid.tsx`): the passbook explorer, themed from Tend's tokens with the Theming API. Natural-language questions become an **external filter** with removable chips; a **pinned totals row** recomputes on every filter and keeps money that was held, stopped or refused out of the totals; coloured status labels; struck-through amounts for money that never left; quick search; per-column filters; CSV export; person-coloured cells; responsive columns (one signed Amount column on phones); circles without a pot hide the pot-only columns.
 - **Render** (`render.yaml`): one Blueprint creates Postgres, the web service (health-checked at `/api/health`, seeds both demo circles on first boot) and a cron job that calls `/api/sync` every five minutes to settle payouts and **release holds that have ended**. If `DATABASE_URL` ever stops answering (free Render Postgres expires after 30 days), Tend falls back to its embedded database, reseeds the demo and says so on `/api/health`, instead of going dark mid-judging.
 - **Channel3** (`src/lib/shopping.ts`): product search across retailers for the shopping agent.
 
@@ -177,7 +177,7 @@ In Claude.ai or Claude Desktop: Settings → Connectors → Add custom connector
 
 | Passbook (Walter's circle) | Passbook (a shared pot, dark) |
 | --- | --- |
-| ![Passbook: held, refused, stopped and paid rows with status pills](docs/screenshots/passbook.png) | ![Passbook for the Okafor pot in dark mode](docs/screenshots/passbook-pot-dark.png) |
+| ![Passbook: held, refused, stopped and paid rows, each status in its own colour](docs/screenshots/passbook.png) | ![Passbook for the Okafor pot in dark mode](docs/screenshots/passbook-pot-dark.png) |
 
 ## Signing in, alerts and setting up
 
@@ -204,7 +204,7 @@ In Claude.ai or Claude Desktop: Settings → Connectors → Add custom connector
 
 ## Design: the clock wall
 
-Diaspora homes and bank halls have a row of clocks labelled with cities. Tend's interface is that wall: one live dial per person, night indigo when they're asleep, so a held payment always says who can look *now*. Each person keeps one colour everywhere. Amounts and times share one numeral system (Jost). Every line people read uses Atkinson Hyperlegible Next, designed for low-vision readers. The person's own screen has three big actions, three text sizes and answers read aloud in a natural voice. Light and dark both work. The design record is in `DESIGN.md`.
+Diaspora homes and bank halls have a row of clocks labelled with cities. Tend's interface is that wall: one live dial per person, night teal when they're asleep, so a held payment always says who can look *now*. Each person keeps one colour everywhere. Amounts and times share one numeral system (Jost). Every line people read uses Atkinson Hyperlegible Next, designed for low-vision readers. The person's own screen has three big actions, three text sizes and answers read aloud in a natural voice. Light and dark both work. The design record is in `DESIGN.md`.
 
 | The circle's home (dark) | The Okafor family home | Rules for their own payments |
 | --- | --- | --- |
