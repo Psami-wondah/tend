@@ -65,7 +65,7 @@ export function StartWizard() {
   const [step, setStep] = useState(0);
   const [tz, setTz] = useState("America/New_York");
   const [person, setPerson] = useState<Person>({ name: "", city: "", timezone: "America/New_York" });
-  const [helpers, setHelpers] = useState<Helper[]>([{ name: "", relation: "Daughter", city: "", timezone: "America/New_York" }]);
+  const [helpers, setHelpers] = useState<Helper[]>([{ name: "", relation: "", city: "", timezone: "America/New_York" }]);
   const [rules, setRules] = useState<Rules>({ coolingOffHours: 24, coolOffOver: 150, approvalOver: 1000, holdNewPayees: true });
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -85,7 +85,7 @@ export function StartWizard() {
 
   function check(): string | null {
     if (step === 0 && (!person.name.trim() || !person.city.trim())) return "Add their name and where they live.";
-    if (step === 1 && helpers.some((h) => !h.name.trim() || !h.city.trim())) return "Add a name and a city for everyone, or remove the empty row.";
+    if (step === 1 && helpers.some((h) => !h.name.trim() || !h.relation || !h.city.trim())) return "Add a name, how they know them and a city for everyone, or remove the empty row.";
     return null;
   }
 
@@ -221,7 +221,11 @@ export function StartWizard() {
                       <input id={`h-name-${n}`} className={field} value={h.name} onChange={(e) => setHelper(n, { name: e.target.value })} placeholder={n === 0 ? "Priya" : "Dolores"} autoComplete="off" />
                     </Field>
                     <Field label={`How they know ${them}`} id={`h-rel-${n}`}>
-                      <select id={`h-rel-${n}`} className={field} value={h.relation} onChange={(e) => setHelper(n, { relation: e.target.value })}>
+                      {/* Nothing pre-chosen: Tend never assumes the person has children. */}
+                      <select id={`h-rel-${n}`} className={field} value={h.relation} onChange={(e) => setHelper(n, { relation: e.target.value })} required>
+                        <option value="" disabled>
+                          Choose one
+                        </option>
                         {RELATIONS.map((r) => (
                           <option key={r}>{r}</option>
                         ))}
@@ -240,7 +244,7 @@ export function StartWizard() {
             {helpers.length < 4 && (
               <button
                 type="button"
-                onClick={() => setHelpers([...helpers, { name: "", relation: "Neighbour", city: person.city, timezone: person.timezone || tz }])}
+                onClick={() => setHelpers([...helpers, { name: "", relation: "", city: person.city, timezone: person.timezone || tz }])}
                 className={`${btn.secondary} mt-3 w-full border-dashed`}
               >
                 <Plus aria-hidden size={18} /> Add someone

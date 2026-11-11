@@ -46,7 +46,7 @@ With no keys Tend runs in **demo mode**: PayPal is simulated (every order, autho
 4. As Walter, send **A PayPal invoice email**. Tend recognises the fake support number: *"You don't owe this. Don't call the number."*
 5. Send **A Medicare card fee**. Someone posing as Medicare, which never charges for a card: Tend refuses it and tells Priya and Dolores.
 6. As Priya, open **Ask Tend** and ask *"Is anything of Walter's held right now?"*, then say *"stop it"*.
-7. Still as Priya, open **Passbook → Dashboard**: twelve weeks of Walter's money, what Tend kept safe, and who stepped in. Click **Build your own** and ask the assistant *"Which week did we stop the most?"*. Save it for the circle.
+7. Still as Priya, open **Passbook → Dashboard**: twelve weeks of Walter's money, what Tend kept safe, and who stepped in. Click **Build your own** and ask the assistant *"Add a bar chart of how much was stopped each week"*: it builds the chart at the bottom of the page. Save it for the circle.
 
 **The Okafor family (a shared care pot)**, under **More examples** on `/demo`
 

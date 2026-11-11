@@ -276,7 +276,9 @@ async function afterAuthorized(intentId: string, authorizationId: string, expire
   if (intent.decision === "auto_pay") {
     const paid = await releaseOwnPayment(intentId, "agent", "routine");
     return {
-      outcome: paid.status === "paid" ? "paid" : paid.status === "failed" ? "failed" : "held",
+      // Captured means it has left their PayPal, so from their side it's paid, even while
+      // PayPal is still delivering the payout to the payee (that takes up to a minute in sandbox).
+      outcome: paid.status === "failed" ? "failed" : paid.status === "paid" || paid.status === "paying" ? "paid" : "held",
       intent: paid,
       message: paid.status === "failed" ? "PayPal didn't send it. Nothing was taken from your account." : `Done. ${amount} is on its way to ${intent.payeeName}.`,
     };

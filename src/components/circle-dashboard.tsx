@@ -24,7 +24,7 @@ import type { CircleReport } from "@/lib/report";
  * It opens on a finished report: where the money went, what Tend kept in the
  * person's account, and who in the circle stepped in and when. Anyone in the
  * circle can switch to "Build your own" and drag fields onto the canvas, or
- * ask the assistant ("which week did we stop the most?") and watch it build
+ * ask the assistant ("add a bar chart of how much was stopped each week") and watch it build
  * the widget. The assistant runs on Tend's own model through /api/studio/ai.
  */
 
