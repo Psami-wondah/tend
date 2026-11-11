@@ -44,7 +44,7 @@ export function PayeesList({ rows, memberId, currency, simulated }: { rows: Row[
   const [adding, setAdding] = useState(false);
   return (
     <div className="space-y-6">
-      <ul className="space-y-3">
+      <ul className="space-y-4">
         {rows.map((r) => (
           <PayeeItem key={r.id} r={r} memberId={memberId} currency={currency} simulated={simulated} />
         ))}
@@ -95,14 +95,14 @@ function PayeeItem({ r, memberId, currency, simulated }: { r: Row; memberId: str
   }
 
   return (
-    <li className={`rounded-2xl bg-dial p-4 ${r.verified ? "" : "border-2 border-wait/40"}`}>
+    <li className={`rounded-3xl border bg-dial p-5 sm:p-6 ${r.verified ? "border-rule" : "border-2 border-wait/40"}`}>
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
           <h3 className="text-lg font-bold">{r.name}</h3>
-          <p className="text-[0.9375rem] text-ink-soft">
+          <p className="mt-1 text-[0.9375rem] leading-relaxed text-ink-soft">
             {categoryLabel(r.kind)}, PayPal <span className="break-all">{maskEmail(r.paypalEmail)}</span>
           </p>
-          {r.aliases.length > 0 && <p className="text-sm text-ink-soft">Also appears on bills as {r.aliases.join(", ")}</p>}
+          {r.aliases.length > 0 && <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink-soft">Also appears on bills as {r.aliases.join(", ")}</p>}
         </div>
         {r.verified ? (
           <span className="inline-flex items-center gap-1.5 rounded-full bg-paid-tint px-2.5 py-1 text-sm font-bold text-paid">
@@ -114,7 +114,7 @@ function PayeeItem({ r, memberId, currency, simulated }: { r: Row; memberId: str
           </span>
         )}
       </div>
-      <p className="mt-2 text-[0.9375rem]">
+      <p className="mt-4 text-[0.9375rem]">
         {r.paidCount > 0 ? (
           <>
             Paid <span className="figures">{formatMoney(r.paidMinor, currency)}</span> over {r.paidCount} {r.paidCount === 1 ? "payment" : "payments"}
@@ -128,9 +128,9 @@ function PayeeItem({ r, memberId, currency, simulated }: { r: Row; memberId: str
       </p>
 
       {!r.verified && (
-        <div className="mt-3 rounded-xl bg-enamel p-3.5">
+        <div className="mt-5 rounded-2xl border border-rule bg-enamel p-4 sm:p-5">
           <p className="text-[0.9375rem]">Tend never pays someone the circle hasn&apos;t verified. Send them one cent with a code, then type the code they saw.</p>
-          <div className="mt-3 flex flex-wrap items-end gap-2">
+          <div className="mt-4 flex flex-wrap items-end gap-3">
             <button type="button" onClick={() => act("verify")} disabled={busy !== null} className={btn.primary}>
               <Send aria-hidden size={17} />
               {busy === "verify" ? "Sending…" : sent ? "Send another cent" : `Send one cent${simulated ? " (simulated)" : ""}`}
@@ -141,7 +141,7 @@ function PayeeItem({ r, memberId, currency, simulated }: { r: Row; memberId: str
                   e.preventDefault();
                   void act("confirm");
                 }}
-                className="flex gap-2"
+                className="flex min-w-0 flex-wrap gap-2"
               >
                 <label className="sr-only" htmlFor={`code-${r.id}`}>Code from the payout note</label>
                 <input
@@ -192,20 +192,20 @@ function AddPayee({ memberId, onDone }: { memberId: string; onDone: () => void }
           setBusy(false);
         }
       }}
-      className="space-y-3 rounded-2xl bg-dial p-4"
+      className="space-y-5 rounded-3xl border border-rule bg-dial p-5 sm:p-7"
     >
       <h3 className="text-lg font-bold">Add a payee</h3>
       <label className="block">
         <span className="text-sm font-bold">Name</span>
-        <input required value={name} onChange={(e) => setName(e.target.value)} className={`${field} mt-1`} placeholder="Riverside Dental" />
+        <input required value={name} onChange={(e) => setName(e.target.value)} className={`${field} mt-2`} placeholder="Riverside Dental" />
       </label>
       <label className="block">
         <span className="text-sm font-bold">PayPal email</span>
-        <input required type="email" inputMode="email" value={email} onChange={(e) => setEmail(e.target.value)} className={`${field} mt-1`} placeholder="Ask them directly, not from a bill" />
+        <input required type="email" inputMode="email" value={email} onChange={(e) => setEmail(e.target.value)} className={`${field} mt-2`} placeholder="Ask them directly, not from a bill" />
       </label>
       <label className="block">
         <span className="text-sm font-bold">What they are</span>
-        <select value={kind} onChange={(e) => setKind(e.target.value)} className={`${field} mt-1`}>
+        <select value={kind} onChange={(e) => setKind(e.target.value)} className={`${field} mt-2`}>
           {CATEGORIES.map((c) => (
             <option key={c} value={c}>
               {categoryLabel(c)}
@@ -214,11 +214,11 @@ function AddPayee({ memberId, onDone }: { memberId: string; onDone: () => void }
         </select>
       </label>
       {error && <p role="alert" className="font-bold text-stop">{error}</p>}
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-3 border-t border-rule pt-5">
         <button disabled={busy} className={btn.primary}>{busy ? "Adding…" : "Add payee"}</button>
         <button type="button" onClick={onDone} className={btn.secondary}>Cancel</button>
       </div>
-      <p className="text-sm text-ink-soft">New payees start unverified. You&apos;ll verify them with a one-cent check next.</p>
+      <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink-soft">New payees start unverified. You&apos;ll verify them with a one-cent check next.</p>
     </form>
   );
 }

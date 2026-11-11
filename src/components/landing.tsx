@@ -8,22 +8,24 @@ import { CircleCheck, Hourglass, OctagonX, PauseCircle, Volume2 } from "lucide-r
 
 function Phone({ children, label, className = "" }: { children: React.ReactNode; label: string; className?: string }) {
   return (
-    <figure className={`w-[10.25rem] shrink-0 sm:w-[15rem] lg:w-[16rem] ${className}`}>
-      <div className="rounded-[2.6rem] bg-night-deep p-[0.55rem] shadow-[0_30px_60px_-30px_rgb(0_0_0/0.6),0_0_0_1px_rgb(255_255_255/0.08)]">
-        <div className="relative aspect-[9/19] overflow-hidden rounded-[2.1rem] text-[8.6px] sm:text-[12px] lg:text-[12.8px]">
+    <figure className={`w-[44%] shrink-0 sm:w-[14rem] lg:w-[46%] xl:w-[15rem] ${className}`}>
+      <div className="rounded-[2.4rem] border border-night-ink/25 bg-night-deep p-[0.45rem] shadow-[0_24px_56px_-24px_rgb(0_0_0/0.55),inset_0_0_0_2px_rgb(255_255_255/0.08)]">
+        <div className="relative aspect-[9/19] overflow-hidden rounded-[1.95rem] text-[clamp(7.3px,2.1vw,11.5px)] lg:text-[10.5px] xl:text-[12px]">
           <span aria-hidden className="absolute top-[0.9em] left-1/2 z-10 h-[1.9em] w-[6.5em] -translate-x-1/2 rounded-full bg-black" />
           {children}
         </div>
       </div>
-      <figcaption className="mt-3 text-center text-sm text-night-soft">{label}</figcaption>
+      <figcaption className="mt-4 text-center text-[0.9375rem] text-night-soft">{label}</figcaption>
     </figure>
   );
 }
 
 export function HeroPhones() {
   return (
-    <div className="flex items-start justify-center" aria-hidden>
-      <Phone label="Walter, 84, in Tucson" className="relative z-10 mt-10">
+    <div className="relative isolate flex items-start justify-center py-5" aria-hidden>
+      <span className="pointer-events-none absolute top-1/2 left-1/2 -z-10 aspect-square w-[105%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-night-ink/10" />
+      <span className="pointer-events-none absolute top-1/2 left-1/2 -z-10 aspect-square w-[82%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-night-ink/10 bg-night-ink/3" />
+      <Phone label="Walter, 84, in Tucson" className="relative z-10 mt-12">
         <div className="flex h-full flex-col bg-enamel px-[1.3em] pt-[3.6em] pb-[1.4em] text-ink">
           <div className="flex items-center gap-[0.5em]">
             <span className="font-display text-[1.7em] font-semibold text-action">Tend</span>
@@ -32,7 +34,7 @@ export function HeroPhones() {
               <Volume2 className="size-[1.3em]" />
             </span>
           </div>
-          <div className="mt-[1.2em] rounded-[1.5em] border-[0.3em] border-action bg-dial p-[1.1em]">
+          <div className="mt-[1.2em] rounded-[1.5em] border-[0.2em] border-action bg-dial p-[1.1em]">
             <PauseCircle className="size-[2.6em]" />
             <p className="mt-[0.4em] font-display text-[2em] leading-none font-semibold">Before you pay</p>
             <p className="mt-[0.6em] text-[1.08em] leading-snug">
@@ -42,7 +44,7 @@ export function HeroPhones() {
               <Hourglass className="mt-[0.15em] size-[1.2em] shrink-0 text-wait" />A stranger at the door, and pressure to pay today.
             </p>
           </div>
-          <div className="mt-[0.8em] grid h-[3.4em] place-items-center rounded-full bg-[#ffc439] text-[1.05em] font-bold text-[#142c8e]">
+          <div className="mt-[0.8em] grid h-[3.4em] place-items-center rounded-full border border-rule bg-dial text-[1.05em] font-bold text-accent">
             <span>
               Pay with <span className="italic">PayPal</span>
             </span>
@@ -50,11 +52,11 @@ export function HeroPhones() {
           <div className="mt-[0.6em] grid h-[3.2em] place-items-center rounded-[1.4em] border-2 border-ink bg-dial font-bold">Don&apos;t pay it</div>
         </div>
       </Phone>
-      <Phone label="Dolores, next door" className="ml-2.5 sm:ml-5">
+      <Phone label="Dolores, next door" className="ml-3 sm:ml-5">
         <div className="on-night flex h-full flex-col items-center bg-[radial-gradient(120%_70%_at_50%_0%,var(--color-night-cell),var(--color-night-deep))] px-[0.9em] pt-[3.8em] text-night-ink">
           <p className="text-[0.95em] text-night-soft">Tuesday 10 November</p>
           <p className="figures font-display text-[4.4em] leading-none font-semibold">4:12</p>
-          <div className="mt-[2.2em] w-full rounded-[1.3em] bg-night-ink/14 p-[0.9em] text-left backdrop-blur">
+          <div className="mt-[2.2em] w-full rounded-[1.3em] border border-night-ink/10 bg-night-ink/14 p-[0.9em] text-left backdrop-blur">
             <div className="flex items-center gap-[0.45em] text-[0.82em] text-night-soft">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/icon-192.png" alt="" className="size-[1.6em] rounded-[0.4em]" />
@@ -95,7 +97,7 @@ export const OUTCOMES: { ask: React.ReactNode; tone: keyof typeof TONE; verdict:
 export function Verdict({ tone, children }: { tone: keyof typeof TONE; children: React.ReactNode }) {
   const t = TONE[tone];
   return (
-    <span className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-bold whitespace-nowrap ${t.cls}`}>
+    <span className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-bold whitespace-nowrap ${t.cls}`}>
       <t.Icon aria-hidden size={15} strokeWidth={2.5} />
       {children}
     </span>

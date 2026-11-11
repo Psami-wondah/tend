@@ -56,8 +56,8 @@ export function HeldCard(props: { intent: PaymentIntent; payer: Person | null; m
   const R = 30;
   const C = 2 * Math.PI * R;
   return (
-    <article className="rounded-2xl border-2 border-wait/40 bg-dial p-4 shadow-[0_1px_2px_rgb(18_21_28/0.05),0_10px_24px_-14px_rgb(18_21_28/0.25)] sm:p-5" aria-labelledby={`h-${intent.id}`}>
-      <div className="flex items-start gap-4">
+    <article className="rounded-3xl border-2 border-wait/40 bg-dial p-5 shadow-[0_1px_2px_rgb(18_21_28/0.05),0_10px_24px_-14px_rgb(18_21_28/0.25)] sm:p-7" aria-labelledby={`h-${intent.id}`}>
+      <div className="flex items-start gap-4 sm:gap-5">
         <div className="relative shrink-0" role="img" aria-label={needsYes ? "Held until someone says yes" : `${hours} hours ${mins} minutes left on the hold`}>
           <svg width="76" height="76" viewBox="0 0 76 76" aria-hidden>
             <circle cx="38" cy="38" r={R} fill="none" stroke="var(--color-rule)" strokeWidth="7" />
@@ -82,17 +82,17 @@ export function HeldCard(props: { intent: PaymentIntent; payer: Person | null; m
           <h3 id={`h-${intent.id}`} className="mt-1 text-lg leading-snug font-bold break-words">
             {props.payer?.name ?? "Someone"} to {intent.payeeName}
           </h3>
-          <p className="text-[0.9375rem] text-ink-soft">
+          <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink-soft">
             {needsYes ? "Held in their PayPal until one of you says yes." : <Txt>{`Held in their PayPal. It goes at ${goesAt} unless someone stops it.`}</Txt>}
           </p>
         </div>
       </div>
 
-      <p className="mt-3 text-[0.9375rem]">
+      <p className="mt-5 rounded-xl bg-enamel px-4 py-3 text-[0.9375rem] leading-relaxed">
         <Txt>{intent.evaluation.reasons[0]?.message ?? intent.summary}</Txt>
       </p>
 
-      <ul className="mt-3 flex flex-wrap gap-1.5" aria-label="Who can look">
+      <ul className="mt-5 flex flex-wrap gap-2" aria-label="Who can look">
         {props.circle.map((p) => {
           const t = localTime(p.timezone, now);
           const asleep = !isDaytimeHour(t.hour);
@@ -108,14 +108,14 @@ export function HeldCard(props: { intent: PaymentIntent; payer: Person | null; m
 
       {isFamily &&
         (confirmStop ? (
-          <div className="mt-4 rounded-xl bg-stop-tint p-3.5">
+          <div className="mt-5 rounded-2xl border border-stop/20 bg-stop-tint p-4 sm:p-5">
             <p className="font-bold">
               Stop <span className="figures">{amount}</span> to {intent.payeeName}? PayPal voids the hold and the money never leaves {props.payer?.name ?? "their"}&apos;s account.
             </p>
             <label className="mt-2 block text-sm font-bold" htmlFor={`n-${intent.id}`}>
               Tell them why (optional)
             </label>
-            <input id={`n-${intent.id}`} value={note} onChange={(e) => setNote(e.target.value)} placeholder="I called them: it's not a real company" className="mt-1 min-h-11 w-full rounded-lg border-2 border-rule bg-dial px-3" />
+            <input id={`n-${intent.id}`} value={note} onChange={(e) => setNote(e.target.value)} placeholder="I called them: it's not a real company" className="mt-2 min-h-12 w-full rounded-xl border-2 border-rule bg-dial px-3" />
             <div className="mt-3 flex flex-wrap gap-2">
               <button type="button" onClick={() => act("reject")} disabled={busy !== null} className={`${btn.danger} border-stop text-stop`}>
                 {busy === "reject" ? "Stopping…" : "Yes, stop it"}
@@ -126,7 +126,7 @@ export function HeldCard(props: { intent: PaymentIntent; payer: Person | null; m
             </div>
           </div>
         ) : (
-          <div className="mt-4 grid grid-cols-2 gap-2">
+          <div className="mt-6 grid grid-cols-2 gap-3 border-t border-rule pt-5">
             <button type="button" onClick={() => setConfirmStop(true)} disabled={busy !== null} className={`${btn.danger} border-stop/60`}>
               Stop it
             </button>
@@ -136,7 +136,7 @@ export function HeldCard(props: { intent: PaymentIntent; payer: Person | null; m
           </div>
         ))}
 
-      <Link href={`/payments/${intent.id}`} className="mt-3 inline-flex items-center gap-1.5 text-sm font-bold text-ink-soft underline decoration-rule-strong hover:text-ink">
+      <Link href={`/payments/${intent.id}`} className="mt-3 inline-flex min-h-12 items-center gap-1.5 text-sm font-bold text-ink-soft underline decoration-rule-strong hover:text-ink">
         <span aria-hidden className="size-2 rounded-full" style={{ background: props.payer ? personVar(props.payer) : "var(--color-wait)" }} />
         What they asked to pay, and why it&apos;s held
       </Link>

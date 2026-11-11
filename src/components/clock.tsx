@@ -66,18 +66,18 @@ export function Dial({ person, now, size = 64 }: { person: Person; now: Date; si
 export function ClockRow({ people, initialNow, viewerId }: { people: Person[]; initialNow: number; viewerId?: string }) {
   const now = useNow(initialNow);
   return (
-    <ul className="grid grid-cols-4 gap-1" aria-label="Where everyone is in their day">
+    <ul className="flex flex-wrap justify-evenly gap-x-2 gap-y-5" aria-label="Where everyone is in their day">
       {people.map((p) => {
         const t = localTime(p.timezone, now);
         const night = !isDaytimeHour(t.hour);
         return (
-          <li key={p.id} className="flex flex-col items-center text-center">
+          <li key={p.id} className="flex min-w-16 flex-1 flex-col items-center text-center">
             <Dial person={p} now={now} size={56} />
-            <span className="mt-1.5 font-display text-base leading-tight font-semibold">
+            <span className="mt-3 text-base leading-tight font-bold">
               {p.id === viewerId ? "You" : p.name}
             </span>
-            <span className="text-[0.8125rem] leading-tight text-ink-soft">{p.city}</span>
-            <span className={`figures mt-0.5 inline-flex items-center gap-1 text-sm ${night ? "text-ink-soft" : "font-medium"}`}>
+            <span className="mt-1 text-[0.9375rem] leading-tight text-ink-soft">{p.city}</span>
+            <span className={`figures mt-1 inline-flex items-center gap-1 text-[0.9375rem] ${night ? "text-ink-soft" : "font-medium"}`}>
               {t.label}
               {night && <Moon aria-hidden size={12} strokeWidth={2.5} />}
               {night && <span className="sr-only">, probably asleep</span>}
@@ -98,7 +98,7 @@ export function DayBand({ people, initialNow }: { people: Person[]; initialNow: 
   const at = people.map((p) => ({ p, hour: localTime(p.timezone, now).hour }));
   return (
     <div aria-hidden className="relative">
-      <div className="grid h-2.5 grid-cols-24 gap-[2px]">
+      <div className="grid h-3 grid-cols-24 gap-[3px]">
         {Array.from({ length: 24 }, (_, h) => (
           <span key={h} className={`rounded-[2px] ${isDaytimeHour(h) ? "bg-day" : "bg-night-cell"}`} />
         ))}
@@ -116,7 +116,7 @@ export function DayBand({ people, initialNow }: { people: Person[]; initialNow: 
           );
         })}
       </div>
-      <div className="mt-0.5 flex justify-between text-[0.6875rem] text-night-soft">
+      <div className="mt-1 flex justify-between text-xs text-night-soft">
         <span>midnight</span>
         <span>noon</span>
         <span>midnight</span>

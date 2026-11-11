@@ -83,24 +83,24 @@ export function PersonChip({ member, note, tone = "plain" }: { member: PersonLik
 
 export const btn = {
   primary:
-    "inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-action px-5 text-base font-bold text-action-ink transition-colors duration-200 hover:bg-action-hover disabled:cursor-not-allowed disabled:opacity-55",
+    "inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-action px-5 py-2.5 text-base font-bold text-action-ink transition-colors duration-200 hover:bg-action-hover disabled:cursor-not-allowed disabled:opacity-55",
   approve:
-    "inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-paid px-5 text-base font-bold text-paid-ink transition-colors duration-200 hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-55",
+    "inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-paid px-5 py-2.5 text-base font-bold text-paid-ink transition-colors duration-200 hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-55",
   secondary:
-    "inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border-2 border-rule-strong bg-dial px-5 text-base font-bold text-ink transition-colors duration-200 hover:border-ink disabled:cursor-not-allowed disabled:opacity-55",
+    "inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-rule-strong bg-dial px-5 py-2.5 text-base font-bold text-ink transition-colors duration-200 hover:border-ink disabled:cursor-not-allowed disabled:opacity-55",
   danger:
-    "inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border-2 border-rule-strong bg-dial px-5 text-base font-bold text-ink transition-colors duration-200 hover:border-stop hover:text-stop disabled:cursor-not-allowed disabled:opacity-55",
+    "inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-rule-strong bg-dial px-5 py-2.5 text-base font-bold text-ink transition-colors duration-200 hover:border-stop hover:text-stop disabled:cursor-not-allowed disabled:opacity-55",
   quiet:
-    "inline-flex min-h-10 items-center gap-1.5 rounded-lg px-2 text-sm font-bold text-ink-soft underline decoration-rule-strong underline-offset-4 hover:text-ink hover:decoration-ink disabled:opacity-55",
+    "inline-flex min-h-12 items-center gap-1.5 rounded-xl px-2 text-sm font-bold text-ink-soft underline decoration-rule-strong underline-offset-4 hover:text-ink hover:decoration-ink disabled:opacity-55",
 };
 
 export const field =
-  "min-h-12 w-full rounded-xl border-2 border-rule bg-dial px-3.5 text-base text-ink placeholder:text-ink-soft/80 focus:border-accent focus:outline-none";
+  "min-h-13 w-full rounded-xl border border-rule-strong bg-dial px-4 py-2.5 text-base text-ink transition-colors placeholder:text-ink-soft/80 focus:border-accent focus:outline-2 focus:outline-offset-2 focus:outline-accent";
 
 export function SectionHeading({ id, children, action }: { id: string; children: React.ReactNode; action?: React.ReactNode }) {
   return (
-    <div className="mb-3 flex items-end justify-between gap-4">
-      <h2 id={id} className="font-display text-[1.375rem] leading-tight font-semibold tracking-[-0.01em]">
+    <div className="mb-4 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+      <h2 id={id} className="font-display text-[1.5rem] leading-tight font-medium tracking-[-0.025em]">
         {children}
       </h2>
       {action}
@@ -111,7 +111,7 @@ export function SectionHeading({ id, children, action }: { id: string; children:
 /** A label that says a transaction is simulated or seed data, never real money. */
 export function SimTag({ id }: { id: string | null | undefined }) {
   if (!id) return null;
-  if (id.startsWith("SIM-")) return <span className="rounded-md bg-wait-tint px-1.5 py-0.5 text-xs font-bold text-wait">Simulated</span>;
+  if (id.startsWith("SIM-")) return <span className="rounded-md bg-enamel px-2 py-1 text-xs font-bold text-ink-soft">Simulated</span>;
   if (id.startsWith("SEED-")) return <span className="rounded-md bg-enamel px-1.5 py-0.5 text-xs font-bold text-ink-soft">Seed data</span>;
   return null;
 }

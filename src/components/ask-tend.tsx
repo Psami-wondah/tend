@@ -90,19 +90,20 @@ export function AskTend({ memberId, firstName, currency, aiLive, who, pot }: { m
   }
 
   return (
-    <div className="flex min-h-[60dvh] flex-col">
+    <div className="flex min-h-[60dvh] flex-col gap-2">
       {messages.length === 0 ? (
-        <div>
-          <p className="text-lg">
+        <div className="py-2 sm:py-4">
+          <div aria-hidden className="mb-5 grid size-14 place-items-center rounded-2xl border border-rule bg-dial text-accent"><MessageCircle size={26} strokeWidth={1.6} /></div>
+          <p className="max-w-2xl text-xl leading-relaxed">
             Hi {firstName}. Ask about {who}&apos;s money, what&apos;s held, or tell me to pay or stop something. Payments still go through the circle&apos;s rules.
           </p>
-          <ul className="mt-5 grid gap-2 sm:grid-cols-2">
+          <ul className="mt-7 grid gap-3 sm:grid-cols-2">
             {starters(who, pot).map((s) => (
               <li key={s}>
                 <button
                   type="button"
                   onClick={() => send(s)}
-                  className="min-h-14 w-full rounded-xl border-2 border-rule bg-dial px-4 py-2.5 text-left transition-colors duration-200 hover:border-ink"
+                  className="min-h-24 h-full w-full rounded-2xl border border-rule bg-dial px-5 py-4 text-left text-[1.0625rem] leading-relaxed transition-colors duration-200 hover:border-accent hover:bg-accent/5"
                 >
                   {s}
                 </button>
@@ -115,7 +116,7 @@ export function AskTend({ memberId, firstName, currency, aiLive, who, pot }: { m
           {messages.map((m, i) => (
             <li key={i} className={m.role === "user" ? "flex justify-end" : ""}>
               {m.role === "user" ? (
-                <p className="max-w-[85%] rounded-2xl rounded-br-md bg-action px-4 py-3 whitespace-pre-wrap text-action-ink">{m.content}</p>
+                <p className="max-w-[90%] rounded-3xl rounded-br-md bg-action px-5 py-4 whitespace-pre-wrap text-action-ink">{m.content}</p>
               ) : (
                 <div className="max-w-[92%]">
                   <div className="flex items-start gap-3">
@@ -123,12 +124,12 @@ export function AskTend({ memberId, firstName, currency, aiLive, who, pot }: { m
                       T
                     </span>
                     <div className="min-w-0">
-                      <p className={`rounded-2xl rounded-tl-md px-4 py-3 whitespace-pre-wrap ${m.error ? "bg-stop-tint" : "bg-dial"}`}>
+                      <p className={`rounded-3xl rounded-tl-md border border-rule px-5 py-4 whitespace-pre-wrap ${m.error ? "bg-stop-tint" : "bg-dial"}`}>
                         <Txt>{m.content}</Txt>
                       </p>
                       {m.cards?.map((c, j) => <Card key={j} card={c} currency={currency} memberId={memberId} />)}
                       {(m.tools?.length || m.offline) && (
-                        <p className="mt-1.5 text-[0.8125rem] text-ink-soft">
+                        <p className="mt-2 text-[0.9375rem] text-ink-soft">
                           {m.tools?.length ? `Checked ${[...new Set(m.tools)].map((t) => TOOL_LABEL[t] ?? t.replaceAll("_", " ")).join(", ")}` : ""}
                           {m.offline ? `${m.tools?.length ? ". " : ""}Answered without AI (demo mode)` : ""}
                         </p>
@@ -155,7 +156,7 @@ export function AskTend({ memberId, firstName, currency, aiLive, who, pot }: { m
           e.preventDefault();
           void send(input);
         }}
-        className="sticky bottom-[calc(4.5rem+env(safe-area-inset-bottom))] mt-6 flex gap-2 bg-enamel py-3 md:bottom-0"
+        className="sticky bottom-[calc(5rem+env(safe-area-inset-bottom))] mt-auto flex gap-2 rounded-2xl border border-rule bg-dial p-2 shadow-[0_8px_32px_-16px_rgb(18_21_28/0.2)] lg:bottom-4"
       >
         <label className="sr-only" htmlFor="ask">
           Ask Tend
@@ -168,7 +169,7 @@ export function AskTend({ memberId, firstName, currency, aiLive, who, pot }: { m
           className={field}
           autoComplete="off"
         />
-        <button disabled={busy || !input.trim()} className="grid min-h-12 min-w-12 place-items-center rounded-xl bg-action text-action-ink disabled:opacity-50" aria-label="Send">
+        <button disabled={busy || !input.trim()} className="grid min-h-13 min-w-13 place-items-center rounded-xl bg-action text-action-ink disabled:opacity-50" aria-label="Send">
           <ArrowUp size={22} strokeWidth={2.5} />
         </button>
       </form>

@@ -252,18 +252,18 @@ export function PersonScreen(props: {
     if (!next) stopSpeaking();
   }
 
-  const bigButton = "flex min-h-24 items-center gap-4 rounded-3xl px-6 text-left text-[1.45em] font-bold";
+  const bigButton = "flex min-h-26 items-center gap-4 rounded-3xl px-5 py-5 text-left text-[1.45em] leading-tight font-bold transition-colors duration-200 sm:px-6";
 
   return (
     <div data-mum-size={size} className="min-h-dvh bg-enamel leading-snug text-ink">
       <Live />
-      <main className="mx-auto flex min-h-dvh max-w-xl flex-col px-5 pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))]">
-        <header className="flex items-center gap-2">
-          <span className="font-display text-[1.75em] font-semibold text-action">Tend</span>
+      <main className="mx-auto flex min-h-dvh max-w-2xl flex-col px-5 pt-[max(1.25rem,env(safe-area-inset-top))] pb-[max(2rem,env(safe-area-inset-bottom))] sm:px-8">
+        <header className="flex items-center gap-2 border-b border-rule pb-5">
+          <span className="font-display text-[1.75em] leading-none font-semibold tracking-[-0.035em] text-action">Tend</span>
           <button
             type="button"
             onClick={cycleSize}
-            className="ml-auto min-h-12 rounded-xl border-2 border-ink px-3 font-display text-[0.8em] font-semibold"
+            className="ml-auto min-h-13 min-w-14 rounded-2xl border-2 border-rule-strong bg-dial px-3 font-display text-[0.8em] font-semibold hover:border-ink"
             aria-label={`Text size ${size} of 3. Press to change.`}
           >
             A<span className="text-[1.25em]">A</span>
@@ -272,7 +272,7 @@ export function PersonScreen(props: {
             type="button"
             onClick={toggleVoice}
             aria-pressed={voice}
-            className="grid min-h-12 min-w-12 place-items-center rounded-xl border-2 border-ink"
+            className="grid min-h-13 min-w-14 place-items-center rounded-2xl border-2 border-rule-strong bg-dial hover:border-ink"
             aria-label={voice ? "Reading answers aloud. Press to stop." : "Not reading answers aloud. Press to start."}
           >
             {voice ? <Volume2 aria-hidden size={24} /> : <VolumeX aria-hidden size={24} />}
@@ -281,9 +281,9 @@ export function PersonScreen(props: {
 
         {mode === "home" && (
           <>
-            <h1 className="mt-8 font-display text-[2.4em] leading-[1.05] font-semibold tracking-[-0.01em]">Hello {props.name}. What needs paying?</h1>
+            <h1 className="mt-8 font-display text-[2.4em] leading-[1.08] font-semibold tracking-[-0.025em]"><span className="mb-2 block text-[0.6em] leading-tight text-ink-soft">Hello {props.name}.</span>{" "}What needs paying?</h1>
             {props.vaultNotice && <p role="status" className="mt-4 rounded-2xl bg-paid-tint p-4 font-bold text-paid">{props.vaultNotice}</p>}
-            <div className="mt-7 grid gap-3.5">
+            <div className="mt-7 grid gap-3">
               <button type="button" onClick={() => fileRef.current?.click()} className={`${bigButton} bg-action text-action-ink hover:bg-action-hover`}>
                 <Camera aria-hidden size={36} strokeWidth={2} className="shrink-0" />
                 <span className="text-balance">Take a photo of a bill</span>
@@ -293,7 +293,7 @@ export function PersonScreen(props: {
                 <Mic aria-hidden size={34} strokeWidth={2} className="shrink-0" />
                 Tell me out loud
               </button>
-              <button type="button" onClick={() => setMode("type")} className="flex min-h-20 items-center gap-4 rounded-3xl border-2 border-ink bg-dial px-6 text-left text-[1.2em] font-bold">
+              <button type="button" onClick={() => setMode("type")} className="flex min-h-24 items-center gap-4 rounded-3xl border-2 border-rule-strong bg-dial px-5 py-5 text-left text-[1.2em] leading-tight font-bold transition-colors duration-200 hover:border-ink sm:px-6">
                 <MessageSquareText aria-hidden size={30} strokeWidth={2} className="shrink-0" />
                 <span className="text-balance">Check a message or email someone sent me</span>
               </button>
@@ -304,14 +304,14 @@ export function PersonScreen(props: {
                     setRoute("own");
                     setMode("type");
                   }}
-                  className="flex min-h-20 items-center gap-4 rounded-3xl border-2 border-ink bg-dial px-6 text-left text-[1.2em] font-bold"
+                  className="flex min-h-24 items-center gap-4 rounded-3xl border-2 border-rule-strong bg-dial px-5 py-5 text-left text-[1.2em] leading-tight font-bold transition-colors duration-200 hover:border-ink sm:px-6"
                 >
                   <Send aria-hidden size={28} strokeWidth={2} className="shrink-0" />
                   <span className="text-balance">Pay someone from my own PayPal</span>
                 </button>
               )}
             </div>
-            <p className="mt-6 text-[1em]">
+            <p className="mt-6 border-l-4 border-accent/35 pl-4 text-[1em] leading-relaxed">
               {props.potEnabled
                 ? `I pay what your circle agreed from the shared pot, and ask ${circleNames} about anything else.`
                 : `It's your money. I pay what you ask, and hold anything unusual ${props.hold} so ${circleNames} can take a look.`}{" "}
@@ -321,11 +321,11 @@ export function PersonScreen(props: {
             {props.vault.payees.length > 0 && <VaultCard memberId={props.memberId} vault={props.vault} simulated={props.paypalMode === "simulated"} currency={props.currency} />}
 
             {props.recent.length > 0 && (
-              <section className="mt-8" aria-labelledby="lately">
+              <section className="mt-10" aria-labelledby="lately">
                 <h2 id="lately" className="font-display text-[1.3em] font-semibold">What I&apos;ve done lately</h2>
-                <ul className="mt-3 divide-y-2 divide-rule rounded-2xl bg-dial">
+                <ul className="mt-4 divide-y divide-rule overflow-hidden rounded-3xl border border-rule bg-dial">
                   {props.recent.map((r) => (
-                    <li key={r.id} className="flex items-start gap-3 px-4 py-3.5">
+                    <li key={r.id} className="flex items-start gap-3 px-5 py-5">
                       <RecentIcon tone={r.tone} />
                       <span className="min-w-0">
                         <span className="block font-bold">
@@ -339,16 +339,16 @@ export function PersonScreen(props: {
               </section>
             )}
 
-            <section className="mt-8" aria-labelledby="fam">
+            <section className="mt-10 border-t border-rule pt-7" aria-labelledby="fam">
               <h2 id="fam" className="font-display text-[1.3em] font-semibold">Your circle right now</h2>
-              <ul className={`mt-3 grid gap-2 ${props.circle.length >= 3 ? "grid-cols-3" : "grid-cols-2"}`}>
+              <ul className={`mt-4 grid gap-3 ${props.circle.length >= 3 ? "grid-cols-2 min-[480px]:grid-cols-3" : "grid-cols-2"}`}>
                 {props.circle.map((p) => {
                   const t = localTime(p.timezone, now);
                   const asleep = !isDaytimeHour(t.hour);
                   return (
-                    <li key={p.id} className="flex flex-col items-center rounded-2xl bg-dial px-2 py-3 text-center">
+                    <li key={p.id} className="flex min-w-0 flex-col items-center rounded-3xl border border-rule bg-dial px-3 py-5 text-center break-words">
                       <Dial person={p} now={now} size={56} />
-                      <span className="mt-2 font-bold">{p.name}</span>
+                      <span className="mt-3 max-w-full font-bold">{p.name}</span>
                       <span className="text-[0.8em] text-ink-soft">
                         {p.relation ? `${p.relation}, ` : ""}
                         {asleep ? "asleep" : "awake"} in {p.city}
@@ -361,10 +361,10 @@ export function PersonScreen(props: {
 
             {props.samples.length > 0 && (
               <details className="mt-auto pt-10 text-[0.85em]">
-                <summary className="cursor-pointer font-bold underline underline-offset-4">Try it with an example</summary>
+                <summary className="min-h-14 cursor-pointer rounded-xl border-t border-rule pt-4 font-bold underline underline-offset-4">Try it with an example</summary>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {props.samples.map((s) => (
-                    <button key={s.id} type="button" onClick={() => sample(s)} className="min-h-12 rounded-full border-2 border-ink bg-dial px-4 font-bold">
+                    <button key={s.id} type="button" onClick={() => sample(s)} className="min-h-14 rounded-2xl border-2 border-rule-strong bg-dial px-4 py-2 text-left font-bold hover:border-ink">
                       {s.label}
                     </button>
                   ))}
@@ -383,7 +383,7 @@ export function PersonScreen(props: {
 
         {(mode === "speak" || mode === "type") && (
           <form
-            className="mt-8 flex flex-1 flex-col gap-4"
+            className="mt-8 flex flex-1 flex-col gap-5"
             onSubmit={(e) => {
               e.preventDefault();
               recRef.current?.stop();
@@ -403,10 +403,10 @@ export function PersonScreen(props: {
               value={text}
               onChange={(e) => setText(e.target.value)}
               rows={6}
-              className="rounded-2xl border-4 border-ink bg-dial p-4 text-[1.15em] leading-relaxed"
+              className="w-full min-w-0 rounded-3xl border-2 border-ink bg-dial p-5 text-[1.15em] leading-relaxed"
               placeholder={mode === "speak" ? "The taxi to my eye appointment was eighteen dollars…" : "Paste the text or email here"}
             />
-            <button disabled={!text.trim()} className="min-h-20 rounded-3xl bg-action text-[1.5em] font-bold text-action-ink disabled:opacity-50">
+            <button disabled={!text.trim()} className="min-h-24 rounded-3xl bg-action px-5 py-4 text-[1.5em] font-bold text-action-ink hover:bg-action-hover disabled:opacity-50">
               Send to Tend
             </button>
             <button type="button" onClick={reset} className="min-h-14 text-[1.1em] font-bold underline underline-offset-4">
@@ -431,16 +431,16 @@ export function PersonScreen(props: {
 
         {mode === "plan" && plan && (
           <section aria-live="assertive" className="mt-8 flex flex-1 flex-col">
-            <div className="rounded-3xl border-4 border-action bg-dial p-7">
+            <div className="rounded-3xl border-4 border-action bg-dial p-5 sm:p-7">
               {plan.decision === "auto_pay" ? <CircleCheck aria-hidden size={52} /> : <PauseCircle aria-hidden size={52} />}
-              <h1 ref={headingRef} tabIndex={-1} className="mt-3 font-display text-[2.2em] leading-none font-semibold outline-none">
+              <h1 ref={headingRef} tabIndex={-1} className="mt-4 font-display text-[2.2em] leading-[1.08] font-semibold tracking-[-0.025em] outline-none">
                 Before you pay
               </h1>
               <p className="mt-4 text-[1.2em] leading-relaxed">
                 <Txt>{plan.message}</Txt>
               </p>
               {plan.reasons.length > 0 && plan.decision !== "auto_pay" && (
-                <ul className="mt-4 space-y-2 text-[0.95em]">
+                <ul className="mt-5 space-y-3 border-t border-rule pt-5 text-[0.95em]">
                   {plan.reasons.map((r) => (
                     <li key={r} className="flex gap-2">
                       <Hourglass aria-hidden size={20} className="mt-1 shrink-0 text-wait" />
@@ -463,7 +463,7 @@ export function PersonScreen(props: {
                 onError={(m) => show("failed", m)}
               />
             </div>
-            <button type="button" onClick={cancelPlan} className="mt-3 min-h-16 rounded-3xl border-2 border-ink bg-dial text-[1.2em] font-bold">
+            <button type="button" onClick={cancelPlan} className="mt-3 min-h-20 rounded-3xl border-2 border-ink bg-dial px-5 py-3 text-[1.2em] font-bold">
               Don&apos;t pay it
             </button>
           </section>
@@ -471,12 +471,12 @@ export function PersonScreen(props: {
 
         {mode === "result" && result && result.outcome !== "approve" && (
           <section aria-live="assertive" className="mt-8 flex flex-1 flex-col">
-            <div className={`rise rounded-3xl p-7 ${TONE[result.outcome].panel}`}>
+            <div className={`rise rounded-3xl p-5 sm:p-7 ${TONE[result.outcome].panel}`}>
               {(() => {
                 const T = TONE[result.outcome];
                 return <T.Icon aria-hidden size={56} strokeWidth={2} />;
               })()}
-              <h1 ref={headingRef} tabIndex={-1} className="mt-3 font-display text-[2.6em] leading-none font-semibold outline-none">
+              <h1 ref={headingRef} tabIndex={-1} className="mt-4 font-display text-[2.6em] leading-[1.08] font-semibold tracking-[-0.025em] outline-none">
                 {TONE[result.outcome].heading}
               </h1>
               <p className="mt-4 text-[1.25em] leading-relaxed">
@@ -503,7 +503,7 @@ export function PersonScreen(props: {
                 <Volume2 aria-hidden size={26} /> Read it again
               </button>
             )}
-            <button type="button" onClick={reset} className="mt-3 min-h-20 rounded-3xl bg-action text-[1.5em] font-bold text-action-ink">
+            <button type="button" onClick={reset} className="mt-3 min-h-24 rounded-3xl bg-action px-5 py-4 text-[1.5em] font-bold text-action-ink hover:bg-action-hover">
               Done
             </button>
           </section>
@@ -535,7 +535,7 @@ function VaultCard({ memberId, vault, simulated, currency }: { memberId: string;
     router.refresh();
   }
   return (
-    <section className="mt-8 rounded-3xl border-2 border-ink bg-dial p-5" aria-labelledby="regular">
+    <section className="mt-10 rounded-3xl border-2 border-rule-strong bg-dial p-5 sm:p-6" aria-labelledby="regular">
       <h2 id="regular" className="flex items-center gap-2 font-display text-[1.3em] font-semibold">
         <Repeat aria-hidden size={24} /> Regular bills
       </h2>
@@ -544,7 +544,7 @@ function VaultCard({ memberId, vault, simulated, currency }: { memberId: string;
           <p className="mt-2">
             <Txt>{vault.summary ?? ""}</Txt>
           </p>
-          <button type="button" onClick={revoke} disabled={busy} className="mt-3 min-h-14 rounded-2xl border-2 border-ink px-5 font-bold">
+          <button type="button" onClick={revoke} disabled={busy} className="mt-4 min-h-20 rounded-2xl border-2 border-ink px-5 py-3 text-left font-bold">
             {busy ? "Stopping…" : "Stop paying these automatically"}
           </button>
         </>
@@ -553,7 +553,7 @@ function VaultCard({ memberId, vault, simulated, currency }: { memberId: string;
           <p className="mt-2">
             <Txt>{`Save your PayPal once, and I'll pay ${vault.payees.map((p) => p.name).join(" and ")} for you, up to ${fmt} a time. Your circle's rules still apply, and you can stop it whenever you like.`}</Txt>
           </p>
-          <button type="button" onClick={save} disabled={busy} className="mt-3 min-h-16 w-full rounded-2xl bg-action text-[1.15em] font-bold text-action-ink">
+          <button type="button" onClick={save} disabled={busy} className="mt-4 min-h-20 w-full rounded-2xl bg-action px-4 py-3 text-[1.15em] font-bold text-action-ink">
             {busy ? "Opening PayPal…" : simulated ? "Save my PayPal (simulated)" : "Save my PayPal"}
           </button>
           {error && <p role="alert" className="mt-2 font-bold text-stop">{error}</p>}

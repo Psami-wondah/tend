@@ -76,14 +76,14 @@ export function RulesEditor(props: {
       />
 
       <section aria-labelledby="own">
-        <h2 id="own" className="font-display text-[1.375rem] font-semibold">When {props.who} pays from their own PayPal</h2>
-        <p className="mt-1 text-ink-soft">
+        <h2 id="own" className="font-display text-2xl font-medium tracking-[-0.02em]">When {props.who} pays from their own PayPal</h2>
+        <p className="mt-2 leading-relaxed text-ink-soft">
           It&apos;s {props.who}&apos;s money. Tend never says no to an ordinary payment; it buys the circle time. Unusual payments are authorized in PayPal but held, and anyone in the circle can stop them.
         </p>
-        <div className="mt-4 divide-y divide-rule rounded-2xl bg-dial">
-          <div className="px-4 py-4">
+        <div className="mt-5 divide-y divide-rule overflow-hidden rounded-3xl border border-rule bg-dial">
+          <div className="px-5 py-5 sm:px-6">
             <p className="text-sm font-bold">Hold unusual payments for</p>
-            <div className="mt-2 grid grid-cols-4 gap-2" role="radiogroup" aria-label="How long to hold">
+            <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4" role="radiogroup" aria-label="How long to hold">
               {[12, 24, 48, 71].map((h) => {
                 const on = Number(readRule(draft, "ownPayments.coolingOffHours")) === h;
                 return (
@@ -102,14 +102,14 @@ export function RulesEditor(props: {
             </div>
             <p className="mt-2 text-sm text-ink-soft">PayPal holds an authorization for up to three days before it must be captured, so three days is the longest Tend can wait.</p>
           </div>
-          <div className="grid gap-3 px-4 py-4 sm:grid-cols-2">
+          <div className="grid gap-5 px-5 py-5 sm:px-6 sm:grid-cols-2">
             <MoneyInput label="Hold any payment over" minor={Number(readRule(draft, "ownPayments.coolOffOverMinor"))} onChange={(v) => set("ownPayments.coolOffOverMinor", v ?? 0)} />
             <MoneyInput label="Need one person's yes over" minor={Number(readRule(draft, "ownPayments.approvalOverMinor"))} onChange={(v) => set("ownPayments.approvalOverMinor", v ?? 0)} />
           </div>
-          <label className="flex min-h-14 items-center justify-between gap-4 px-4 py-3">
+          <label className="flex min-h-20 items-center justify-between gap-4 px-5 py-4 sm:px-6">
             <span>
               <span className="block font-bold">Hold their first payment to anyone new</span>
-              <span className="block text-sm text-ink-soft">The roofer at the door, a new website, a stranger&apos;s PayPal.</span>
+              <span className="mt-1 block text-[0.9375rem] leading-relaxed text-ink-soft">The roofer at the door, a new website, a stranger&apos;s PayPal.</span>
             </span>
             <Toggle checked={Boolean(readRule(draft, "ownPayments.holdNewPayees"))} onChange={(v) => set("ownPayments.holdNewPayees", v)} label="Hold their first payment to anyone new" />
           </label>
@@ -119,15 +119,15 @@ export function RulesEditor(props: {
       {props.pot && (
       <>
       <section aria-labelledby="auto">
-        <h2 id="auto" className="font-display text-[1.375rem] font-semibold">What Tend pays without asking</h2>
-        <p className="mt-1 text-ink-soft">At or under the limit, Tend pays a verified payee straight away. Set 0 to always ask. A monthly budget makes Tend ask once the month&apos;s spending would go over it.</p>
-        <ul className="mt-4 divide-y divide-rule rounded-2xl bg-dial">
+        <h2 id="auto" className="font-display text-2xl font-medium tracking-[-0.02em]">What Tend pays without asking</h2>
+        <p className="mt-2 leading-relaxed text-ink-soft">At or under the limit, Tend pays a verified payee straight away. Set 0 to always ask. A monthly budget makes Tend ask once the month&apos;s spending would go over it.</p>
+        <ul className="mt-5 divide-y divide-rule overflow-hidden rounded-3xl border border-rule bg-dial">
           {CATEGORIES.map((c) => {
             const limit = Number(readRule(draft, `categories.${c}.autoPayUpToMinor`));
             const budget = readRule(draft, `categories.${c}.monthlyBudgetMinor`) as number | null;
             const spent = props.spent[c] ?? 0;
             return (
-              <li key={c} className="grid gap-3 px-4 py-4 sm:grid-cols-[9rem_1fr_1fr] sm:items-center">
+              <li key={c} className="grid gap-5 px-5 py-5 sm:px-6 sm:grid-cols-[9rem_1fr_1fr] sm:items-center">
                 <div>
                   <p className="font-bold">{categoryLabel(c)}</p>
                   {spent > 0 && <p className="figures text-sm text-ink-soft">{money(spent)} this month</p>}
@@ -148,19 +148,19 @@ export function RulesEditor(props: {
       </section>
 
       <section aria-labelledby="ask">
-        <h2 id="ask" className="font-display text-[1.375rem] font-semibold">When the circle has to say yes</h2>
-        <div className="mt-4 divide-y divide-rule rounded-2xl bg-dial">
-          <div className="grid gap-3 px-4 py-4 sm:grid-cols-2 sm:items-end">
+        <h2 id="ask" className="font-display text-2xl font-medium tracking-[-0.02em]">When the circle has to say yes</h2>
+        <div className="mt-5 divide-y divide-rule overflow-hidden rounded-3xl border border-rule bg-dial">
+          <div className="grid gap-5 px-5 py-5 sm:px-6 sm:grid-cols-2 sm:items-end">
             <MoneyInput label="A payment is large when it's over" minor={draft.largePaymentOverMinor} onChange={(v) => set("largePaymentOverMinor", v ?? 0)} />
             <Stepper label="Large payments need" value={draft.largePaymentApprovals} onChange={(v) => set("largePaymentApprovals", v)} />
           </div>
-          <div className="px-4 py-4">
+          <div className="px-5 py-5 sm:px-6">
             <Stepper label="Everything else that needs an OK needs" value={draft.defaultApprovals} onChange={(v) => set("defaultApprovals", v)} />
           </div>
-          <label className="flex min-h-14 items-center justify-between gap-4 px-4 py-3">
+          <label className="flex min-h-20 items-center justify-between gap-4 px-5 py-4 sm:px-6">
             <span>
               <span className="block font-bold">Ask before paying someone new</span>
-              <span className="block text-sm text-ink-soft">The first payment to any payee waits for the circle.</span>
+              <span className="mt-1 block text-[0.9375rem] leading-relaxed text-ink-soft">The first payment to any payee waits for the circle.</span>
             </span>
             <Toggle checked={draft.newPayeeRequiresApproval} onChange={(v) => set("newPayeeRequiresApproval", v)} label="Ask before paying someone new" />
           </label>
@@ -171,15 +171,15 @@ export function RulesEditor(props: {
       )}
 
       <section aria-labelledby="never">
-        <h2 id="never" className="font-display text-[1.375rem] font-semibold">Ways Tend never pays</h2>
-        <p className="mt-1 text-ink-soft">These are how most scams take money from older people. Tend refuses them whoever asks.</p>
-        <ul className="mt-4 divide-y divide-rule rounded-2xl bg-dial">
+        <h2 id="never" className="font-display text-2xl font-medium tracking-[-0.02em]">Ways Tend never pays</h2>
+        <p className="mt-2 leading-relaxed text-ink-soft">These are how most scams take money from older people. Tend refuses them whoever asks.</p>
+        <ul className="mt-5 divide-y divide-rule overflow-hidden rounded-3xl border border-rule bg-dial">
           {EDITABLE_METHODS.map((m) => {
             const locked = m === "gift_card";
             const on = Boolean(readRule(draft, `blockedMethods.${m}`));
             return (
               <li key={m}>
-                <label className="flex min-h-14 items-center justify-between gap-4 px-4 py-3">
+                <label className="flex min-h-20 items-center justify-between gap-4 px-5 py-4 sm:px-6">
                   <span className="font-bold first-letter:uppercase">
                     {humanMethod(m)}
                     {locked && (
@@ -197,9 +197,9 @@ export function RulesEditor(props: {
       </section>
 
       <section aria-labelledby="scam">
-        <h2 id="scam" className="font-display text-[1.375rem] font-semibold">How careful to be with scams</h2>
-        <p className="mt-1 text-ink-soft">The AI scores each request for scam signals from 0 to 100%. Lower numbers make Tend more careful. Refusing outright also needs a sign with no innocent version: someone posing as family or an official, a request for secrecy, or gift cards, crypto or wire. Otherwise a risky request waits for a yes.</p>
-        <div className="mt-4 space-y-5 rounded-2xl bg-dial p-4">
+        <h2 id="scam" className="font-display text-2xl font-medium tracking-[-0.02em]">How careful to be with scams</h2>
+        <p className="mt-2 leading-relaxed text-ink-soft">The AI scores each request for scam signals from 0 to 100%. Lower numbers make Tend more careful. Refusing outright also needs a sign with no innocent version: someone posing as family or an official, a request for secrecy, or gift cards, crypto or wire. Otherwise a risky request waits for a yes.</p>
+        <div className="mt-5 space-y-7 rounded-3xl border border-rule bg-dial p-5 sm:p-6">
           <Slider label="Ask the circle when the risk is at least" value={draft.scamReviewThreshold} onChange={(v) => set("scamReviewThreshold", v)} />
           <Slider label="Refuse outright when the risk is at least" value={draft.scamRefuseThreshold} onChange={(v) => set("scamRefuseThreshold", v)} />
         </div>
@@ -208,8 +208,8 @@ export function RulesEditor(props: {
       <HistoryList history={props.history} memberId={props.memberId} current={props.mandate.version} />
 
       {(changes.length > 0 || status) && (
-        <div className="fixed inset-x-0 bottom-[calc(4rem+env(safe-area-inset-bottom))] z-20 px-3 md:bottom-4">
-          <div id="review" className="rise mx-auto max-w-3xl rounded-2xl border-2 border-action bg-dial p-4 shadow-[0_12px_40px_-12px_rgb(18_21_28/0.45)]">
+        <div className="fixed inset-x-0 bottom-[calc(5rem+env(safe-area-inset-bottom))] z-20 px-3 lg:bottom-4">
+          <div id="review" className="rise mx-auto max-h-[60dvh] max-w-3xl overflow-y-auto overscroll-contain rounded-3xl border-2 border-action bg-dial p-5 shadow-[0_12px_40px_-12px_rgb(18_21_28/0.45)]">
             {changes.length > 0 && <ChangeList changes={changes} />}
             {problems.length > 0 && (
               <ul className="mt-2 space-y-1 text-sm font-bold text-stop">
@@ -220,7 +220,7 @@ export function RulesEditor(props: {
             )}
             {status && <p role="status" className={`mt-2 font-bold ${status.ok ? "text-paid" : "text-stop"}`}>{status.text}</p>}
             {changes.length > 0 && (
-              <div className="mt-3 flex flex-wrap gap-2">
+              <div className="mt-4 flex flex-wrap gap-3 border-t border-rule pt-4">
                 <button type="button" onClick={save} disabled={saving || problems.length > 0} className={btn.primary}>
                   {saving ? "Saving…" : `Save ${changes.length} ${changes.length === 1 ? "change" : "changes"}`}
                 </button>
@@ -284,12 +284,12 @@ function PlainEnglish({ initialAsk, aiLive, onPropose }: { initialAsk: string | 
   }, [initialAsk]);
 
   return (
-    <section aria-labelledby="plain" className="rounded-2xl bg-dial p-4">
-      <h2 id="plain" className="flex items-center gap-2 font-bold">
+    <section aria-labelledby="plain" className="rounded-3xl border border-rule bg-dial p-5 sm:p-7">
+      <h2 id="plain" className="flex items-center gap-3 text-lg font-bold">
         <MessageCircle aria-hidden size={18} className="text-accent" />
         Change a rule in plain words
       </h2>
-      <p className="mt-1 text-sm text-ink-soft">
+      <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink-soft">
         {aiLive ? "The AI proposes the change. Nothing happens until you save it." : "Demo mode reads simple sentences without AI. Nothing happens until you save it."}
       </p>
       <form
@@ -297,7 +297,7 @@ function PlainEnglish({ initialAsk, aiLive, onPropose }: { initialAsk: string | 
           e.preventDefault();
           void propose(text);
         }}
-        className="mt-3 flex gap-2"
+        className="mt-5 flex flex-col gap-3 sm:flex-row"
       >
         <label htmlFor="plain-text" className="sr-only">
           The change you want
@@ -319,12 +319,12 @@ function HistoryList({ history, memberId, current }: { history: History; memberI
   const fmt = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" });
   return (
     <section aria-labelledby="history">
-      <h2 id="history" className="font-display text-[1.375rem] font-semibold">Every version of the rules</h2>
-      <p className="mt-1 text-ink-soft">Rules are never edited in place. Each change is a new version, and every payment records which version decided it.</p>
+      <h2 id="history" className="font-display text-2xl font-medium tracking-[-0.02em]">Every version of the rules</h2>
+      <p className="mt-2 leading-relaxed text-ink-soft">Rules are never edited in place. Each change is a new version, and every payment records which version decided it.</p>
       {error && <p role="alert" className="mt-2 font-bold text-stop">{error}</p>}
-      <ol className="mt-4 divide-y divide-rule rounded-2xl bg-dial">
+      <ol className="mt-5 divide-y divide-rule overflow-hidden rounded-3xl border border-rule bg-dial">
         {history.map((h) => (
-          <li key={h.version} className="px-4 py-4">
+          <li key={h.version} className="px-5 py-5 sm:px-6">
             <div className="flex flex-wrap items-baseline justify-between gap-2">
               <p className="font-bold">
                 Version {h.version}
@@ -376,7 +376,7 @@ function MoneyInput({ label, minor, onChange, optional, hint }: { label: string;
   return (
     <label className="block">
       <span className="text-sm font-bold">{label}</span>
-      <span className="relative mt-1 block">
+      <span className="relative mt-2 block">
         <span aria-hidden className="figures absolute top-1/2 left-3.5 -translate-y-1/2 text-ink-soft">$</span>
         <input
           inputMode="decimal"
@@ -391,7 +391,7 @@ function MoneyInput({ label, minor, onChange, optional, hint }: { label: string;
           className={`${field} figures pl-7`}
         />
       </span>
-      {hint && <span className="mt-1 block text-sm text-ink-soft">{hint}</span>}
+      {hint && <span className="mt-1 block text-[0.9375rem] leading-relaxed text-ink-soft">{hint}</span>}
     </label>
   );
 }
@@ -400,14 +400,14 @@ function Stepper({ label, value, onChange }: { label: string; value: number; onC
   return (
     <div>
       <p className="text-sm font-bold">{label}</p>
-      <div className="mt-1 inline-flex items-center rounded-xl border-2 border-rule">
-        <button type="button" onClick={() => onChange(Math.max(1, value - 1))} disabled={value <= 1} className="grid min-h-11 min-w-11 place-items-center text-xl font-bold disabled:opacity-40" aria-label="One fewer person">
+      <div className="mt-2 inline-flex items-center rounded-xl border-2 border-rule">
+        <button type="button" onClick={() => onChange(Math.max(1, value - 1))} disabled={value <= 1} className="grid min-h-12 min-w-12 place-items-center text-xl font-bold disabled:opacity-40" aria-label="One fewer person">
           −
         </button>
         <span className="figures min-w-24 text-center text-lg" aria-live="polite">
           {value} {value === 1 ? "person" : "people"}
         </span>
-        <button type="button" onClick={() => onChange(Math.min(3, value + 1))} disabled={value >= 3} className="grid min-h-11 min-w-11 place-items-center text-xl font-bold disabled:opacity-40" aria-label="One more person">
+        <button type="button" onClick={() => onChange(Math.min(3, value + 1))} disabled={value >= 3} className="grid min-h-12 min-w-12 place-items-center text-xl font-bold disabled:opacity-40" aria-label="One more person">
           +
         </button>
       </div>
@@ -439,7 +439,7 @@ function Slider({ label, value, onChange }: { label: string; value: number; onCh
         <span className="font-bold">{label}</span>
         <span className="figures text-lg">{Math.round(value * 100)}%</span>
       </span>
-      <input type="range" min={5} max={100} step={5} value={Math.round(value * 100)} onChange={(e) => onChange(Number(e.target.value) / 100)} className="mt-2 w-full accent-[var(--color-action)]" />
+      <input type="range" min={5} max={100} step={5} value={Math.round(value * 100)} onChange={(e) => onChange(Number(e.target.value) / 100)} className="mt-3 min-h-8 w-full accent-[var(--color-action)]" />
     </label>
   );
 }

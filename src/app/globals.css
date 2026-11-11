@@ -1,31 +1,31 @@
 @import "tailwindcss";
 
 /*
-  Tend: the family clock wall.
-  The family lives in four time zones, so the app reads like the row of city
-  clocks in a diaspora living room: white enamel dials, a night-indigo shell,
-  brass for Mum's home clock, and one colour per person, used everywhere.
+  Tend: the circle's clock wall.
+  Porcelain dials, a midnight-indigo shell, and one colour per person.
+  Daylight and the home clock use cool tones; amber is reserved for waiting.
   State colours (paid, waiting, refused) always travel with a word and an icon.
 */
 @theme static {
-  --color-enamel: #f1f3f6;
+  --color-enamel: #f3f5f7;
   --color-dial: #ffffff;
-  --color-ink: #12151c;
-  --color-ink-soft: #4a5163;
-  --color-rule: #d8dde6;
-  --color-rule-strong: #b9c0cd;
+  --color-ink: #172238;
+  --color-ink-soft: #536176;
+  --color-rule: #dde3eb;
+  --color-rule-strong: #9ca9bc;
 
-  --color-night: #1c2250;
-  --color-night-deep: #141a3f;
-  --color-night-cell: #2c3473;
-  --color-night-ink: #f0f2fb;
-  --color-night-soft: #b9bfe0;
-  --color-day: #edc66f;
+  --color-night: #19233e;
+  --color-night-deep: #111a30;
+  --color-night-cell: #354568;
+  --color-night-ink: #f3f6fc;
+  --color-night-soft: #b9c5db;
+  --color-day: #c7d7f1;
 
-  --color-brass: #a9792a;
-  --color-brass-deep: #7d5718;
+  /* Retain token names because stored person identities reference them. */
+  --color-brass: #65788f;
+  --color-brass-deep: #43566e;
 
-  --color-person-brass: #a9792a;
+  --color-person-brass: #65788f;
   --color-person-cobalt: #2c5bd4;
   --color-person-violet: #7448c4;
   --color-person-magenta: #b8306f;
@@ -44,15 +44,15 @@
 
   /* Clock faces keep their meaning in either theme: white is day, indigo is night. */
   /* Interaction accent (focus, caret, selection, Tend's own icons). Never a person's colour. */
-  --color-accent: #2c3473;
+  --color-accent: #394f7c;
 
   /* Primary actions: indigo on light, near-white on dark, always maximum contrast. */
-  --color-action: #1c2250;
-  --color-action-hover: #141a3f;
-  --color-action-ink: #f0f2fb;
+  --color-action: #223454;
+  --color-action-hover: #14243e;
+  --color-action-ink: #f3f6fc;
 
   --color-face-day: #ffffff;
-  --color-face-night: #1c2250;
+  --color-face-night: #19233e;
   --color-hand-day: #12151c;
   --color-hand-night: #f0f2fb;
 
@@ -68,18 +68,18 @@
 /* Night for the reader: the ground becomes the shell's indigo. */
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-enamel: #11152f;
-    --color-dial: #1a2046;
-    --color-ink: #eef0fa;
-    --color-ink-soft: #b3b9d9;
-    --color-rule: #2c3363;
-    --color-rule-strong: #414a85;
-    --color-night: #0b0f26;
-    --color-night-deep: #070a1c;
-    --color-night-cell: #222a63;
-    --color-brass: #d4a24f;
-    --color-brass-deep: #e7c07c;
-    --color-person-brass: #d4a24f;
+    --color-enamel: #101722;
+    --color-dial: #192333;
+    --color-ink: #edf2fa;
+    --color-ink-soft: #b4c1d4;
+    --color-rule: #2c3a4f;
+    --color-rule-strong: #62738d;
+    --color-night: #0c1424;
+    --color-night-deep: #080f1d;
+    --color-night-cell: #293958;
+    --color-brass: #9eb4cf;
+    --color-brass-deep: #c5d5e9;
+    --color-person-brass: #9eb4cf;
     --color-person-cobalt: #7a9cf5;
     --color-person-violet: #ad8cf0;
     --color-person-magenta: #ec78ae;
@@ -93,16 +93,17 @@
     --color-stop: #ff8b7d;
     --color-stop-tint: #3d1a17;
     --color-stop-ink: #2a0a06;
-    --color-accent: #c3cbf5;
-    --color-action: #eef0fa;
+    --color-accent: #c0d2f2;
+    --color-action: #e0eafd;
     --color-action-hover: #ffffff;
-    --color-action-ink: #11152f;
+    --color-action-ink: #172238;
     --color-face-day: #eef0f8;
-    --color-face-night: #0b0f26;
+    --color-face-night: #0c1424;
   }
 }
 
 html {
+  color-scheme: light dark;
   background: var(--color-enamel);
   color: var(--color-ink);
   font-family: var(--font-sans);
@@ -113,6 +114,56 @@ html {
 
 body {
   background: var(--color-enamel);
+}
+
+button:not(:disabled),
+summary,
+select {
+  cursor: pointer;
+}
+
+/* Shared page rhythm: a quiet frame around the task at hand. */
+.shell-header {
+  background-image: radial-gradient(ellipse at 90% 0%, rgb(130 157 210 / 0.1), transparent 65%);
+}
+
+.shell-band {
+  padding-block: 0.25rem 1rem;
+}
+
+.shell-band h1:not(.sr-only):not(.summary-title) {
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+}
+
+.tend-panel {
+  border: 1px solid var(--color-rule);
+  border-radius: 1.5rem;
+  background: var(--color-dial);
+}
+
+.tend-mark {
+  position: relative;
+  display: inline-block;
+  width: 1.35rem;
+  height: 1.35rem;
+  flex: none;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+}
+
+.tend-mark::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+  transform: translateX(4px);
+}
+
+@media (min-width: 640px) {
+  .shell-band { padding-block: 0.5rem 1.5rem; }
 }
 
 ::selection {
@@ -220,7 +271,7 @@ select {
   }
 }
 
-/* Mum's text size, chosen on her screen. */
+/* The person's text size, chosen on their screen. */
 [data-mum-size="1"] {
   font-size: 1.25rem;
 }

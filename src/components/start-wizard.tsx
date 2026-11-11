@@ -49,10 +49,10 @@ function ZoneSelect({ value, onChange, id }: { value: string; onChange: (v: stri
 function Field({ label, id, children }: { label: string; id: string; children: React.ReactNode }) {
   return (
     <div>
-      <label htmlFor={id} className="text-sm font-bold">
+      <label htmlFor={id} className="text-[0.9375rem] font-bold">
         {label}
       </label>
-      <div className="mt-1">{children}</div>
+      <div className="mt-2">{children}</div>
     </div>
   );
 }
@@ -120,16 +120,16 @@ export function StartWizard() {
     const [centre, ...rest] = links;
     return (
       <div className="rise">
-        <span className="grid size-14 place-items-center rounded-full bg-paid-tint text-paid">
+        <span className="grid size-16 place-items-center rounded-2xl border border-paid/20 bg-paid-tint text-paid">
           <Check aria-hidden size={30} strokeWidth={2.5} />
         </span>
-        <h1 className="mt-5 font-display text-[2.25rem] leading-[1.05] font-semibold tracking-[-0.01em] text-balance">{centre.name}&apos;s circle is ready</h1>
+        <h1 className="mt-5 font-display text-[2.5rem] leading-[1.08] font-semibold tracking-[-0.025em] sm:text-[2.75rem] text-balance">{centre.name}&apos;s circle is ready</h1>
         <p className="mt-3 text-lg text-ink-soft">
           Send everyone their own link. {centre.name}&apos;s opens their screen, with three big buttons; the others open the circle&apos;s home, where alerts can be turned on.
         </p>
-        <ul className="mt-6 divide-y divide-rule rounded-2xl bg-dial">
+        <ul className="mt-7 divide-y divide-rule overflow-hidden rounded-3xl border border-rule bg-dial">
           {[centre, ...rest].map((l) => (
-            <li key={l.id} className="flex flex-wrap items-center gap-3 px-4 py-3.5">
+            <li key={l.id} className="flex flex-wrap items-center gap-4 px-5 py-5 sm:px-6">
               <span className="min-w-0 flex-1">
                 <span className="block font-bold">
                   {l.name}
@@ -161,17 +161,18 @@ export function StartWizard() {
 
   return (
     <div>
-      <ol className="grid grid-cols-4 gap-2" aria-label="Steps">
+      <ol className="grid grid-cols-4 gap-2 border-b border-rule pb-6 sm:gap-4" aria-label="Steps">
         {STEPS.map((s, n) => (
-          <li key={s} aria-current={n === step ? "step" : undefined}>
-            <span aria-hidden className={`block h-1.5 rounded-full ${n < step ? "bg-paid" : n === step ? "bg-action" : "bg-rule"}`} />
-            <span className={`mt-1.5 block text-[0.8125rem] font-bold ${n === step ? "text-ink" : "text-ink-soft"}`}>{s}</span>
+          <li key={s} aria-current={n === step ? "step" : undefined} className="min-w-0">
+            <span aria-hidden className={`figures mb-3 grid size-9 place-items-center rounded-full border text-base font-semibold ${n < step ? "border-paid/25 bg-paid-tint text-paid" : n === step ? "border-action bg-action text-action-ink" : "border-rule-strong bg-dial text-ink-soft"}`}>{n < step ? <Check size={17} strokeWidth={2.5} /> : n + 1}</span>
+            <span aria-hidden className={`block h-1 rounded-full ${n < step ? "bg-paid" : n === step ? "bg-action" : "bg-rule"}`} />
+            <span className={`mt-2 block text-sm leading-snug font-bold ${n === step ? "text-ink" : "text-ink-soft"}`}>{s}</span>
           </li>
         ))}
       </ol>
 
       <form
-        className="mt-8"
+        className="mt-8 sm:mt-10"
         onSubmit={(e) => {
           e.preventDefault();
           if (step < 3) next();
@@ -180,13 +181,13 @@ export function StartWizard() {
       >
         {step === 0 && (
           <section className="rise">
-            <h1 className="font-display text-[2.25rem] leading-[1.05] font-semibold tracking-[-0.01em]">Who is Tend for?</h1>
+            <h1 className="font-display text-[2.5rem] leading-[1.08] font-semibold tracking-[-0.025em] sm:text-[2.75rem]">Who is Tend for?</h1>
             <p className="mt-3 text-lg text-ink-soft">They keep paying from their own PayPal. Tend gives the people they trust time to look at anything unusual first.</p>
-            <div className="mt-6 grid gap-4 rounded-2xl bg-dial p-4 sm:p-5">
+            <div className="mt-7 grid gap-6 rounded-3xl border border-rule bg-dial p-5 sm:p-7">
               <Field label="Their first name" id="p-name">
                 <input id="p-name" className={field} value={person.name} onChange={(e) => setPerson({ ...person, name: e.target.value })} placeholder="Walter" autoComplete="off" autoFocus />
               </Field>
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid gap-5 sm:grid-cols-2">
                 <Field label="Where they live" id="p-city">
                   <input id="p-city" className={field} value={person.city} onChange={(e) => setPerson({ ...person, city: e.target.value })} placeholder="Tucson" autoComplete="off" />
                 </Field>
@@ -200,22 +201,22 @@ export function StartWizard() {
 
         {step === 1 && (
           <section className="rise">
-            <h1 className="font-display text-[2.25rem] leading-[1.05] font-semibold tracking-[-0.01em]">Who&apos;s {theirs} second key?</h1>
+            <h1 className="font-display text-[2.5rem] leading-[1.08] font-semibold tracking-[-0.025em] sm:text-[2.75rem]">Who&apos;s {theirs} second key?</h1>
             <p className="mt-3 text-lg text-ink-soft">
               One to four people {them} trusts: family, a friend, a neighbour. When something is held, whoever is awake gets the alert. Start with yourself.
             </p>
-            <ul className="mt-6 space-y-3">
+            <ul className="mt-7 space-y-4">
               {helpers.map((h, n) => (
-                <li key={n} className="grid gap-4 rounded-2xl bg-dial p-4 sm:p-5">
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="font-bold">{n === 0 ? "You" : `Person ${n + 1}`}</span>
+                <li key={n} className="grid gap-5 rounded-3xl border border-rule bg-dial p-5 sm:p-7">
+                  <div className="flex items-center justify-between gap-3 border-b border-rule pb-4">
+                    <span className="font-display text-xl font-semibold">{n === 0 ? "You" : `Person ${n + 1}`}</span>
                     {n > 0 && (
-                      <button type="button" onClick={() => setHelpers(helpers.filter((_, i) => i !== n))} className="inline-flex min-h-10 items-center gap-1.5 text-sm font-bold text-ink-soft hover:text-stop">
+                      <button type="button" onClick={() => setHelpers(helpers.filter((_, i) => i !== n))} className="inline-flex min-h-12 items-center gap-1.5 rounded-xl px-2 text-sm font-bold text-ink-soft hover:bg-stop-tint hover:text-stop">
                         <Trash2 aria-hidden size={16} /> Remove
                       </button>
                     )}
                   </div>
-                  <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="grid gap-5 sm:grid-cols-2">
                     <Field label={n === 0 ? "Your first name" : "Their first name"} id={`h-name-${n}`}>
                       <input id={`h-name-${n}`} className={field} value={h.name} onChange={(e) => setHelper(n, { name: e.target.value })} placeholder={n === 0 ? "Priya" : "Dolores"} autoComplete="off" />
                     </Field>
@@ -250,12 +251,12 @@ export function StartWizard() {
 
         {step === 2 && (
           <section className="rise">
-            <h1 className="font-display text-[2.25rem] leading-[1.05] font-semibold tracking-[-0.01em]">How careful should Tend be?</h1>
+            <h1 className="font-display text-[2.5rem] leading-[1.08] font-semibold tracking-[-0.025em] sm:text-[2.75rem]">How careful should Tend be?</h1>
             <p className="mt-3 text-lg text-ink-soft">Ordinary bills to people {them} has paid before go straight through. These decide what waits.</p>
-            <div className="mt-6 divide-y divide-rule rounded-2xl bg-dial">
-              <div className="px-4 py-4 sm:px-5">
-                <p className="text-sm font-bold">Hold unusual payments for</p>
-                <div className="mt-2 grid grid-cols-4 gap-2" role="radiogroup" aria-label="How long to hold">
+            <div className="mt-7 divide-y divide-rule overflow-hidden rounded-3xl border border-rule bg-dial">
+              <div className="px-5 py-5 sm:px-7 sm:py-6">
+                <p className="text-[0.9375rem] font-bold">Hold unusual payments for</p>
+                <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4" role="radiogroup" aria-label="How long to hold">
                   {([12, 24, 48, 71] as const).map((h) => (
                     <button
                       key={h}
@@ -263,14 +264,14 @@ export function StartWizard() {
                       role="radio"
                       aria-checked={rules.coolingOffHours === h}
                       onClick={() => setRules({ ...rules, coolingOffHours: h })}
-                      className={`figures min-h-12 rounded-xl border-2 text-base font-medium ${rules.coolingOffHours === h ? "border-action bg-action text-action-ink" : "border-rule bg-dial hover:border-ink"}`}
+                      className={`figures min-h-14 rounded-2xl border-2 text-base font-medium transition-colors duration-200 ${rules.coolingOffHours === h ? "border-action bg-action text-action-ink" : "border-rule bg-dial hover:border-ink"}`}
                     >
                       {h === 71 ? "3 days" : `${h} hours`}
                     </button>
                   ))}
                 </div>
               </div>
-              <div className="grid gap-4 px-4 py-4 sm:grid-cols-2 sm:px-5">
+              <div className="grid gap-5 px-5 py-5 sm:grid-cols-2 sm:px-7 sm:py-6">
                 {(
                   [
                     ["coolOffOver", "Hold any payment over"],
@@ -293,7 +294,7 @@ export function StartWizard() {
                   </Field>
                 ))}
               </div>
-              <label className="flex min-h-14 items-center justify-between gap-4 px-4 py-3 sm:px-5">
+              <label className="flex min-h-20 items-center justify-between gap-4 px-5 py-5 sm:px-7">
                 <span>
                   <span className="block font-bold">Hold their first payment to anyone new</span>
                   <span className="block text-sm text-ink-soft">The roofer at the door, a new website, a stranger&apos;s PayPal.</span>
@@ -315,29 +316,29 @@ export function StartWizard() {
 
         {step === 3 && (
           <section className="rise">
-            <h1 className="font-display text-[2.25rem] leading-[1.05] font-semibold tracking-[-0.01em]">Check it over</h1>
-            <dl className="mt-6 divide-y divide-rule rounded-2xl bg-dial">
-              <div className="px-4 py-3.5 sm:px-5">
+            <h1 className="font-display text-[2.5rem] leading-[1.08] font-semibold tracking-[-0.025em] sm:text-[2.75rem]">Check it over</h1>
+            <dl className="mt-7 divide-y divide-rule overflow-hidden rounded-3xl border border-rule bg-dial">
+              <div className="px-5 py-5 sm:px-7">
                 <dt className="text-sm font-bold text-ink-soft">Tend is for</dt>
-                <dd className="mt-0.5 text-lg font-bold">
+                <dd className="mt-1.5 text-lg font-bold">
                   {person.name}, in {person.city}
                 </dd>
               </div>
-              <div className="px-4 py-3.5 sm:px-5">
+              <div className="px-5 py-5 sm:px-7">
                 <dt className="text-sm font-bold text-ink-soft">Their second key</dt>
-                <dd className="mt-0.5 text-lg font-bold">{helpers.map((h) => `${h.name} (${h.relation.toLowerCase()}, ${h.city})`).join(", ")}</dd>
+                <dd className="mt-1.5 text-lg font-bold">{helpers.map((h) => `${h.name} (${h.relation.toLowerCase()}, ${h.city})`).join(", ")}</dd>
               </div>
-              <div className="px-4 py-3.5 sm:px-5">
+              <div className="px-5 py-5 sm:px-7">
                 <dt className="text-sm font-bold text-ink-soft">What waits</dt>
-                <dd className="mt-0.5">
+                <dd className="mt-1.5 leading-relaxed">
                   Anything over <span className="figures">${rules.coolOffOver.toLocaleString("en-US")}</span>
                   {rules.holdNewPayees ? " or to someone new" : ""} is held for {rules.coolingOffHours === 71 ? "3 days" : `${rules.coolingOffHours} hours`}. Over{" "}
                   <span className="figures">${Math.max(rules.approvalOver, rules.coolOffOver).toLocaleString("en-US")}</span>, or with warning signs, it waits for a yes.
                 </dd>
               </div>
-              <div className="px-4 py-3.5 sm:px-5">
+              <div className="px-5 py-5 sm:px-7">
                 <dt className="text-sm font-bold text-ink-soft">Their PayPal</dt>
-                <dd className="mt-0.5">
+                <dd className="mt-1.5 leading-relaxed">
                   {person.name} approves each payment in their own PayPal. Tend asks PayPal to authorize it, and only captures it once it&apos;s cleared.
                 </dd>
               </div>
@@ -351,13 +352,13 @@ export function StartWizard() {
           </p>
         )}
 
-        <div className="mt-6 flex flex-wrap items-center gap-3">
+        <div className="mt-7 flex flex-wrap items-center gap-3 border-t border-rule pt-6">
           {step > 0 && (
             <button type="button" onClick={() => setStep(step - 1)} className={btn.secondary}>
               <ArrowLeft aria-hidden size={18} /> Back
             </button>
           )}
-          <button type="submit" disabled={busy} className={`${btn.primary} ml-auto min-w-40`}>
+          <button type="submit" disabled={busy} className={`${btn.primary} ml-auto min-w-40 flex-1 sm:flex-none`}>
             {step < 3 ? "Next" : busy ? "Setting up…" : `Set up ${theirs} circle`}
           </button>
         </div>

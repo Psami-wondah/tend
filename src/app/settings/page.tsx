@@ -34,7 +34,7 @@ export default async function SettingsPage() {
       }
     >
       <div className="mx-auto max-w-2xl space-y-8">
-        <section aria-labelledby="you" className="rounded-2xl bg-dial p-4">
+        <section aria-labelledby="you" className="tend-panel p-5 sm:p-6">
           <h2 id="you" className="sr-only">
             You
           </h2>
@@ -58,7 +58,7 @@ export default async function SettingsPage() {
 
         {isFamily(ctx.me) && <AlertsToggle memberId={ctx.me.id} person={who} />}
 
-        <section aria-labelledby="install" className="rounded-2xl bg-dial p-4">
+        <section aria-labelledby="install" className="tend-panel p-5 sm:p-6">
           <h2 id="install" className="flex items-center gap-2 font-bold">
             <Smartphone aria-hidden size={20} className="text-ink-soft" />
             Put Tend on your Home Screen
@@ -83,9 +83,9 @@ export default async function SettingsPage() {
           <p className="mt-1 text-[0.9375rem] text-ink-soft">
             Each person gets into Tend from their own link, on as many of their devices as they like. Send it by text or email, only to them.
           </p>
-          <ul className="mt-3 divide-y divide-rule rounded-2xl bg-dial">
+          <ul className="mt-5 divide-y divide-rule overflow-hidden rounded-3xl border border-rule bg-dial">
             {links.map(({ m, url }) => (
-              <li key={m.id} className="flex items-center gap-3 px-4 py-3">
+              <li key={m.id} className="flex items-center gap-3 px-5 py-5">
                 <PersonDot member={m} size={12} />
                 <span className="min-w-0 flex-1">
                   <span className="block font-bold">
@@ -104,7 +104,7 @@ export default async function SettingsPage() {
         </section>
 
         {ctx.example && (
-          <section aria-labelledby="example" className="rounded-2xl border-2 border-dashed border-rule-strong p-4">
+          <section aria-labelledby="example" className="rounded-3xl border border-dashed border-rule-strong p-5 sm:p-6">
             <h2 id="example" className="font-bold">
               This is an example circle
             </h2>
@@ -120,7 +120,7 @@ export default async function SettingsPage() {
           </section>
         )}
 
-        <nav aria-label="More" className="divide-y divide-rule rounded-2xl bg-dial">
+        <nav aria-label="More" className="divide-y divide-rule overflow-hidden rounded-3xl border border-rule bg-dial">
           <Link href="/setup" className="flex min-h-14 items-center justify-between px-4 font-bold">
             What&apos;s connected
             <ChevronRight aria-hidden size={18} className="text-ink-soft" />

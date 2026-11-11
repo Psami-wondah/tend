@@ -18,7 +18,7 @@ export default async function AskPage() {
           <p className="mt-2 max-w-xl text-night-soft">
             {ctx.integrations.ai
               ? `Ask in plain words. Tend looks it up in the passbook${ctx.integrations.paypal !== "simulated" ? " and PayPal" : ""}, can stop a held payment, and can suggest a payment or a rule change; the circle's rules still decide.`
-              : "Demo mode: answers come from the ledger without AI. Add an Anthropic or OpenRouter key on Setup for open questions."}
+              : "Demo mode: answers come from the ledger without AI. Connect AI on Setup for open questions."}
           </p>
         </div>
       }

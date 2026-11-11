@@ -31,11 +31,11 @@ export default async function PassbookPage() {
             <h1 className="font-display text-[2rem] leading-none font-semibold tracking-[-0.01em]">Passbook</h1>
             <p className="mt-2 text-night-soft">
               {pot
-                ? `Every cent in and out of ${ctx.circle.careRecipientName}'s pot, append-only, plus what ${ctx.circle.careRecipientName} paid from their own PayPal.`
+                ? `Every cent in and out of ${ctx.circle.careRecipientName}'s pot, plus what ${ctx.circle.careRecipientName} paid from their own PayPal.`
                 : `Everything ${ctx.circle.careRecipientName} paid from their own PayPal, and everything that was held, stopped or refused.`}
             </p>
           </div>
-          <dl className="flex gap-6">
+          <dl className="flex flex-wrap gap-x-8 gap-y-4 rounded-2xl border border-night-ink/15 bg-night-ink/5 px-5 py-4">
             {pot ? (
               <>
                 <div>

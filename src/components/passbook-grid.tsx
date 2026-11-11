@@ -348,20 +348,20 @@ export function PassbookGrid({ rows, currency, people, aiLive, pot = true }: { r
     });
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <form
         onSubmit={(e) => {
           e.preventDefault();
           void ask(question);
         }}
-        className="rounded-2xl bg-dial p-4"
+        className="tend-panel p-5 sm:p-6"
       >
         <label htmlFor="ask-passbook" className="flex items-center gap-2 font-bold">
           <MessageCircle aria-hidden size={18} className="text-accent" />
           Ask the passbook
         </label>
-        <p className="mt-0.5 text-sm text-ink-soft">{aiLive ? "The AI turns your question into a filter you can see and remove." : "Demo mode matches keywords; with an AI key set up, the model reads the question."}</p>
-        <div className="mt-2 flex gap-2">
+        <p className="mt-2 text-[0.9375rem] text-ink-soft">{aiLive ? "The AI turns your question into a filter you can see and remove." : "Demo mode matches keywords; with an AI key set up, AI reads the question."}</p>
+        <div className="mt-4 flex flex-wrap gap-2 sm:flex-nowrap">
           <input
             id="ask-passbook"
             value={question}
@@ -375,7 +375,7 @@ export function PassbookGrid({ rows, currency, people, aiLive, pot = true }: { r
         </div>
         <div className="mt-3 flex flex-wrap gap-1.5">
           {SUGGESTIONS.map((s) => (
-            <button key={s} type="button" onClick={() => void ask(s)} className="min-h-9 rounded-full border border-rule px-3 text-sm hover:border-ink">
+            <button key={s} type="button" onClick={() => void ask(s)} className="min-h-12 rounded-full border border-rule px-3 text-sm hover:border-ink">
               {s}
             </button>
           ))}
@@ -392,7 +392,7 @@ export function PassbookGrid({ rows, currency, people, aiLive, pot = true }: { r
                 key={c.label}
                 type="button"
                 onClick={() => removeChip(c.key, c.value)}
-                className="inline-flex min-h-9 items-center gap-1.5 rounded-full bg-action px-3 text-sm font-bold text-action-ink"
+                className="inline-flex min-h-12 items-center gap-1.5 rounded-full bg-action px-3 text-sm font-bold text-action-ink"
                 aria-label={`Remove filter: ${c.label}`}
               >
                 {c.label}
@@ -408,19 +408,19 @@ export function PassbookGrid({ rows, currency, people, aiLive, pot = true }: { r
           <label className="relative flex-1 sm:w-56">
             <span className="sr-only">Search the passbook</span>
             <Search aria-hidden size={16} className="absolute top-1/2 left-3 -translate-y-1/2 text-ink-soft" />
-            <input value={quick} onChange={(e) => setQuick(e.target.value)} placeholder="Search" className={`${field} min-h-10 pl-9`} />
+            <input value={quick} onChange={(e) => setQuick(e.target.value)} placeholder="Search" className={`${field} min-h-12 pl-9`} />
           </label>
           <button
             type="button"
             onClick={() => api.current?.exportDataAsCsv({ fileName: "tend-passbook.csv", columnKeys: ["at", "description", "who", "category", "inMinor", "outMinor", "balanceMinor", "paypalId"] })}
-            className={`${btn.secondary} min-h-10 px-3 text-sm`}
+            className={`${btn.secondary} min-h-12 px-3 text-sm`}
           >
             <Download aria-hidden size={16} /> CSV
           </button>
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-2xl shadow-[0_1px_2px_rgb(18_21_28/0.05)]">
+      <div className="overflow-hidden rounded-3xl border border-rule">
         <AgGridReact<PassbookRow>
           theme={tendTheme}
           rowData={rows}

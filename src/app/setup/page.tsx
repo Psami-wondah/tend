@@ -20,15 +20,15 @@ export default async function SetupPage() {
       ok: i.ai,
       title: "AI reads bills and answers questions",
       body: i.ai
-        ? `Connected, using ${i.model} through ${i.aiProvider === "openrouter" ? "OpenRouter" : "the Claude API"}.`
-        : "Not connected. The examples and typed messages still work with a keyword reader, but photos need an AI model.",
-      fix: "Add OPENROUTER_API_KEY (openrouter.ai, Keys) or ANTHROPIC_API_KEY (console.anthropic.com) to .env, then restart. Pick any model with TEND_MODEL; the default is Claude Sonnet 5.5.",
+        ? "Connected. AI can read bills and answer questions."
+        : "Not connected. The examples and typed messages still work with a keyword reader, but photos need AI.",
+      fix: "Add OPENROUTER_API_KEY (openrouter.ai, Keys) or ANTHROPIC_API_KEY (console.anthropic.com) to .env, then restart.",
     },
     {
       ok: i.voice,
       title: "Answers read aloud in a natural voice",
-      body: i.voice ? `On, with ${i.voiceLabel} through OpenRouter.` : "The person's screen uses the browser's own voice, which can sound robotic.",
-      fix: "Comes with OPENROUTER_API_KEY. Pick another voice with TEND_VOICE_MODEL and TEND_VOICE (any OpenRouter speech model), or set TEND_VOICE=off.",
+      body: i.voice ? "On. Answers are read aloud in a natural voice." : "The person's screen uses the browser's own voice, which can sound robotic.",
+      fix: "Comes with OPENROUTER_API_KEY. Pick another voice with TEND_VOICE_MODEL and TEND_VOICE (an available AI voice), or set TEND_VOICE=off.",
     },
     {
       ok: i.paypal !== "simulated",
@@ -43,7 +43,7 @@ export default async function SetupPage() {
       ok: i.sandboxEmails.every((e) => e.set),
       title: "Sandbox accounts for payees and the circle",
       body: `${i.sandboxEmails.filter((e) => e.set).length} of ${i.sandboxEmails.length} set. Without them, payouts go to example addresses PayPal will reject.`,
-      fix: "developer.paypal.com: Testing tools, Sandbox accounts. Copy a Personal account email into each SANDBOX_*_EMAIL (one account can be reused), then run npm run db:reset. Mum and Walter approve their own payments by logging in to theirs.",
+      fix: "developer.paypal.com: Testing tools, Sandbox accounts. Copy a Personal account email into each SANDBOX_*_EMAIL (one account can be reused), then run npm run db:reset. Each person approves their own payments by logging in to their account.",
     },
     {
       ok: i.paypal !== "simulated",
@@ -98,9 +98,9 @@ export default async function SetupPage() {
   );
   const body = (
       <div className="mx-auto max-w-3xl space-y-8">
-        <ul className="divide-y divide-rule rounded-2xl bg-dial">
+        <ul className="divide-y divide-rule overflow-hidden rounded-3xl border border-rule bg-dial">
           {items.map((it) => (
-            <li key={it.title} className="flex gap-3.5 px-4 py-4">
+            <li key={it.title} className="flex gap-3.5 px-5 py-6 sm:px-6">
               {it.ok ? (
                 <CircleCheck aria-hidden size={24} className="mt-0.5 shrink-0 text-paid" />
               ) : (
@@ -118,7 +118,7 @@ export default async function SetupPage() {
           ))}
         </ul>
 
-        <section aria-labelledby="mcp" className="rounded-2xl bg-dial p-4">
+        <section aria-labelledby="mcp" className="tend-panel p-5 sm:p-6">
           <h2 id="mcp" className="font-bold">Use Tend from an AI assistant (MCP)</h2>
           <p className="mt-1 text-[0.9375rem] text-ink-soft">
             Tend is also an MCP server, so any AI assistant or agent about to pay a bill can ask the circle&apos;s second key first. Eight tools: check a payment

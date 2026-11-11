@@ -58,8 +58,8 @@ export function ApprovalCard(props: {
   }
 
   return (
-    <article className="rounded-2xl border-2 border-wait/35 bg-dial p-4 shadow-[0_1px_2px_rgb(18_21_28/0.05),0_10px_24px_-14px_rgb(18_21_28/0.25)] sm:p-5" aria-labelledby={`p-${intent.id}`}>
-      <div className="flex items-start justify-between gap-3">
+    <article className="rounded-3xl border-2 border-wait/35 bg-dial p-5 shadow-[0_1px_2px_rgb(18_21_28/0.05),0_10px_24px_-14px_rgb(18_21_28/0.25)] sm:p-7" aria-labelledby={`p-${intent.id}`}>
+      <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="min-w-0">
           <Money minor={intent.amountMinor} currency={intent.currency} size="lg" />
           <h3 id={`p-${intent.id}`} className="mt-1.5 text-lg leading-snug font-bold break-words">
@@ -72,7 +72,7 @@ export function ApprovalCard(props: {
 
       {props.compact ? (
         headline && (
-          <p className="mt-3 text-[0.9375rem]">
+          <p className="mt-5 rounded-xl bg-enamel px-4 py-3 text-[0.9375rem] leading-relaxed">
             <Txt>{headline.message}</Txt>
           </p>
         )
@@ -91,7 +91,7 @@ export function ApprovalCard(props: {
       )}
 
       {unknownPayee && isFamily && (
-        <div className="mt-4 rounded-xl bg-enamel p-3.5">
+        <div className="mt-5 rounded-2xl border border-rule bg-enamel p-4 sm:p-5">
           {!adding ? (
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
               <p className="min-w-0 flex-1 text-[0.9375rem]">Tend can only pay people the circle has added. Do you know who {intent.payeeName} is?</p>
@@ -106,7 +106,7 @@ export function ApprovalCard(props: {
         </div>
       )}
 
-      <div className={props.compact ? "mt-3" : "mt-4"}>
+      <div className={props.compact ? "mt-5" : "mt-6"}>
         <p className="mb-2 text-[0.9375rem] font-bold">
           {intent.status === "on_hold"
             ? "Waiting for a top-up. Approvals still count."
@@ -114,7 +114,7 @@ export function ApprovalCard(props: {
               ? `${remaining} more ${remaining === 1 ? "approval" : "approvals"} needed`
               : "Fully approved"}
         </p>
-        <ul className="flex flex-wrap gap-1.5" aria-label="Who can approve">
+        <ul className="flex flex-wrap gap-2" aria-label="Who can approve">
           {props.family.map((p) => {
             const t = localTime(p.timezone, now);
             const asleep = !isDaytimeHour(t.hour);
@@ -144,14 +144,14 @@ export function ApprovalCard(props: {
       )}
 
       {isFamily && (
-        <div className="mt-4">
+        <div className="mt-6 border-t border-rule pt-5">
           {props.myVote === "approve" ? (
             <p className="font-bold text-paid">
               You approved this.{" "}
               {remaining === 1 ? "Tend pays it when one more person says yes." : remaining > 1 ? `Tend pays it when ${remaining} more people say yes.` : ""}
             </p>
           ) : confirmDecline ? (
-            <div className="rounded-xl bg-stop-tint p-3.5">
+            <div className="rounded-2xl border border-stop/20 bg-stop-tint p-4 sm:p-5">
               <p className="font-bold">
                 Decline <span className="figures">{amount}</span> to {intent.payeeName}? Nobody will be paid, and the circle will see you declined.
               </p>
@@ -165,7 +165,7 @@ export function ApprovalCard(props: {
               </div>
             </div>
           ) : (
-            <div className="grid grid-cols-[1fr_auto] gap-2">
+            <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-3">
               <button type="button" onClick={() => vote("approve")} disabled={busy !== null || unknownPayee} className={btn.approve}>
                 {busy === "approve" ? (
                   "Approving…"
@@ -185,7 +185,7 @@ export function ApprovalCard(props: {
       )}
 
       {props.showLink !== false && (
-        <Link href={`/payments/${intent.id}`} className="mt-3 inline-block text-sm font-bold text-ink-soft underline decoration-rule-strong hover:text-ink">
+        <Link href={`/payments/${intent.id}`} className="mt-3 inline-flex min-h-12 items-center text-sm font-bold text-ink-soft underline decoration-rule-strong hover:text-ink">
           {props.compact ? "Why, and what happened so far" : "What happened so far"}
         </Link>
       )}

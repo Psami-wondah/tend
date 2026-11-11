@@ -22,7 +22,7 @@ export function PersonPicker({ people, initialNow }: { people: Person[]; initial
   }
 
   return (
-    <ul className={`grid grid-cols-2 gap-3 ${people.length >= 4 ? "sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4" : "sm:grid-cols-3"}`}>
+    <ul className={`grid grid-cols-2 gap-3 sm:gap-4 ${people.length >= 4 ? "sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4" : "sm:grid-cols-3"}`}>
       {people.map((p) => {
         const t = localTime(p.timezone, now);
         const night = !isDaytimeHour(t.hour);
@@ -33,16 +33,16 @@ export function PersonPicker({ people, initialNow }: { people: Person[]; initial
               type="button"
               onClick={() => choose(p)}
               disabled={busy !== null}
-              className="group flex w-full flex-col items-center rounded-2xl bg-night-ink/6 px-3 pt-5 pb-4 text-center transition-colors duration-200 hover:bg-night-ink/12 disabled:opacity-70"
+              className="group flex h-full w-full flex-col items-center rounded-3xl border border-night-ink/15 bg-night-ink/6 px-3 pt-7 pb-5 text-center transition-colors duration-200 hover:border-night-ink/40 hover:bg-night-ink/12 disabled:opacity-70 sm:px-4 sm:pt-8 sm:pb-6"
             >
               <Dial person={p} now={now} size={92} />
-              <span className="mt-3 font-display text-xl font-semibold">{busy === p.id ? "Opening…" : p.name}</span>
-              <span className="text-sm text-night-soft">{p.city}</span>
-              <span className="figures inline-flex items-center gap-1 text-sm text-night-soft">
+              <span className="mt-5 font-display text-2xl font-semibold tracking-[-0.015em]">{busy === p.id ? "Opening…" : p.name}</span>
+              <span className="text-[0.9375rem] text-night-soft">{p.city}</span>
+              <span className="figures mt-1 inline-flex items-center gap-1 text-base text-night-soft">
                 {t.label}
                 {night && <Moon aria-label="night" size={13} />}
               </span>
-              <span className="mt-2.5 rounded-full bg-night-ink/10 px-3 py-1 text-[0.8125rem] font-bold group-hover:bg-day group-hover:text-night">
+              <span className="mt-4 rounded-2xl bg-night-ink/10 px-3 py-2 text-sm leading-snug font-bold group-hover:bg-night-ink group-hover:text-night">
                 {mum ? "Pay or check something" : p.relation ? `${p.relation.charAt(0).toUpperCase()}${p.relation.slice(1)}, second key` : "Second key"}
               </span>
             </button>

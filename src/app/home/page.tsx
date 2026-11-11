@@ -47,12 +47,12 @@ export default async function CircleHome() {
       me={personProps(ctx.me)}
       demo={ctx.demo}
       band={
-        <div className="mt-4 grid gap-5 md:grid-cols-[1fr_minmax(0,22rem)] md:items-end">
+        <div className="mt-6 grid gap-6 pb-2 md:grid-cols-[1fr_minmax(0,22rem)] md:items-end">
           {d.circle.potEnabled ? (
             <div>
-              <h1 className="sr-only">{who}&apos;s care pot</h1>
+              <h1 className="summary-title mb-3 text-base font-bold text-night-soft">{who}&apos;s care pot</h1>
               <Money minor={available} currency={d.circle.currency} size="xl" className="block" />
-              <p className="mt-2 text-[0.9375rem] text-night-soft">
+              <p className="mt-4 max-w-lg text-base leading-relaxed text-night-soft">
                 <Txt>
                   {`In ${who}'s care pot${d.reservedMinor > 0 ? `, with ${money(d.reservedMinor)} on its way out` : ""}${
                     waitingTotal > 0 ? `. ${money(waitingTotal)} is waiting on the circle.` : "."
@@ -62,9 +62,9 @@ export default async function CircleHome() {
             </div>
           ) : (
             <div>
-              <h1 className="sr-only">Protecting {who}&apos;s PayPal</h1>
+              <h1 className="summary-title mb-3 text-base font-bold text-night-soft">Protecting {who}&apos;s PayPal</h1>
               <Money minor={d.keptMinor} currency={d.circle.currency} size="xl" className="block" />
-              <p className="mt-2 text-[0.9375rem] text-night-soft">
+              <p className="mt-4 max-w-lg text-base leading-relaxed text-night-soft">
                 <Txt>
                   {`Kept in ${who}'s account this month: payments the circle stopped and scams Tend refused.${
                     d.held.length ? ` ${money(d.heldMinor)} held right now.` : " Nothing held right now."
@@ -73,23 +73,27 @@ export default async function CircleHome() {
               </p>
             </div>
           )}
-          <DayBand people={people} initialNow={ctx.now} />
+          <div className="pb-1">
+            <p className="mb-3 text-[0.9375rem] text-night-soft">Everyone’s local day</p>
+            <DayBand people={people} initialNow={ctx.now} />
+          </div>
         </div>
       }
     >
-      <div className="grid grid-cols-[minmax(0,1fr)] gap-x-8 gap-y-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
-        <section aria-label="The circle's clocks" className="lg:col-start-2 lg:row-start-1">
+      <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-x-8 gap-y-8 lg:grid-cols-[minmax(0,1fr)_22rem]">
+        <section aria-label="The circle's clocks" className="rounded-3xl border border-rule bg-dial px-4 py-6 lg:col-start-2 lg:row-start-1">
+          <p className="mb-5 text-center font-display text-xl font-medium">A little closer, wherever you are</p>
           <ClockRow people={people} initialNow={ctx.now} viewerId={ctx.me.id} />
         </section>
 
-        <div className="space-y-8 lg:col-start-1 lg:row-span-2 lg:row-start-1">
+        <div className="space-y-10 lg:col-start-1 lg:row-span-2 lg:row-start-1">
           {d.payingCount > 0 && <WaitingForPayPal />}
           {isNew && person && isFamily(ctx.me) && <GettingStarted person={who} link={personLink} payees={payeeCount} />}
 
-          <section aria-labelledby="waiting">
+          <section aria-labelledby="waiting" className={nothingWaiting ? "rounded-3xl border border-rule bg-dial p-5 sm:p-7" : undefined}>
             <SectionHeading id="waiting">{nothingWaiting ? "Nothing waiting on you" : "Waiting on you"}</SectionHeading>
             {nothingWaiting ? (
-              <p className="max-w-prose text-ink-soft">
+              <p className="max-w-prose leading-relaxed text-ink-soft">
                 {d.circle.potEnabled
                   ? `Tend is paying routine bills within the limits you agreed. Anything bigger or unusual, from the pot or from ${who}'s own PayPal, will appear here.`
                   : `${who} pays ordinary bills from their own PayPal. Anything unusual is held there ${hold} and appears here, so you can look before it goes.`}
@@ -169,7 +173,7 @@ export default async function CircleHome() {
               <SectionHeading
                 id="recent"
                 action={
-                  <Link href="/passbook" className="text-sm font-bold text-ink-soft underline decoration-rule-strong hover:text-ink">
+                  <Link href="/passbook" className="inline-flex min-h-12 items-center text-sm font-bold text-ink-soft underline decoration-rule-strong hover:text-ink">
                     Open the passbook
                   </Link>
                 }
@@ -188,7 +192,7 @@ export default async function CircleHome() {
               <SectionHeading
                 id="own"
                 action={
-                  <Link href="/passbook" className="text-sm font-bold text-ink-soft underline decoration-rule-strong hover:text-ink">
+                  <Link href="/passbook" className="inline-flex min-h-12 items-center text-sm font-bold text-ink-soft underline decoration-rule-strong hover:text-ink">
                     All payments
                   </Link>
                 }
@@ -206,21 +210,21 @@ export default async function CircleHome() {
             <>
               <section aria-labelledby="fair">
                 <SectionHeading id="fair">Who&apos;s put in what</SectionHeading>
-                <div className="rounded-2xl bg-dial p-4">
+                <div className="rounded-3xl border border-rule bg-dial p-5 sm:p-6">
                   <Fairness rows={d.contributedBy} currency={d.circle.currency} />
                 </div>
               </section>
 
               <section aria-labelledby="topup">
                 <SectionHeading id="topup">Top up the pot</SectionHeading>
-                <div className="rounded-2xl bg-dial p-4">
+                <div className="rounded-3xl border border-rule bg-dial p-5 sm:p-6">
                   <TopUp memberId={ctx.me.id} currency={d.circle.currency} homeCurrency={ctx.me.homeCurrency} mode={ctx.integrations.paypal} />
                 </div>
               </section>
 
               <section aria-labelledby="chipin">
                 <SectionHeading id="chipin">Ask everyone to chip in</SectionHeading>
-                <div className="rounded-2xl bg-dial p-4">
+                <div className="rounded-3xl border border-rule bg-dial p-5 sm:p-6">
                   <p className="mb-3 text-[0.9375rem] text-ink-soft">
                     Tend sends each of you a PayPal invoice for an equal share.
                     {d.pendingShareCount > 0 ? ` ${d.pendingShareCount} still open.` : ""}
@@ -232,9 +236,9 @@ export default async function CircleHome() {
           )}
 
           {!d.circle.potEnabled && (
-            <section aria-labelledby="how" className="rounded-2xl bg-dial p-4">
+            <section aria-labelledby="how" className="rounded-3xl border border-rule bg-dial p-5 sm:p-6">
               <h2 id="how" className="font-display text-[1.375rem] leading-tight font-semibold">How the second key works</h2>
-              <ul className="mt-3 space-y-2.5 text-[0.9375rem]">
+              <ul className="mt-5 space-y-4 text-[0.9375rem] leading-relaxed">
                 <li>
                   <span className="font-bold">Ordinary bills</span> to people {who} has paid before go straight through.
                 </li>
@@ -245,7 +249,7 @@ export default async function CircleHome() {
                   <span className="font-bold">Gift cards, crypto, wire transfers</span> and clear scams are refused before any money moves.
                 </li>
               </ul>
-              <Link href="/rules" className="mt-3 inline-block text-sm font-bold underline">
+              <Link href="/rules" className="mt-4 inline-flex min-h-12 items-center text-sm font-bold underline">
                 Change how long Tend holds things
               </Link>
             </section>

@@ -36,8 +36,8 @@ export function RecoveryCard({ r, memberId, simulated }: { r: Recovery; memberId
   }
   const amount = formatMoney(r.amountMinor, r.currency);
   return (
-    <article className="rounded-2xl border-2 border-accent/30 bg-dial p-4 sm:p-5">
-      <div className="flex items-start gap-3">
+    <article className="rounded-3xl border-2 border-accent/30 bg-dial p-5 sm:p-7">
+      <div className="flex items-start gap-4">
         <span aria-hidden className="grid size-10 shrink-0 place-items-center rounded-full bg-accent/12 text-accent">
           <Undo2 size={20} strokeWidth={2.25} />
         </span>
@@ -45,20 +45,20 @@ export function RecoveryCard({ r, memberId, simulated }: { r: Recovery; memberId
           <h3 className="text-lg leading-snug font-bold">
             <Txt>{r.status === "found" ? `${r.payeeName} was paid ${amount} twice` : `Asked ${r.payeeName} for ${amount} back`}</Txt>
           </h3>
-          <p className="mt-0.5 text-ink-soft">
+          <p className="mt-2 leading-relaxed text-ink-soft">
             {r.status === "found"
               ? "Same bill, same amount, a day apart. Tend can send them a PayPal invoice for the second payment."
               : "Tend sent them a PayPal refund invoice. The money comes back into the pot when they pay it."}
           </p>
           {r.paypalInvoiceId && (
-            <p className="mt-1 flex flex-wrap items-center gap-2 text-sm text-ink-soft">
+            <p className="mt-1 flex flex-wrap items-center gap-2 text-[0.9375rem] leading-relaxed text-ink-soft">
               Invoice <span className="figures">{r.paypalInvoiceId}</span> <SimTag id={r.paypalInvoiceId} />
             </p>
           )}
         </div>
       </div>
       {error && <p role="alert" className="mt-3 font-bold text-stop">{error}</p>}
-      <div className="mt-4 flex flex-wrap gap-2">
+      <div className="mt-5 flex flex-wrap gap-3 border-t border-rule pt-5 empty:hidden">
         {r.status === "found" ? (
           <>
             <button type="button" onClick={() => act("request")} disabled={busy !== null} className={btn.primary}>
@@ -105,7 +105,7 @@ export function TopUp({ memberId, currency, homeCurrency, mode }: {
   const fmt = (n: number) => new Intl.NumberFormat("en-US", { style: "currency", currency, maximumFractionDigits: 0 }).format(n);
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       <fieldset>
         <legend className="mb-2 text-[0.9375rem] font-bold">How much?</legend>
         <div className="grid grid-cols-4 gap-2">
@@ -125,7 +125,7 @@ export function TopUp({ memberId, currency, homeCurrency, mode }: {
         </div>
       </fieldset>
       {homeCurrency && homeCurrency !== currency && (
-        <p className="text-sm text-ink-soft">You pay from {homeCurrency}; PayPal shows the exact conversion before you confirm.</p>
+        <p className="text-[0.9375rem] leading-relaxed text-ink-soft">You pay from {homeCurrency}; PayPal shows the exact conversion before you confirm.</p>
       )}
       <PayPalApprove
         simulated={mode === "simulated"}
@@ -180,15 +180,15 @@ export function ShareRequest({ family, currency }: { family: number; currency: s
   const n = Number(total);
   const share = new Intl.NumberFormat("en-US", { style: "currency", currency }).format(n > 0 ? Math.ceil((n * 100) / family) / 100 : 0);
   return (
-    <form onSubmit={send} className="space-y-3">
-      <div className="grid grid-cols-[7.5rem_1fr] gap-2">
+    <form onSubmit={send} className="space-y-4">
+      <div className="grid grid-cols-[minmax(0,0.7fr)_minmax(0,1fr)] gap-3">
         <label className="block">
           <span className="text-sm font-bold">Total</span>
-          <input inputMode="decimal" value={total} onChange={(e) => setTotal(e.target.value.replace(/[^\d.]/g, ""))} className={`${field} figures mt-1 text-lg`} />
+          <input inputMode="decimal" value={total} onChange={(e) => setTotal(e.target.value.replace(/[^\d.]/g, ""))} className={`${field} figures mt-2 text-lg`} />
         </label>
         <label className="block">
           <span className="text-sm font-bold">What it&apos;s for</span>
-          <input value={note} onChange={(e) => setNote(e.target.value)} className={`${field} mt-1`} />
+          <input value={note} onChange={(e) => setNote(e.target.value)} className={`${field} mt-2`} />
         </label>
       </div>
       <button disabled={busy || !(n > 0) || !note.trim()} className={`${btn.secondary} w-full`}>
@@ -218,12 +218,12 @@ export function MyShare({ c, memberId }: { c: Contribution; memberId: string }) 
     }
   }
   return (
-    <div className="flex flex-col gap-3 rounded-2xl bg-dial p-4 sm:flex-row sm:items-center">
+    <div className="flex flex-col gap-4 rounded-3xl border border-rule bg-dial p-5 sm:flex-row sm:items-center sm:p-6">
       <div className="min-w-0 flex-1">
         <p className="font-bold">
           Your share: <Money minor={c.amountMinor} currency={c.currency} size="sm" />
         </p>
-        <p className="flex flex-wrap items-center gap-2 text-sm text-ink-soft">
+        <p className="flex flex-wrap items-center gap-2 text-[0.9375rem] leading-relaxed text-ink-soft">
           {sim ? "A PayPal invoice is waiting for you." : "Check your PayPal email for the invoice."} <SimTag id={c.paypalInvoiceId} />
         </p>
         {error && <p role="alert" className="text-sm font-bold text-stop">{error}</p>}
@@ -240,7 +240,7 @@ export function MyShare({ c, memberId }: { c: Contribution; memberId: string }) 
 /** While a payout is in flight. The page itself stays current through <Live />. */
 export function WaitingForPayPal() {
   return (
-    <p role="status" className="flex items-center gap-2 text-sm text-ink-soft">
+    <p role="status" className="flex items-center gap-2 text-[0.9375rem] leading-relaxed text-ink-soft">
       <span aria-hidden className="pulse-dot size-2 rounded-full bg-wait" />
       Waiting for PayPal to confirm a payment…
     </p>
