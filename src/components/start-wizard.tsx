@@ -120,14 +120,14 @@ export function StartWizard() {
     const [centre, ...rest] = links;
     return (
       <div className="rise">
-        <span className="grid size-16 place-items-center text-paid">
+        <span className="grid size-16 place-items-center rounded-full bg-action text-action-ink shadow-[0_8px_18px_-12px_rgb(8_46_63/0.45)]">
           <Check aria-hidden size={30} strokeWidth={2.5} />
         </span>
         <h1 className="mt-5 font-display text-[2.5rem] leading-[1.08] font-semibold tracking-[-0.025em] sm:text-[2.75rem] text-balance">{centre.name}&apos;s circle is ready</h1>
         <p className="mt-3 text-lg text-ink-soft">
           Send everyone their own link. {centre.name}&apos;s opens their screen, with three big buttons; the others open the circle&apos;s home, where alerts can be turned on.
         </p>
-        <ul className="mt-7 divide-y divide-rule overflow-hidden rounded-3xl border border-rule bg-dial">
+        <ul className="mt-7 divide-y divide-rule overflow-hidden rounded-3xl border border-rule bg-dial shadow-[0_12px_32px_-24px_rgb(25_47_57/0.45)]">
           {[centre, ...rest].map((l) => (
             <li key={l.id} className="flex flex-wrap items-center gap-4 px-5 py-5 sm:px-6">
               <span className="min-w-0 flex-1">
@@ -164,7 +164,7 @@ export function StartWizard() {
       <ol className="grid grid-cols-4 gap-2 border-b border-rule pb-6 sm:gap-4" aria-label="Steps">
         {STEPS.map((s, n) => (
           <li key={s} aria-current={n === step ? "step" : undefined} className="min-w-0">
-            <span aria-hidden className={`figures mb-3 grid size-9 place-items-center rounded-full border text-base font-semibold ${n < step ? "border-paid text-paid" : n === step ? "border-action bg-action text-action-ink" : "border-rule-strong bg-dial text-ink-soft"}`}>{n < step ? <Check size={17} strokeWidth={2.5} /> : n + 1}</span>
+            <span aria-hidden className={`figures mb-3 grid size-9 place-items-center rounded-full border text-base font-semibold shadow-[0_5px_14px_-10px_rgb(8_46_63/0.4)] ${n < step ? "border-paid bg-paid text-paid-ink" : n === step ? "border-action bg-action text-action-ink" : "border-rule-strong bg-dial text-ink-soft"}`}>{n < step ? <Check size={17} strokeWidth={2.5} /> : n + 1}</span>
             <span aria-hidden className={`block h-1 rounded-full ${n < step ? "bg-paid" : n === step ? "bg-action" : "bg-rule"}`} />
             <span className={`mt-2 block text-sm leading-snug font-bold ${n === step ? "text-ink" : "text-ink-soft"}`}>{s}</span>
           </li>
@@ -183,7 +183,7 @@ export function StartWizard() {
           <section className="rise">
             <h1 className="font-display text-[2.5rem] leading-[1.08] font-semibold tracking-[-0.025em] sm:text-[2.75rem]">Who is Tend for?</h1>
             <p className="mt-3 text-lg text-ink-soft">They keep paying from their own PayPal. Tend gives the people they trust time to look at anything unusual first.</p>
-            <div className="mt-7 grid gap-6 rounded-3xl border border-rule bg-dial p-5 sm:p-7">
+            <div className="mt-7 grid gap-6 rounded-3xl border border-rule bg-dial p-5 shadow-[0_12px_32px_-24px_rgb(25_47_57/0.45)] sm:p-7">
               <Field label="Their first name" id="p-name">
                 <input id="p-name" className={field} value={person.name} onChange={(e) => setPerson({ ...person, name: e.target.value })} placeholder="Walter" autoComplete="off" autoFocus />
               </Field>
@@ -207,7 +207,7 @@ export function StartWizard() {
             </p>
             <ul className="mt-7 space-y-4">
               {helpers.map((h, n) => (
-                <li key={n} className="grid gap-5 rounded-3xl border border-rule bg-dial p-5 sm:p-7">
+                <li key={n} className="grid gap-5 rounded-3xl border border-rule bg-dial p-5 shadow-[0_12px_32px_-24px_rgb(25_47_57/0.45)] sm:p-7">
                   <div className="flex items-center justify-between gap-3 border-b border-rule pb-4">
                     <span className="font-display text-xl font-semibold">{n === 0 ? "You" : `Person ${n + 1}`}</span>
                     {n > 0 && (
@@ -241,7 +241,7 @@ export function StartWizard() {
               <button
                 type="button"
                 onClick={() => setHelpers([...helpers, { name: "", relation: "Neighbour", city: person.city, timezone: person.timezone || tz }])}
-                className={`${btn.secondary} mt-3 w-full`}
+                className={`${btn.secondary} mt-3 w-full border-dashed`}
               >
                 <Plus aria-hidden size={18} /> Add someone
               </button>
@@ -253,7 +253,7 @@ export function StartWizard() {
           <section className="rise">
             <h1 className="font-display text-[2.5rem] leading-[1.08] font-semibold tracking-[-0.025em] sm:text-[2.75rem]">How careful should Tend be?</h1>
             <p className="mt-3 text-lg text-ink-soft">Ordinary bills to people {them} has paid before go straight through. These decide what waits.</p>
-            <div className="mt-7 divide-y divide-rule overflow-hidden rounded-3xl border border-rule bg-dial">
+            <div className="mt-7 divide-y divide-rule overflow-hidden rounded-3xl border border-rule bg-dial shadow-[0_12px_32px_-24px_rgb(25_47_57/0.45)]">
               <div className="px-5 py-5 sm:px-7 sm:py-6">
                 <p className="text-[0.9375rem] font-bold">Hold unusual payments for</p>
                 <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4" role="radiogroup" aria-label="How long to hold">
@@ -317,7 +317,7 @@ export function StartWizard() {
         {step === 3 && (
           <section className="rise">
             <h1 className="font-display text-[2.5rem] leading-[1.08] font-semibold tracking-[-0.025em] sm:text-[2.75rem]">Check it over</h1>
-            <dl className="mt-7 divide-y divide-rule overflow-hidden rounded-3xl border border-rule bg-dial">
+            <dl className="mt-7 divide-y divide-rule overflow-hidden rounded-3xl border border-rule bg-dial shadow-[0_12px_32px_-24px_rgb(25_47_57/0.45)]">
               <div className="px-5 py-5 sm:px-7">
                 <dt className="text-sm font-bold text-ink-soft">Tend is for</dt>
                 <dd className="mt-1.5 text-lg font-bold">

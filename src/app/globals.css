@@ -2,24 +2,27 @@
 
 /*
   Tend: the circle's clock wall.
-  Porcelain dials, a midnight-indigo shell, and one colour per person.
-  Daylight and the home clock use cool tones; amber is reserved for waiting.
+  Ocean-blue actions, tactile clocks, aqua and clay colour scenes.
+  Neutral reading surfaces and one colour per person keep meaning clear.
   State colours (paid, waiting, refused) always travel with a word and an icon.
 */
 @theme static {
-  --color-enamel: #ffffff;
+  --color-sea: #89d7dd;
+  --color-clay: #f0b6a2;
+  --color-feature-ink: #203347;
+  --color-enamel: #f6f5f1;
   --color-dial: #ffffff;
-  --color-ink: #172238;
-  --color-ink-soft: #536176;
-  --color-rule: #dde3eb;
-  --color-rule-strong: #9ca9bc;
+  --color-ink: #203347;
+  --color-ink-soft: #52616b;
+  --color-rule: #dbe1e2;
+  --color-rule-strong: #8b9ca7;
 
-  --color-night: #19233e;
-  --color-night-deep: #111a30;
-  --color-night-cell: #354568;
-  --color-night-ink: #f3f6fc;
-  --color-night-soft: #b9c5db;
-  --color-day: #c7d7f1;
+  --color-night: #103f55;
+  --color-night-deep: #0a2e40;
+  --color-night-cell: #2d6b7d;
+  --color-night-ink: #ffffff;
+  --color-night-soft: #d2e8ef;
+  --color-day: #89d7dd;
 
   /* Retain token names because stored person identities reference them. */
   --color-brass: #65788f;
@@ -45,15 +48,15 @@
 
   /* Clock faces keep their meaning in either theme: white is day, indigo is night. */
   /* Interaction accent (focus, caret, selection, Tend's own icons). Never a person's colour. */
-  --color-accent: #394f7c;
+  --color-accent: #126382;
 
-  /* Primary actions: indigo on light, near-white on dark, always maximum contrast. */
-  --color-action: #223454;
-  --color-action-hover: #14243e;
-  --color-action-ink: #f3f6fc;
+  /* Ocean blue and white make the primary action clear in either theme. */
+  --color-action: #126382;
+  --color-action-hover: #0b4c66;
+  --color-action-ink: #ffffff;
 
   --color-face-day: #ffffff;
-  --color-face-night: #19233e;
+  --color-face-night: #103f55;
   --color-hand-day: #12151c;
   --color-hand-night: #f0f2fb;
 
@@ -66,18 +69,18 @@
   --font-display: var(--font-jost), "Futura", system-ui, sans-serif;
 }
 
-/* Night for the reader: the ground becomes the shell's indigo. */
+/* Preserve a distinct reading surface and the same brand colour after dark. */
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-enamel: #151b24;
-    --color-dial: #151b24;
-    --color-ink: #edf2fa;
-    --color-ink-soft: #b4c1d4;
-    --color-rule: #2c3a4f;
-    --color-rule-strong: #62738d;
-    --color-night: #0c1424;
-    --color-night-deep: #080f1d;
-    --color-night-cell: #293958;
+    --color-enamel: #111d24;
+    --color-dial: #1b2b34;
+    --color-ink: #f0f4f5;
+    --color-ink-soft: #bcccd2;
+    --color-rule: #344952;
+    --color-rule-strong: #708c98;
+    --color-night: #103f55;
+    --color-night-deep: #0a2e40;
+    --color-night-cell: #2d6b7d;
     --color-brass: #9eb4cf;
     --color-brass-deep: #c5d5e9;
     --color-person-brass: #9eb4cf;
@@ -94,12 +97,12 @@
     --color-stop: #ff8b7d;
     --color-stop-tint: transparent;
     --color-stop-ink: #2a0a06;
-    --color-accent: #c0d2f2;
-    --color-action: #e0eafd;
-    --color-action-hover: #ffffff;
-    --color-action-ink: #172238;
+    --color-accent: #8cdbe2;
+    --color-action: #187b9d;
+    --color-action-hover: #126382;
+    --color-action-ink: #ffffff;
     --color-face-day: #eef0f8;
-    --color-face-night: #0c1424;
+    --color-face-night: #103f55;
   }
 }
 
@@ -123,7 +126,19 @@ select {
   cursor: pointer;
 }
 
-/* Flat surfaces share one ground. Meaning lives in words, icons and rules. */
+/* Colour belongs in purposeful scenes and actions; labels stay economical. */
+.color-scene {
+  --color-ink: #203347;
+  --color-ink-soft: #3c5463;
+  --color-rule: #5f9fa8;
+  --color-accent: #126382;
+  color: var(--color-feature-ink);
+}
+
+.surface-card {
+  box-shadow: 0 2px 4px rgb(24 49 62 / 0.03), 0 12px 30px -22px rgb(24 49 62 / 0.3);
+}
+
 
 .shell-band {
   padding-block: 0.25rem 1rem;
@@ -139,6 +154,7 @@ select {
   border: 1px solid var(--color-rule);
   border-radius: 1.5rem;
   background: var(--color-dial);
+  box-shadow: 0 2px 4px rgb(24 49 62 / 0.03), 0 12px 30px -22px rgb(24 49 62 / 0.3);
 }
 
 .tend-mark {

@@ -81,8 +81,8 @@ export default async function CircleHome() {
       }
     >
       <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-x-8 gap-y-8 lg:grid-cols-[minmax(0,1fr)_22rem]">
-        <section aria-label="The circle's clocks" className="rounded-3xl border border-rule bg-dial px-4 py-6 lg:col-start-2 lg:row-start-1">
-          <p className="mb-5 text-center font-display text-xl font-medium">A little closer, wherever you are</p>
+        <section aria-label="The circle's clocks" className="color-scene rounded-[2rem] border border-feature-ink/10 bg-sea px-4 py-7 text-feature-ink shadow-[0_14px_32px_-22px_rgb(19_58_71/0.5)] lg:col-start-2 lg:row-start-1">
+          <p className="mb-6 text-center font-display text-xl font-semibold tracking-[-0.02em]">A little closer, wherever you are</p>
           <ClockRow people={people} initialNow={ctx.now} viewerId={ctx.me.id} />
         </section>
 
@@ -90,7 +90,7 @@ export default async function CircleHome() {
           {d.payingCount > 0 && <WaitingForPayPal />}
           {isNew && person && isFamily(ctx.me) && <GettingStarted person={who} link={personLink} payees={payeeCount} />}
 
-          <section aria-labelledby="waiting" className={nothingWaiting ? "rounded-3xl border border-rule bg-dial p-5 sm:p-7" : undefined}>
+          <section aria-labelledby="waiting" className={nothingWaiting ? "rounded-3xl border border-rule bg-dial p-5 shadow-[0_10px_28px_-22px_rgb(25_47_57/0.3)] sm:p-7" : undefined}>
             <SectionHeading id="waiting">{nothingWaiting ? "Nothing waiting on you" : "Waiting on you"}</SectionHeading>
             {nothingWaiting ? (
               <p className="max-w-prose leading-relaxed text-ink-soft">

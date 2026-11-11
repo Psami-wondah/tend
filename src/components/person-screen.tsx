@@ -259,7 +259,7 @@ export function PersonScreen(props: {
       <Live />
       <main className="mx-auto flex min-h-dvh max-w-2xl flex-col px-5 pt-[max(1.25rem,env(safe-area-inset-top))] pb-[max(2rem,env(safe-area-inset-bottom))] sm:px-8">
         <header className="flex items-center gap-2 border-b border-rule pb-5">
-          <span className="font-display text-[1.75em] leading-none font-semibold tracking-[-0.035em] text-action">Tend</span>
+          <span className="font-display text-[1.75em] leading-none font-semibold tracking-[-0.035em] text-accent">Tend</span>
           <button
             type="button"
             onClick={cycleSize}
@@ -284,16 +284,16 @@ export function PersonScreen(props: {
             <h1 className="mt-8 font-display text-[2.4em] leading-[1.08] font-semibold tracking-[-0.025em]"><span className="mb-2 block text-[0.6em] leading-tight text-ink-soft">Hello {props.name}.</span>{" "}What needs paying?</h1>
             {props.vaultNotice && <p role="status" className="mt-4 border-l-4 border-paid p-4 font-bold text-paid">{props.vaultNotice}</p>}
             <div className="mt-7 grid gap-3">
-              <button type="button" onClick={() => fileRef.current?.click()} className={`${bigButton} bg-action text-action-ink hover:bg-action-hover`}>
+              <button type="button" onClick={() => fileRef.current?.click()} className={`${bigButton} bg-action text-action-ink shadow-[0_8px_20px_-12px_rgb(8_46_63/0.5)] hover:bg-action-hover`}>
                 <Camera aria-hidden size={36} strokeWidth={2} className="shrink-0" />
                 <span className="text-balance">Take a photo of a bill</span>
               </button>
               <input ref={fileRef} type="file" accept="image/*" capture="environment" className="sr-only" tabIndex={-1} onChange={(e) => onPhoto(e.target.files?.[0])} />
-              <button type="button" onClick={startListening} className={`${bigButton} border-4 border-action bg-dial text-action`}>
+              <button type="button" onClick={startListening} className={`${bigButton} color-scene border-2 border-feature-ink/20 bg-sea text-feature-ink shadow-[0_8px_20px_-14px_rgb(8_46_63/0.4)] hover:border-feature-ink`}>
                 <Mic aria-hidden size={34} strokeWidth={2} className="shrink-0" />
                 Tell me out loud
               </button>
-              <button type="button" onClick={() => setMode("type")} className="flex min-h-24 items-center gap-4 rounded-3xl border-2 border-rule-strong bg-dial px-5 py-5 text-left text-[1.2em] leading-tight font-bold transition-colors duration-200 hover:border-ink sm:px-6">
+              <button type="button" onClick={() => setMode("type")} className="flex min-h-24 items-center gap-4 rounded-3xl border-2 border-rule-strong bg-dial px-5 py-5 text-left text-[1.2em] leading-tight font-bold shadow-[0_6px_16px_-14px_rgb(8_46_63/0.45)] transition-colors duration-200 hover:border-ink sm:px-6">
                 <MessageSquareText aria-hidden size={30} strokeWidth={2} className="shrink-0" />
                 <span className="text-balance">Check a message or email someone sent me</span>
               </button>
@@ -304,7 +304,7 @@ export function PersonScreen(props: {
                     setRoute("own");
                     setMode("type");
                   }}
-                  className="flex min-h-24 items-center gap-4 rounded-3xl border-2 border-rule-strong bg-dial px-5 py-5 text-left text-[1.2em] leading-tight font-bold transition-colors duration-200 hover:border-ink sm:px-6"
+                  className="flex min-h-24 items-center gap-4 rounded-3xl border-2 border-rule-strong bg-dial px-5 py-5 text-left text-[1.2em] leading-tight font-bold shadow-[0_6px_16px_-14px_rgb(8_46_63/0.45)] transition-colors duration-200 hover:border-ink sm:px-6"
                 >
                   <Send aria-hidden size={28} strokeWidth={2} className="shrink-0" />
                   <span className="text-balance">Pay someone from my own PayPal</span>
@@ -323,7 +323,7 @@ export function PersonScreen(props: {
             {props.recent.length > 0 && (
               <section className="mt-10" aria-labelledby="lately">
                 <h2 id="lately" className="font-display text-[1.3em] font-semibold">What I&apos;ve done lately</h2>
-                <ul className="mt-4 divide-y divide-rule overflow-hidden rounded-3xl border border-rule bg-dial">
+                <ul className="mt-4 divide-y divide-rule overflow-hidden rounded-3xl border border-rule bg-dial shadow-[0_10px_28px_-22px_rgb(25_47_57/0.3)]">
                   {props.recent.map((r) => (
                     <li key={r.id} className="flex items-start gap-3 px-5 py-5">
                       <RecentIcon tone={r.tone} />
@@ -339,15 +339,15 @@ export function PersonScreen(props: {
               </section>
             )}
 
-            <section className="mt-10 border-t border-rule pt-7" aria-labelledby="fam">
+            <section className="color-scene mt-10 rounded-3xl border border-feature-ink/10 bg-sea p-5 text-feature-ink sm:p-6" aria-labelledby="fam">
               <h2 id="fam" className="font-display text-[1.3em] font-semibold">Your circle right now</h2>
               <ul className={`mt-4 grid gap-3 ${props.circle.length >= 3 ? "grid-cols-2 min-[480px]:grid-cols-3" : "grid-cols-2"}`}>
                 {props.circle.map((p) => {
                   const t = localTime(p.timezone, now);
                   const asleep = !isDaytimeHour(t.hour);
                   return (
-                    <li key={p.id} className="flex min-w-0 flex-col items-center rounded-3xl border border-rule bg-dial px-3 py-5 text-center break-words">
-                      <Dial person={p} now={now} size={56} />
+                    <li key={p.id} className="flex min-w-0 flex-col items-center px-2 py-4 text-center break-words">
+                      <Dial person={p} now={now} size={68} />
                       <span className="mt-3 max-w-full font-bold">{p.name}</span>
                       <span className="text-[0.8em] text-ink-soft">
                         {p.relation ? `${p.relation}, ` : ""}
@@ -431,7 +431,7 @@ export function PersonScreen(props: {
 
         {mode === "plan" && plan && (
           <section aria-live="assertive" className="mt-8 flex flex-1 flex-col">
-            <div className="rounded-3xl border-4 border-action bg-dial p-5 sm:p-7">
+            <div className="rounded-3xl border-4 border-accent bg-dial p-5 sm:p-7">
               {plan.decision === "auto_pay" ? <CircleCheck aria-hidden size={52} /> : <PauseCircle aria-hidden size={52} />}
               <h1 ref={headingRef} tabIndex={-1} className="mt-4 font-display text-[2.2em] leading-[1.08] font-semibold tracking-[-0.025em] outline-none">
                 Before you pay

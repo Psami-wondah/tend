@@ -83,13 +83,13 @@ export function PersonChip({ member, note, tone = "plain" }: { member: PersonLik
 
 export const btn = {
   primary:
-    "inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-action px-5 py-2.5 text-base font-bold text-action-ink transition-colors duration-200 hover:bg-action-hover disabled:cursor-not-allowed disabled:opacity-55",
+    "inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-action px-5 py-2.5 shadow-[0_4px_12px_-5px_rgb(18_99_130/0.5)] text-base font-bold text-action-ink transition-colors duration-200 hover:bg-action-hover disabled:cursor-not-allowed disabled:opacity-55",
   approve:
-    "inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-paid px-5 py-2.5 text-base font-bold text-paid-ink transition-colors duration-200 hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-55",
+    "inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-paid px-5 py-2.5 shadow-[0_4px_12px_-5px_rgb(29_118_80/0.4)] text-base font-bold text-paid-ink transition-colors duration-200 hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-55",
   secondary:
-    "inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-rule-strong bg-dial px-5 py-2.5 text-base font-bold text-ink transition-colors duration-200 hover:border-ink disabled:cursor-not-allowed disabled:opacity-55",
+    "inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-rule-strong bg-dial px-5 py-2.5 shadow-[0_2px_3px_rgb(24_49_62/0.05)] text-base font-bold text-ink transition-colors duration-200 hover:border-ink disabled:cursor-not-allowed disabled:opacity-55",
   danger:
-    "inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-rule-strong bg-dial px-5 py-2.5 text-base font-bold text-ink transition-colors duration-200 hover:border-stop hover:text-stop disabled:cursor-not-allowed disabled:opacity-55",
+    "inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-rule-strong bg-dial px-5 py-2.5 shadow-[0_2px_3px_rgb(24_49_62/0.05)] text-base font-bold text-ink transition-colors duration-200 hover:border-stop hover:text-stop disabled:cursor-not-allowed disabled:opacity-55",
   quiet:
     "inline-flex min-h-12 items-center gap-1.5 rounded-xl px-2 text-sm font-bold text-ink-soft underline decoration-rule-strong underline-offset-4 hover:text-ink hover:decoration-ink disabled:opacity-55",
 };

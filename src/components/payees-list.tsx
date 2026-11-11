@@ -192,7 +192,7 @@ function AddPayee({ memberId, onDone }: { memberId: string; onDone: () => void }
           setBusy(false);
         }
       }}
-      className="space-y-5 rounded-3xl border border-rule bg-dial p-5 sm:p-7"
+      className="space-y-5 surface-card rounded-3xl border border-rule bg-dial p-5 sm:p-7"
     >
       <h3 className="text-lg font-bold">Add a payee</h3>
       <label className="block">

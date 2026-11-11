@@ -2,24 +2,27 @@
 name: Tend
 description: A second key for someone's money, read against their circle's clocks.
 colors:
-  enamel: "#ffffff"
+  sea: "#89d7dd"
+  clay: "#f0b6a2"
+  feature-ink: "#203347"
+  enamel: "#f6f5f1"
   dial: "#ffffff"
-  ink: "#172238"
-  ink-soft: "#536176"
-  rule: "#dde3eb"
-  rule-strong: "#9ca9bc"
-  night: "#19233e"
-  night-deep: "#111a30"
-  night-cell: "#354568"
-  night-ink: "#f3f6fc"
-  night-soft: "#b9c5db"
-  day: "#c7d7f1"
+  ink: "#203347"
+  ink-soft: "#52616b"
+  rule: "#dbe1e2"
+  rule-strong: "#8b9ca7"
+  night: "#103f55"
+  night-deep: "#0a2e40"
+  night-cell: "#2d6b7d"
+  night-ink: "#ffffff"
+  night-soft: "#d2e8ef"
+  day: "#89d7dd"
   brass: "#65788f"
   brass-deep: "#43566e"
   person-brass: "#65788f"
   person-cobalt: "#2c5bd4"
-  accent: "#394f7c"
-  night-dark-theme: "#0c1424"
+  accent: "#126382"
+  night-dark-theme: "#103f55"
   person-violet: "#7448c4"
   person-magenta: "#b8306f"
   person-teal: "#0f7f86"
@@ -33,13 +36,13 @@ colors:
   stop-tint: "transparent"
   stop-ink: "#ffffff"
   second-hand: "#d23a2c"
-  action: "#223454"
-  action-hover: "#14243e"
-  action-ink: "#f3f6fc"
+  action: "#126382"
+  action-hover: "#0b4c66"
+  action-ink: "#ffffff"
   face-day: "#ffffff"
-  face-night: "#19233e"
-  hand-day: "#172238"
-  hand-night: "#f3f6fc"
+  face-night: "#103f55"
+  hand-day: "#12151c"
+  hand-night: "#f0f2fb"
 typography:
   display-xl:
     fontFamily: "Jost, Futura, system-ui, sans-serif"
@@ -136,7 +139,7 @@ rounded:
   lg: "12px"
   card: "24px"
   mum: "24px"
-  dial: "999px"
+  dial: "#ffffff"
 spacing:
   xs: "4px"
   sm: "8px"
@@ -248,31 +251,31 @@ components:
 
 **Creative North Star: "The Circle Clock Wall"**
 
-Tend reads like the row of city clocks in a diaspora living room. A circle can span time zones, so every screen reads money against everyone's clock: porcelain dials on a cool ground, a midnight-indigo shell for headers and anything asleep, slate for the home clock, and one colour per person that follows them everywhere. The memorable moment is the clock row, where asleep people's dials go to night and a waiting payment shows who is awake to approve it.
+Tend reads like the row of city clocks in a diaspora living room. A circle can span time zones, so every screen reads money against everyone's clock: porcelain dials on a cool ground, a ocean-blue shell for headers and anything asleep, slate for the home clock, and one colour per person that follows them everywhere. The memorable moment is the clock row, where asleep people's dials go to night and a waiting payment shows who is awake to approve it.
 
-The system is calm and operational. Density is moderate on phones (16–20px gutters, 20–28px panel padding) and the type is large: body copy never drops below 15px, and labels are bold rather than small. Amounts and clock times are set in one numeral system, Jost with tabular lining figures at fixed steps, so any two amounts compare at a glance. Every line people read is Atkinson Hyperlegible Next. Surfaces are flat: the page and its panels share one neutral ground in each theme, separated by rules and whitespace. Status colour appears in text and icons without a matching tinted background.
+The system is calm and operational. Density is moderate on phones (16–20px gutters, 20–28px panel padding) and the type is large: body copy never drops below 15px, and labels are bold rather than small. Amounts and clock times are set in one numeral system, Jost with tabular lining figures at fixed steps, so any two amounts compare at a glance. Every line people read is Atkinson Hyperlegible Next. Warm-white pages and raised neutral panels provide a clear reading hierarchy. Larger aqua and clay scenes carry colour, while tactile clocks and phone previews bring depth. Status colour remains in text and icons, with no repeated matching tinted capsule.
 
 It refuses the category default: a green balance card over a stack of white cards that could belong to any budgeting app. The balance lives in the night header, not in a card, and green is a state (paid), never the brand.
 
 **Key Characteristics:**
-- Night-indigo header carrying the brand, the viewer, the pot and the 24-cell day band.
+- Ocean-blue header carrying the brand, the viewer, the pot and the 24-cell day band.
 - CSS clock dials with a person-coloured bezel, a red second-hand pin, and a night face when that person is asleep.
 - One colour per person (bezels, dots, chips, contribution bars), never relabelled.
 - State colours (paid, waiting, refused) always paired with a word and an icon.
 - One numeral face (Jost, tabular) for every amount and every time, including inside sentences.
-- A dark theme that turns the ground itself to night indigo; clock faces keep their day/night meaning in both.
-- The person's screen: two-value contrast, very large type in three steps, 96–104px targets.
+- A dark theme that turns the ground to charcoal blue; clock faces keep their day/night meaning in both.
+- The person's screen: strong contrast, very large type in three steps, 96–104px targets.
 
 ## Colors
 
-**Flat Surface Rule:** avoid a colour placed on a lighter or darker tint of itself. Use one neutral ground, borders, and whitespace for grouping. Semantic labels carry colour through words and icons. Solid high-contrast primary actions and person-screen results remain appropriate. Historic tint tokens resolve to transparent, including in protected components.
+**Expressive Colour Rule:** colour has a clear location and purpose: ocean-blue primary actions, aqua clock scenes, clay product compositions, personal clock bezels, and semantic payment states. Use dark ink on aqua or clay, and white on ocean blue. Reading text stays on neutral surfaces.
 
-There is no decorative gold, shade-on-shade layering, tinted status pill, translucent card, or decorative gradient. The shell, daylight strip, focus rings, and home-clock identity use cool hues. Amber is reserved for waiting or a payment needing attention.
+The reference study combines [Airbnb](https://www.airbnb.co.uk/)'s imagery and gentle depth, [Monzo](https://monzo.com/)'s product compositions and hierarchy, and [Headspace](https://www.headspace.com/)'s expressive illustrations and larger colour areas. Tend uses its own palette and clock identity. No third-party assets are copied.
 
-A cool, near-neutral enamel and white ground under a deep night-indigo shell, with slate and six person hues as identity, and three semantic state colours that never travel alone.
+Soft depth and colourful scenes are welcome. The repeating same-hue text-on-tint badge treatment is avoided. Historic semantic tint tokens stay transparent; colour is not being removed from the rest of the experience.
 
 ### Primary
-- **Night Indigo** (`night`): the committed shell colour. The header band, asleep dial faces (`face-night`), asleep clock faces, selected controls and primary actions (`action`) on light. Also the text-selection colour.
+- **Ocean Blue** (`night`): the committed shell colour. The header band, asleep dial faces (`face-night`), asleep clock faces, selected controls and primary actions (`action`) on light. Also the text-selection colour.
 - **Night Deep** (`night-deep`): hover for primary actions; the darker step of the shell.
 - **Night Cell** (`night-cell`): the night hours of the day band and neutral progress bars on night or enamel (the welcome stage strip).
 
@@ -284,7 +287,7 @@ A cool, near-neutral enamel and white ground under a deep night-indigo shell, wi
 - **Cobalt, Violet, Magenta, Teal, Rust** (`person-cobalt` through `person-rust`) plus slate: six assignable identities. A member's colour paints their dial bezel, their dot in the day band and chips, their contribution bar, and their viewer-switch dot. In the Okafor demo Ada is cobalt, Tunde violet, Chioma magenta, the person at the centre slate.
 - **Second-Hand Red** (`second-hand`): only the centre pin of a dial.
 
-- **Accent** (`accent`, #394f7c; #c0d2f2 in dark): Tend's own interaction colour, a lighter step of the night shell. Focus ring, caret, field focus, passbook grid hover and selection, Ask Tend and rules-assistant icons, the double-payment card, and PayPal's dot in the payment timeline. It replaced an earlier use of Ada's cobalt for these jobs, so no person's colour does interface work.
+- **Accent** (`accent`, #126382; #8cdbe2 in dark): Tend's own interaction colour, a lighter step of the night shell. Focus ring, caret, field focus, passbook grid hover and selection, Ask Tend and rules-assistant icons, the double-payment card, and PayPal's dot in the payment timeline. It replaced an earlier use of Ada's cobalt for these jobs, so no person's colour does interface work.
 
 ### Semantic
 - **Paid Green** (`paid` / `paid-tint` / `paid-ink`): paid and approved states, the Approve button, completed stages, approver chips that have said yes.
@@ -298,14 +301,14 @@ A cool, near-neutral enamel and white ground under a deep night-indigo shell, wi
 - **Night Ink** (`night-ink`, `hand-night`) and **Night Soft** (`night-soft`): text on the night shell; night dial hands.
 - **Rule** (`rule`) and **Rule Strong** (`rule-strong`): dividers and field borders; secondary-button borders and underlines.
 
-In the dark theme (`prefers-color-scheme: dark`) the ground becomes indigo (enamel `#151b24`, dial `#151b24`), the shell deepens to `#0c1424`, person and state colours lift to lighter values for contrast, state inks go dark, and `action` flips to near-white with indigo ink.
+In the dark theme (`prefers-color-scheme: dark`), the ground is charcoal blue (`#111d24`) and panels are raised to `#1b2b34`. Ocean-blue primary actions retain white text. Aqua and clay scenes keep dark feature ink in both themes; clock faces retain their day/night meaning.
 
 ### Named Rules
 **The One Colour Per Person Rule.** A person's colour is theirs everywhere they appear. The colour, not a repeated name, is what ties a dot in the day band to a dial and a chip. Interface jobs use `accent`, never a person colour.
 
 **The Word-And-Icon Rule.** Paid, waiting and refused colours never appear without a word and an icon (or, on the stage strip, a word). Colour alone never carries state.
 
-**The Night Is Asleep Rule.** Indigo means night: the shell, an asleep dial, an asleep approver. Clock faces keep this meaning in either theme; white is day, indigo is night.
+**The Night Is Asleep Rule.** A dark clock face indicates night; a white face indicates day. This meaning holds in either theme.
 
 ## Typography
 
@@ -334,7 +337,7 @@ The person's screen scales in `em` from a chosen base of 1.25rem, 1.5rem or 1.8r
 
 ## Layout
 
-The landing page uses a two-level editorial headline with paired phone previews . Inside Tend, fine rules, clearly grouped panels, and a framed clock wall establish a quieter task hierarchy. Presentation changes preserve requests, handlers, form fields, and component contracts.
+The landing page uses a two-level editorial headline on a neutral surface, with paired phone previews composed against aqua and clay scenes. Inside Tend, fine rules, clearly grouped panels, and a framed clock wall establish a quieter task hierarchy. Presentation changes preserve requests, handlers, form fields, and component contracts.
 
 Phones first. Content sits in a centred column (max 72rem for most screens, 80rem for the passbook) with 16px side gutters, 32px from 640px. The night header spans the full width and holds page-specific header content (pot, day band) beneath the brand row. Spacing runs on a 4px base, with 8px and 12px as the common gaps, 20–28px panel padding and 32–40px between sections.
 
@@ -342,16 +345,16 @@ Below 1024px a fixed bottom tab bar of five equal cells (Home, Passbook, Ask Ten
 
 ## Elevation & Depth
 
-One flat neutral surface per theme, divided by 1px rules. Ordinary panels, callouts, badges, and navigation have no shadows or tinted backplates. Clock dials retain their physical face and small shadow so day and night remain recognizable.
+Neutral surfaces sit above the page with restrained ambient shadows and fine rules. Clocks have a physical rim, face, and soft cast shadow. Product previews use layered composition and distinct colour blocks. Payment status labels stay simple so they do not become the main source of visual decoration.
 
 ### Shadow Vocabulary
 - **Dial** (`0 1px 2px rgb(18 21 28 / 0.08), 0 6px 14px -6px rgb(18 21 28 / 0.25)`): every clock dial, so it sits proud of the ground.
-- **Waiting card:** an outline carries emphasis, with no shadow.
+- **Waiting card:** a semantic outline and soft ambient shadow give the next decision prominence.
 - **Passbook:** a fine rule encloses the grid.
 - **Review sheet:** an opaque neutral surface with a strong outline.
 
 ### Named Rules
-**The Flat Ground Rule.** Ordinary cards and lists carry no shadow; only clock dials lift.
+**The Useful Depth Rule.** A shadow makes a card tappable, a control clear, or a clock tactile. It does not become a glow or a repeated decorative layer.
 
 ## Shapes
 
@@ -362,7 +365,7 @@ Round where the world is round: dials, dots and clock bezels are circles. Status
 ### Buttons
 Solid, wide and unmistakable; every button is at least 48px tall.
 - **Shape:** gently curved (16px), with pills for landing-page calls to action.
-- **Primary:** night indigo with night-ink text, 20px side padding, bold 1rem. Hovers to night deep. In dark mode it becomes near-white with indigo text.
+- **Primary:** ocean blue with night-ink text, 20px side padding, bold 1rem. Hovers to night deep. It stays ocean blue with white text in dark mode.
 - **Approve:** paid green with paid-ink, carrying the amount in figures ("Approve $340.00"); hovers 5% darker. Sits full-width beside Decline.
 - **Secondary:** dial white, 1px rule-strong border, ink text; border goes to ink on hover.
 - **Danger (Decline):** secondary at rest; border and text go to refused red on hover. Declining always asks for confirmation beside a refused-colour rule.
@@ -376,8 +379,8 @@ Solid, wide and unmistakable; every button is at least 48px tall.
 
 ### Cards / Containers
 - **Corner Style:** 24px.
-- **Background:** the same neutral surface as the page; lists are divided by rule lines.
-- **Shadow Strategy:** none.
+- **Background:** neutral dial surfaces on a warm-white or charcoal page; lists use fine rules. Clock scenes may use solid aqua and product scenes solid clay.
+- **Shadow Strategy:** soft neutral ambient depth on actionable panels and tactile objects.
 - **Border:** 1px rule by default; a 2px state-tinted border marks a card that needs action.
 - **Internal Padding:** 20–28px, according to context.
 
@@ -387,7 +390,7 @@ Solid, wide and unmistakable; every button is at least 48px tall.
 - **Error:** bold refused-red message below, beside a refused-colour rule.
 
 ### Navigation
-- **Header:** night indigo, Tend wordmark in Jost 500 (1.875rem), Demo badge outlined in night-soft, viewer link with the viewer's dot and a simple divider.
+- **Header:** ocean blue, Tend wordmark in Jost 500 (1.875rem), Demo badge outlined in night-soft, viewer link with the viewer's dot and a simple divider.
 - **Bottom tabs (phones):** icon over bold 12px label; the active tab has a short underline and its label turns `action`; inactive is ink-soft.
 - **Top tabs (1024px+):** bold 15px night-soft links; active gets a clear underline.
 
@@ -405,7 +408,7 @@ Twenty-four 10px-tall cells with 2px gaps, daylight blue for daytime hours and n
 AG Grid Quartz themed from the tokens: Atkinson at 15px (14px bold headers), dial-white rows on an enamel header, rule borders, 52px rows, 44px header, accent colour with a 7% accent hover and 12% selection, 24px wrapper radius with a fine rule border. Wrapped cells on phones read as text at 1.35 line-height.
 
 ### The Person's Screen
-Two-value contrast: every result is ink on a light field or white on a deep one. Paid and refused results are solid paid or stop panels; waiting results are dial white with a 4px amber border. Large actions are 96–104px tall with 30-36px icons, a 24px radius and 4px or 2px borders. Results speak aloud and rise into place.
+Strong contrast: every result is ink on a light field or white on a deep one. The voice action may use aqua with dark ink; primary actions remain ocean blue and white. Paid and refused results are solid paid or stop panels; waiting results are dial white with a 4px amber border. Large actions are 96–104px tall with 30-36px icons, a 24px radius and 4px or 2px borders. Results speak aloud and rise into place.
 
 ### Motion
 Hands sweep once on load. State changes use the translate-only rise (6px upward, 220ms, cubic-bezier(0.16, 1, 0.3, 1)), with content visible from the first frame. Colour transitions are 200ms. Pulses run only on live states (recording, waiting for PayPal, loading), and skeletons pulse on a single flat fill while loading. Reduced motion turns everything off.
@@ -421,7 +424,7 @@ Say “AI”, without model names. Generic interface copy refers to the person a
 - **Do** give every person their one colour on every bezel, dot, chip and bar they own.
 - **Do** pair every paid, waiting or refused colour with a word and an icon.
 - **Do** set every amount and every time in Jost tabular figures, including inside sentences and chips.
-- **Do** go to night (indigo face, night chip, moon icon) for anyone whose local hour is outside the day.
+- **Do** go to night (dark face, explicit asleep note, moon icon) for anyone whose local hour is outside the day.
 - **Do** keep buttons and fields at 48px minimum and the person's actions at 96px or more.
 - **Do** keep reading text at 15px or larger in Atkinson Hyperlegible Next.
 
@@ -429,6 +432,6 @@ Say “AI”, without model names. Generic interface copy refers to the person a
 - **Don't** build the green balance card over a stack of white cards; green is the paid state, not the brand.
 - **Don't** use a person colour for a category, a chart series or a state, and don't use any person's colour for interface jobs; that is what `accent` is for.
 - **Don't** set a figure in Atkinson or invent an amount size outside the four money steps.
-- **Don't** add shadow to ordinary cards, and never use hard or offset shadows.
+- **Don't** replace useful depth and colour with a blanket flat-surface rule. Avoid heavy shadows, decorative glows, and repetitive tinted status capsules.
 - **Don't** animate beyond the hand sweep, the rise, 200ms colour changes and pulses on live states.
 - **Don't** use uppercase tracked labels; labels are bold sentence case.

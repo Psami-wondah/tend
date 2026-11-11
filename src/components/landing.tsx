@@ -9,30 +9,31 @@ import { CircleCheck, Hourglass, OctagonX, PauseCircle, Volume2 } from "lucide-r
 function Phone({ children, label, className = "" }: { children: React.ReactNode; label: string; className?: string }) {
   return (
     <figure className={`w-[44%] shrink-0 sm:w-[14rem] lg:w-[46%] xl:w-[15rem] ${className}`}>
-      <div className="rounded-[2.4rem] border border-night-soft bg-night-deep p-[0.45rem]">
+      <div className="rounded-[2.4rem] border border-night-soft/50 bg-night-deep p-[0.45rem] shadow-[0_24px_44px_-20px_rgb(14_35_48/0.42)]">
         <div className="relative aspect-[9/19] overflow-hidden rounded-[1.95rem] text-[clamp(7.3px,2.1vw,11.5px)] lg:text-[10.5px] xl:text-[12px]">
           <span aria-hidden className="absolute top-[0.9em] left-1/2 z-10 h-[1.9em] w-[6.5em] -translate-x-1/2 rounded-full bg-black" />
           {children}
         </div>
       </div>
-      <figcaption className="mt-4 text-center text-[0.9375rem] text-night-soft">{label}</figcaption>
+      <figcaption className="mt-4 text-center text-[0.9375rem] font-bold text-feature-ink">{label}</figcaption>
     </figure>
   );
 }
 
 export function HeroPhones() {
   return (
-    <div className="relative isolate flex items-start justify-center py-5" aria-hidden>
+    <div className="relative isolate flex items-start justify-center overflow-hidden rounded-[2.5rem] bg-sea px-2 py-8 sm:px-4 sm:py-10" aria-hidden>
+      <span className="pointer-events-none absolute -right-[22%] -bottom-[15%] z-0 aspect-square w-[100%] rounded-full bg-clay" />
       <Phone label="Walter, 84, in Tucson" className="relative z-10 mt-12">
         <div className="flex h-full flex-col bg-dial px-[1.3em] pt-[3.6em] pb-[1.4em] text-ink">
           <div className="flex items-center gap-[0.5em]">
-            <span className="font-display text-[1.7em] font-semibold text-action">Tend</span>
+            <span className="font-display text-[1.7em] font-semibold text-accent">Tend</span>
             <span className="ml-auto rounded-[0.6em] border-2 border-ink px-[0.5em] font-display text-[0.9em] font-semibold">AA</span>
             <span className="grid size-[2.2em] place-items-center rounded-[0.6em] border-2 border-ink">
               <Volume2 className="size-[1.3em]" />
             </span>
           </div>
-          <div className="mt-[1.2em] rounded-[1.5em] border-[0.2em] border-action p-[1.1em]">
+          <div className="mt-[1.2em] rounded-[1.5em] border-[0.2em] border-accent p-[1.1em]">
             <PauseCircle className="size-[2.6em]" />
             <p className="mt-[0.4em] font-display text-[2em] leading-none font-semibold">Before you pay</p>
             <p className="mt-[0.6em] text-[1.08em] leading-snug">
@@ -50,25 +51,25 @@ export function HeroPhones() {
           <div className="mt-[0.6em] grid h-[3.2em] place-items-center rounded-[1.4em] border-2 border-ink bg-dial font-bold">Don&apos;t pay it</div>
         </div>
       </Phone>
-      <Phone label="Dolores, next door" className="ml-3 sm:ml-5">
+      <Phone label="Dolores, next door" className="relative z-10 ml-3 sm:ml-5">
         <div className="on-night flex h-full flex-col items-center bg-night px-[0.9em] pt-[3.8em] text-night-ink">
           <p className="text-[0.95em] text-night-soft">Tuesday 10 November</p>
           <p className="figures font-display text-[4.4em] leading-none font-semibold">4:12</p>
-          <div className="mt-[2.2em] w-full rounded-[0.6em] border border-night-soft p-[0.9em] text-left">
-            <div className="flex items-center gap-[0.45em] text-[0.82em] text-night-soft">
+          <div className="mt-[2.2em] w-full rounded-[1.1em] bg-white p-[0.9em] text-left text-feature-ink shadow-[0_8px_20px_-12px_rgb(0_0_0/0.4)]">
+            <div className="flex items-center gap-[0.45em] text-[0.82em] text-feature-ink">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/icon-192.png" alt="" className="size-[1.6em] rounded-[0.4em]" />
-              <span className="font-bold text-night-ink">Tend</span>
+              <span className="font-bold text-feature-ink">Tend</span>
               <span className="ml-auto">now</span>
             </div>
             <p className="mt-[0.5em] text-[1.02em] leading-snug font-bold">
               Held: <span className="figures">$650.00</span> from Walter to Ridgeline Roofing
             </p>
-            <p className="mt-[0.25em] text-[0.92em] leading-snug text-night-soft">A stranger at the door wants a deposit today. It waits until you or Priya says yes.</p>
+            <p className="mt-[0.25em] text-[0.92em] leading-snug text-feature-ink">A stranger at the door wants a deposit today. It waits until you or Priya says yes.</p>
           </div>
           <div className="mt-[0.45em] grid w-full grid-cols-2 gap-[0.45em] text-[0.98em] font-bold">
-            <span className="rounded-[0.6em] border border-night-soft py-[0.75em] text-center">Stop it</span>
-            <span className="rounded-[0.6em] border border-night-soft py-[0.75em] text-center">Say yes</span>
+            <span className="rounded-[0.8em] bg-white py-[0.75em] text-center text-feature-ink">Stop it</span>
+            <span className="rounded-[0.8em] bg-white py-[0.75em] text-center text-feature-ink">Say yes</span>
           </div>
         </div>
       </Phone>

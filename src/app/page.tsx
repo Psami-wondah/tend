@@ -73,52 +73,52 @@ export default async function Welcome() {
 
   return (
     <div className="min-h-dvh">
-      <section className="on-night relative overflow-hidden bg-night text-night-ink">
+      <section className="relative overflow-hidden bg-dial text-ink">
         <div className="relative mx-auto max-w-7xl px-5 pt-[max(1.25rem,env(safe-area-inset-top))] pb-16 sm:px-8 lg:px-12 lg:pb-24">
-          <nav aria-label="Tend" className="flex min-h-14 flex-wrap items-center gap-3 border-b border-night-ink/15 pb-5 sm:gap-6">
-            <span className="inline-flex items-center gap-2.5 font-display text-[2rem] font-semibold tracking-[-0.04em]"><Clock3 aria-hidden size={27} strokeWidth={1.5} className="text-day" />Tend</span>
+          <nav aria-label="Tend" className="flex min-h-14 flex-wrap items-center gap-3 border-b border-rule pb-5 sm:gap-6">
+            <span className="inline-flex items-center gap-2.5 font-display text-[2rem] font-semibold tracking-[-0.04em]"><Clock3 aria-hidden size={27} strokeWidth={1.5} className="text-accent" />Tend</span>
             {demo && (
-              <Link href="/setup" className="inline-flex min-h-12 items-center rounded-full border border-night-ink/20 px-3 text-sm font-bold text-night-soft">
+              <Link href="/setup" className="inline-flex min-h-12 items-center rounded-full border border-rule px-3 text-sm font-bold text-ink-soft">
                 Demo mode
               </Link>
             )}
-            <div className="ml-auto hidden items-center gap-7 text-[0.9375rem] font-bold text-night-soft md:flex">
-              <a href="#how" className="inline-flex min-h-12 items-center transition-colors hover:text-night-ink">
+            <div className="ml-auto hidden items-center gap-7 text-[0.9375rem] font-bold text-ink-soft md:flex">
+              <a href="#how" className="inline-flex min-h-12 items-center transition-colors hover:text-accent">
                 How it works
               </a>
-              <a href="#safety" className="inline-flex min-h-12 items-center transition-colors hover:text-night-ink">
+              <a href="#safety" className="inline-flex min-h-12 items-center transition-colors hover:text-accent">
                 Safety
               </a>
               {tryIt && (
-                <a href="#try" className="inline-flex min-h-12 items-center transition-colors hover:text-night-ink">
+                <a href="#try" className="inline-flex min-h-12 items-center transition-colors hover:text-accent">
                   Try it
                 </a>
               )}
             </div>
             <Link
               href={yours ?? "/start"}
-              className="ml-auto inline-flex min-h-12 items-center rounded-full bg-night-ink px-5 text-[0.9375rem] font-bold text-night transition-colors hover:bg-white md:ml-0"
+              className="ml-auto inline-flex min-h-12 items-center rounded-full bg-action px-5 text-[0.9375rem] font-bold text-action-ink transition-colors hover:bg-action-hover md:ml-0"
             >
               {yours ? "Open Tend" : "Set up Tend"}
             </Link>
           </nav>
 
-          <div className="mt-12 grid items-center gap-12 sm:mt-16 lg:mt-20 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,1fr)] lg:gap-14">
+          <div className="mt-10 grid items-center gap-12 sm:mt-14 lg:mt-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-12">
             <div>
-              <p className="inline-flex items-center gap-2.5 text-[0.9375rem] font-bold text-night-soft before:size-1.5 before:rounded-full before:bg-day">For older adults, and the people they trust</p>
+              <p className="inline-flex items-center gap-2.5 text-[0.9375rem] font-bold text-ink-soft before:size-1.5 before:rounded-full before:bg-action">For older adults, and the people they trust</p>
               <h1 className="mt-6 max-w-xl font-display font-medium tracking-[-0.045em] text-balance">
-                <span className="block text-[3.35rem] leading-[1.02] sm:text-[4.5rem] lg:text-[5.25rem]">Their money,<br />their say.</span>{" "}<span className="mt-5 block max-w-md text-[1.9rem] leading-[1.16] tracking-[-0.025em] text-day sm:text-[2.2rem]">A second key for the people they trust.</span>
+                <span className="block text-[3.35rem] leading-[1.02] sm:text-[4.5rem] lg:text-[5.25rem]">Their money,<br />their say.</span>{" "}<span className="mt-5 block max-w-md text-[1.9rem] leading-[1.16] tracking-[-0.025em] text-accent sm:text-[2.2rem]">A second key for the people they trust.</span>
               </h1>
-              <p className="mt-6 max-w-md text-[1.0625rem] leading-relaxed text-night-soft">
+              <p className="mt-6 max-w-md text-[1.0625rem] leading-relaxed text-ink-soft">
                 Tend lets an older adult keep paying from their own PayPal. Anything unusual is held in their account until someone they trust has had a look, so a scam can be stopped
                 before a cent leaves.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
-                <Link href="/start" className="inline-flex min-h-14 items-center gap-3 rounded-full bg-night-ink px-6 font-bold text-night transition-colors hover:bg-white">
+                <Link href="/start" className="inline-flex min-h-14 items-center gap-3 rounded-full bg-action px-6 font-bold text-action-ink transition-colors hover:bg-action-hover">
                   Set up Tend for someone <ArrowRight aria-hidden size={18} />
                 </Link>
                 {tryIt && (
-                  <a href="#try" className="inline-flex min-h-14 items-center rounded-full border border-night-ink/35 px-6 font-bold transition-colors hover:border-night-ink">
+                  <a href="#try" className="inline-flex min-h-14 items-center rounded-full border border-rule-strong bg-dial px-6 font-bold transition-colors hover:border-action">
                     Try the demo
                   </a>
                 )}
@@ -164,7 +164,7 @@ export default async function Welcome() {
         </ol>
 
         <h3 className="mt-16 font-display text-[1.75rem] leading-tight font-medium tracking-[-0.02em]">What Tend does with what Walter is sent</h3>
-        <ul className="mt-6 divide-y divide-rule border-y border-rule">
+        <ul className="mt-6 divide-y divide-rule overflow-hidden rounded-[2rem] border border-rule bg-dial shadow-[0_4px_24px_-12px_rgb(25_40_50/0.15)]">
           {OUTCOMES.map((o, n) => (
             <li key={n} className="grid gap-3 px-5 py-5 sm:grid-cols-[minmax(0,1.2fr)_9.5rem_minmax(0,1.3fr)] sm:items-center sm:gap-6 sm:px-7 sm:py-6">
               <span className="font-bold">{o.ask}</span>
@@ -178,12 +178,12 @@ export default async function Welcome() {
       </section>
 
       {tryIt && (
-      <section id="try" className="on-night relative overflow-hidden bg-night text-night-ink" aria-labelledby="try-h">
+      <section id="try" className="relative overflow-hidden bg-sea text-feature-ink" aria-labelledby="try-h">
         <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:px-12 lg:py-24">
           <h2 id="try-h" className="max-w-3xl font-display text-[2.25rem] leading-[1.12] font-medium tracking-[-0.035em] sm:text-[3rem]">
             Meet Walter&apos;s circle. Tap anyone to see Tend through their eyes.
           </h2>
-          <p className="mt-5 max-w-2xl text-[1.0625rem] leading-relaxed text-night-soft">
+          <p className="mt-5 max-w-2xl text-[1.0625rem] leading-relaxed text-feature-ink">
             Each clock is someone&apos;s own time. A night face means they&apos;re probably asleep, so Tend asks whoever is awake. Everyone here, and their history, is made up for the
             demo; the PayPal side is real sandbox money{i.paypal === "simulated" ? " once keys are added" : ""}.
           </p>
@@ -193,15 +193,15 @@ export default async function Welcome() {
                 <h3 id={`c-${circle.id}`} className="font-display text-[1.75rem] font-medium tracking-[-0.02em]">
                   {circle.name}
                 </h3>
-                {circle.story && <p className="mt-2 max-w-prose text-base leading-relaxed text-night-soft">{circle.story}</p>}
+                {circle.story && <p className="mt-2 max-w-prose text-base leading-relaxed text-feature-ink">{circle.story}</p>}
                 <div className="mt-6">
                   <PersonPicker people={people} initialNow={now} />
                 </div>
               </section>
             ))}
           </div>
-          <p className="mt-8 text-night-soft">
-            <Link href="/demo" className="font-bold text-night-ink underline underline-offset-4">
+          <p className="mt-8 text-feature-ink">
+            <Link href="/demo" className="font-bold text-feature-ink underline underline-offset-4">
               More examples
             </Link>
             , including a family that shares a care pot, and a way to start the demo again.
@@ -224,7 +224,7 @@ export default async function Welcome() {
           ))}
         </ul>
 
-        <div className="mt-16 grid gap-8 border-y border-rule py-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center lg:gap-12">
+        <div className="mt-16 grid gap-8 rounded-[2rem] bg-dial p-6 shadow-[0_4px_24px_-12px_rgb(25_40_50/0.15)] sm:p-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center lg:gap-12">
           <div>
             <h3 className="font-display text-[1.75rem] leading-tight font-medium tracking-[-0.02em]">A second key for AI assistants, too</h3>
             <p className="mt-2 text-ink-soft">

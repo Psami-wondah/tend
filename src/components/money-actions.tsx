@@ -218,7 +218,7 @@ export function MyShare({ c, memberId }: { c: Contribution; memberId: string }) 
     }
   }
   return (
-    <div className="flex flex-col gap-4 rounded-3xl border border-rule bg-dial p-5 sm:flex-row sm:items-center sm:p-6">
+    <div className="flex flex-col gap-4 surface-card rounded-3xl border border-rule bg-dial p-5 sm:flex-row sm:items-center sm:p-6">
       <div className="min-w-0 flex-1">
         <p className="font-bold">
           Your share: <Money minor={c.amountMinor} currency={c.currency} size="sm" />

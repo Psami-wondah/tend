@@ -38,7 +38,7 @@ export function Shell({
   return (
     <div className="min-h-dvh pb-[calc(6rem+env(safe-area-inset-bottom))] lg:pb-20">
       <Live />
-      <header className="on-night border-b border-night-ink/10 bg-night text-night-ink">
+      <header className="on-night border-b border-night-ink/10 bg-night text-night-ink shadow-[0_3px_18px_-12px_rgb(16_63_85/0.5)]">
         <div className={`mx-auto ${width} px-4 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-8`}>
           <div className="flex min-h-16 flex-wrap items-center gap-x-3 gap-y-2 pb-3 sm:min-h-20 sm:gap-x-4">
             <Link href="/home" className="inline-flex min-h-12 items-center gap-3 font-display text-[1.875rem] font-medium tracking-[-0.04em]">
@@ -91,9 +91,9 @@ function TabLinks({ variant }: { variant: "top" | "bottom" }) {
         key={href}
         href={href}
         aria-current={on ? "page" : undefined}
-        className={`flex min-h-18 flex-col items-center justify-center gap-1 text-xs font-bold ${on ? "text-action" : "text-ink-soft"}`}
+        className={`flex min-h-18 flex-col items-center justify-center gap-1 text-xs font-bold ${on ? "text-accent" : "text-ink-soft"}`}
       >
-        <span className={`grid h-8 w-14 place-items-center border-b-2 transition-colors duration-200 ${on ? "border-action text-action" : "border-transparent"}`}>
+        <span className={`grid h-8 w-14 place-items-center rounded-full border-b-2 transition-colors duration-200 ${on ? "border-action bg-action text-action-ink" : "border-transparent"}`}>
           <Icon aria-hidden size={19} strokeWidth={2.25} />
         </span>
         {label}

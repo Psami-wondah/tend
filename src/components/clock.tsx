@@ -36,7 +36,7 @@ export function Dial({ person, now, size = 64 }: { person: Person; now: Date; si
         width: size,
         height: size,
         border: `${bezel}px solid ${personVar(person)}`,
-        boxShadow: "0 1px 2px rgb(18 21 28 / 0.08), 0 6px 14px -6px rgb(18 21 28 / 0.25)",
+        boxShadow: "0 2px 4px rgb(22 42 53 / 0.12), 0 10px 18px -9px rgb(22 42 53 / 0.35), inset 0 0 0 2px rgb(255 255 255 / 0.45)",
       }}
     >
       {[0, 90, 180, 270].map((deg) => (
@@ -66,13 +66,13 @@ export function Dial({ person, now, size = 64 }: { person: Person; now: Date; si
 export function ClockRow({ people, initialNow, viewerId }: { people: Person[]; initialNow: number; viewerId?: string }) {
   const now = useNow(initialNow);
   return (
-    <ul className="flex flex-wrap justify-evenly gap-x-2 gap-y-5" aria-label="Where everyone is in their day">
+    <ul className="flex flex-wrap justify-evenly gap-x-2 gap-y-6" aria-label="Where everyone is in their day">
       {people.map((p) => {
         const t = localTime(p.timezone, now);
         const night = !isDaytimeHour(t.hour);
         return (
-          <li key={p.id} className="flex min-w-16 flex-1 flex-col items-center text-center">
-            <Dial person={p} now={now} size={56} />
+          <li key={p.id} className="flex min-w-17 flex-1 flex-col items-center text-center">
+            <Dial person={p} now={now} size={68} />
             <span className="mt-3 text-base leading-tight font-bold">
               {p.id === viewerId ? "You" : p.name}
             </span>

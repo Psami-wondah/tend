@@ -22,7 +22,7 @@ export function PersonPicker({ people, initialNow }: { people: Person[]; initial
   }
 
   return (
-    <ul className={`grid grid-cols-2 gap-3 sm:gap-4 ${people.length >= 4 ? "sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4" : "sm:grid-cols-3"}`}>
+    <ul className={`grid grid-cols-1 gap-3 min-[380px]:grid-cols-2 sm:gap-4 ${people.length >= 4 ? "sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4" : "sm:grid-cols-3"}`}>
       {people.map((p) => {
         const t = localTime(p.timezone, now);
         const night = !isDaytimeHour(t.hour);
@@ -33,16 +33,16 @@ export function PersonPicker({ people, initialNow }: { people: Person[]; initial
               type="button"
               onClick={() => choose(p)}
               disabled={busy !== null}
-              className="group flex h-full w-full flex-col items-center rounded-xl border border-night-soft px-3 pt-7 pb-5 text-center transition-colors duration-200 hover:border-night-ink disabled:opacity-70 sm:px-4 sm:pt-8 sm:pb-6"
+              className="group flex h-full w-full flex-col items-center rounded-[1.75rem] border border-rule bg-dial px-3 pt-7 pb-5 text-center text-ink shadow-[0_4px_18px_-8px_rgb(25_40_50/0.18)] transition-colors duration-200 hover:border-accent disabled:opacity-70 sm:px-4 sm:pt-8 sm:pb-6"
             >
-              <Dial person={p} now={now} size={92} />
+              <Dial person={p} now={now} size={104} />
               <span className="mt-5 font-display text-2xl font-semibold tracking-[-0.015em] group-hover:underline">{busy === p.id ? "Opening…" : p.name}</span>
-              <span className="text-[0.9375rem] text-night-soft">{p.city}</span>
-              <span className="figures mt-1 inline-flex items-center gap-1 text-base text-night-soft">
+              <span className="text-[0.9375rem] text-ink-soft">{p.city}</span>
+              <span className="figures mt-1 inline-flex items-center gap-1 text-base text-ink-soft">
                 {t.label}
                 {night && <Moon aria-label="night" size={13} />}
               </span>
-              <span className="mt-4 border-t border-night-soft pt-3 text-sm leading-snug font-bold">
+              <span className="mt-4 border-t border-rule pt-3 text-sm leading-snug font-bold">
                 {mum ? "Pay or check something" : p.relation ? `${p.relation.charAt(0).toUpperCase()}${p.relation.slice(1)}, second key` : "Second key"}
               </span>
             </button>

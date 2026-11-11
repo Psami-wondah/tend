@@ -93,7 +93,7 @@ export function AskTend({ memberId, firstName, currency, aiLive, who, pot }: { m
     <div className="flex min-h-[60dvh] flex-col gap-2">
       {messages.length === 0 ? (
         <div className="py-2 sm:py-4">
-          <div aria-hidden className="mb-5 grid size-14 place-items-center text-accent"><MessageCircle size={26} strokeWidth={1.6} /></div>
+          <div aria-hidden className="mb-5 grid size-14 place-items-center rounded-2xl bg-clay text-feature-ink shadow-[0_6px_16px_-10px_rgb(32_51_71/0.35)]"><MessageCircle size={26} strokeWidth={1.6} /></div>
           <p className="max-w-2xl text-xl leading-relaxed">
             Hi {firstName}. Ask about {who}&apos;s money, what&apos;s held, or tell me to pay or stop something. Payments still go through the circle&apos;s rules.
           </p>
@@ -103,7 +103,7 @@ export function AskTend({ memberId, firstName, currency, aiLive, who, pot }: { m
                 <button
                   type="button"
                   onClick={() => send(s)}
-                  className="min-h-24 h-full w-full rounded-2xl border border-rule bg-dial px-5 py-4 text-left text-[1.0625rem] leading-relaxed transition-colors duration-200 hover:border-accent"
+                  className="surface-card min-h-24 h-full w-full rounded-2xl border border-rule bg-dial px-5 py-4 text-left text-[1.0625rem] leading-relaxed transition-colors duration-200 hover:border-accent"
                 >
                   {s}
                 </button>
@@ -156,7 +156,7 @@ export function AskTend({ memberId, firstName, currency, aiLive, who, pot }: { m
           e.preventDefault();
           void send(input);
         }}
-        className="sticky bottom-[calc(5rem+env(safe-area-inset-bottom))] mt-auto flex gap-2 rounded-2xl border border-rule bg-dial p-2 lg:bottom-4"
+        className="sticky bottom-[calc(5rem+env(safe-area-inset-bottom))] mt-auto flex gap-2 rounded-2xl border border-rule bg-dial p-2 shadow-[0_8px_24px_-12px_rgb(24_49_62/0.25)] lg:bottom-4"
       >
         <label className="sr-only" htmlFor="ask">
           Ask Tend

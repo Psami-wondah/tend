@@ -92,7 +92,7 @@ export function AlertsToggle({ memberId, person }: { memberId: string; person: s
 
   const Icon = state === "on" ? BellRing : state === "denied" || state === "unsupported" ? BellOff : Bell;
   return (
-    <section aria-labelledby="alerts" className="rounded-2xl bg-dial p-4">
+    <section aria-labelledby="alerts" className="surface-card rounded-2xl border border-rule bg-dial p-4">
       <h2 id="alerts" className="flex items-center gap-2 font-bold">
         <Icon aria-hidden size={20} className={state === "on" ? "text-paid" : "text-ink-soft"} />
         {state === "on" ? "Alerts are on" : "Alerts on this device"}

@@ -58,7 +58,7 @@ export function ApprovalCard(props: {
   }
 
   return (
-    <article className="rounded-3xl border-2 border-wait/35 bg-dial p-5 sm:p-7" aria-labelledby={`p-${intent.id}`}>
+    <article className="surface-card rounded-3xl border-2 border-wait/35 bg-dial p-5 sm:p-7" aria-labelledby={`p-${intent.id}`}>
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="min-w-0">
           <Money minor={intent.amountMinor} currency={intent.currency} size="lg" />

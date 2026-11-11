@@ -98,7 +98,7 @@ export default async function SetupPage() {
   );
   const body = (
       <div className="mx-auto max-w-3xl space-y-8">
-        <ul className="divide-y divide-rule overflow-hidden rounded-3xl border border-rule bg-dial">
+        <ul className="divide-y divide-rule overflow-hidden surface-card rounded-3xl border border-rule bg-dial">
           {items.map((it) => (
             <li key={it.title} className="flex gap-3.5 px-5 py-6 sm:px-6">
               {it.ok ? (
