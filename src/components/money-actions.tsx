@@ -181,7 +181,8 @@ export function ShareRequest({ family, currency }: { family: number; currency: s
   const share = new Intl.NumberFormat("en-US", { style: "currency", currency }).format(n > 0 ? Math.ceil((n * 100) / family) / 100 : 0);
   return (
     <form onSubmit={send} className="space-y-4">
-      <div className="grid grid-cols-[minmax(0,0.7fr)_minmax(0,1fr)] gap-3">
+      {/* Stacked: the card sits in a narrow side column, where side by side cut "What it's for" off. */}
+      <div className="grid grid-cols-1 gap-3">
         <label className="block">
           <span className="text-sm font-bold">Total</span>
           <input inputMode="decimal" value={total} onChange={(e) => setTotal(e.target.value.replace(/[^\d.]/g, ""))} className={`${field} figures mt-2 text-lg`} />

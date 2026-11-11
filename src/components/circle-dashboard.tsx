@@ -30,8 +30,9 @@ import type { CircleReport } from "@/lib/report";
 
 type Tokens = Record<"enamel" | "ink" | "inkSoft" | "rule" | "accent" | "font", string> & { palette: string[] };
 
-// Chart series wear the clock wall's person colours. None is green, so no series reads as "all clear".
-const PALETTE = ["cobalt", "brass", "teal", "rust", "violet", "magenta"];
+// Chart series wear the clock wall's person colours, in series order: what was paid in Tend's teal,
+// what was refused and stopped in warm clay and magenta. None is green, so no series reads as "all clear".
+const PALETTE = ["teal", "rust", "magenta", "cobalt", "violet", "brass"];
 
 function readTokens(): Tokens {
   const css = getComputedStyle(document.documentElement);
@@ -706,7 +707,7 @@ export function CircleDashboard({
           </div>
         </div>
       </div>
-      <div className="h-[78vh] min-h-[560px] overflow-hidden rounded-2xl border-2 border-rule">
+      <div className="h-[min(78vh,680px)] min-h-[560px] overflow-hidden rounded-2xl border-2 border-rule">
         <AgStudioProvider modules={aiLive ? [AgStudioAiModule] : []} licenseKey={licenseKey}>
           <AgStudio
             data={data}

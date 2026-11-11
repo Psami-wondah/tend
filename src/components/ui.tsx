@@ -32,10 +32,11 @@ const STATUS: Record<IntentStatus, { label: string; tone: "paid" | "wait" | "sto
   voided: { label: "Stopped", tone: "quiet", Icon: Ban },
 };
 
+// Held and stopped get an outlined pill so they stand out in a list; an outline, not a fill, keeps the text's contrast.
 const TONE = {
   paid: "text-paid",
-  wait: "text-wait",
-  stop: "text-stop",
+  wait: "text-wait rounded-full px-2.5 ring-1 ring-inset ring-current/40",
+  stop: "text-stop rounded-full px-2.5 ring-1 ring-inset ring-current/40",
   quiet: "text-ink-soft",
 };
 
@@ -65,8 +66,9 @@ export function PersonDot({ member, size = 10, dim = false }: { member: PersonLi
 
 /** Name with their colour. `note` adds a quiet trailing word: "asleep", "approved". */
 export function PersonChip({ member, note, tone = "plain" }: { member: PersonLike; note?: string; tone?: "plain" | "done" | "asleep" }) {
-  const textCls = tone === "done" ? "text-paid" : "text-ink";
-  const noteCls = tone === "done" ? "text-paid" : "text-ink-soft";
+  // Someone asleep wears the clock wall's night colour, so who can look now is plain at a glance.
+  const textCls = tone === "done" ? "text-paid" : tone === "asleep" ? "rounded-full bg-night pl-2.5 text-night-ink" : "text-ink";
+  const noteCls = tone === "done" ? "text-paid" : tone === "asleep" ? "text-night-soft" : "text-ink-soft";
   return (
     <span className={`inline-flex min-h-8 items-center gap-2 ${textCls} py-1 pr-3 text-sm`}>
       <PersonDot member={member} />

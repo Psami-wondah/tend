@@ -128,11 +128,23 @@ export async function seedDemo(opts: { history?: boolean; stable?: boolean } = {
     data: { from: 1, to: 2, changes: [{ label: "Transport auto-pay limit", before: 3_000, after: 4_000 }] },
   });
 
-  await paid({ circleId: circle.id, currency, payee: pharmacy, amountMinor: 2_450, category: "pharmacy", reference: "RX-1033", summary: "Mum's cholesterol tablets.", at: daysAgo(12, 15), mandate: DEFAULT_MANDATE });
+  const firstRx = await paid({ circleId: circle.id, currency, payee: pharmacy, amountMinor: 2_450, category: "pharmacy", reference: "RX-1033", summary: "Mum's cholesterol tablets.", at: daysAgo(12, 15), mandate: DEFAULT_MANDATE });
   // The same bill again. Tend flagged it as a duplicate; Tunde approved it at 1am Toronto time.
-  await paid({
+  const againRx = await paid({
     circleId: circle.id, currency, payee: pharmacy, amountMinor: 2_450, category: "pharmacy", reference: "RX-1033",
     summary: "Mum's cholesterol tablets.", at: daysAgo(11, 6), mandate: DEFAULT_MANDATE, approvers: [tunde], duplicate: true,
+  });
+  // Tend's double-payment check caught it the next day; nobody has asked for it back yet ("Money to get back").
+  const [found] = await db
+    .insert(schema.recoveries)
+    .values({
+      circleId: circle.id, intentId: againRx.id, originalIntentId: firstRx.id, payeeId: pharmacy.id, payeeName: pharmacy.name,
+      amountMinor: 2_450, currency, status: "found", createdAt: daysAgo(10, 9), updatedAt: daysAgo(10, 9),
+    })
+    .returning();
+  await db.insert(schema.auditEvents).values({
+    circleId: circle.id, intentId: againRx.id, actor: "agent", type: "duplicate_found", createdAt: daysAgo(10, 9),
+    data: { recoveryId: found.id, originalIntentId: firstRx.id },
   });
 
   await refusedScam(circle.id, currency, daysAgo(9, 17));

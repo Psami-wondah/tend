@@ -171,8 +171,8 @@ export function RulesEditor(props: {
       )}
 
       <section aria-labelledby="never">
-        <h2 id="never" className="font-display text-2xl font-medium tracking-[-0.02em]">Ways Tend never pays</h2>
-        <p className="mt-2 leading-relaxed text-ink-soft">These are how most scams take money from older people. Tend refuses them whoever asks.</p>
+        <h2 id="never" className="font-display text-2xl font-medium tracking-[-0.02em]">Ways to pay Tend can block</h2>
+        <p className="mt-2 leading-relaxed text-ink-soft">These are how most scams take money from older people. Tend refuses a blocked one whoever asks, and gift cards are always blocked.</p>
         <ul className="mt-5 divide-y divide-rule overflow-hidden surface-card rounded-3xl border border-rule bg-dial">
           {EDITABLE_METHODS.map((m) => {
             const locked = m === "gift_card";

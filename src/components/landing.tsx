@@ -43,9 +43,11 @@ export function HeroPhones() {
               <Hourglass className="mt-[0.15em] size-[1.2em] shrink-0 text-wait" />A stranger at the door, and pressure to pay today.
             </p>
           </div>
-          <div className="mt-[0.8em] grid h-[3.4em] place-items-center rounded-[1em] bg-action text-[1.05em] font-bold text-action-ink">
+          {/* PayPal's own gold button, as Walter sees it in the app. */}
+          <div className="mt-[0.8em] grid h-[3.4em] place-items-center rounded-[1em] bg-[#ffc439] text-[1.05em] font-bold text-[#003087]">
             <span>
-              Pay with <span className="italic">PayPal</span>
+              Pay with <span className="font-extrabold italic">Pay</span>
+              <span className="font-extrabold italic text-[#0070e0]">Pal</span>
             </span>
           </div>
           <div className="mt-[0.6em] grid h-[3.2em] place-items-center rounded-[1.4em] border-2 border-ink bg-dial font-bold">Don&apos;t pay it</div>

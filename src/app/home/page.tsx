@@ -73,58 +73,62 @@ export default async function CircleHome() {
               </p>
             </div>
           )}
-          <div className="pb-1">
+          {/* On phones the clock card says the same, and the space goes to what's waiting. */}
+          <div className="hidden pb-1 sm:block">
             <p className="mb-3 text-[0.9375rem] text-night-soft">Everyone’s local day</p>
             <DayBand people={people} initialNow={ctx.now} />
           </div>
         </div>
       }
     >
-      <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-x-8 gap-y-8 lg:grid-cols-[minmax(0,1fr)_22rem]">
+      {/* Phones: what's waiting first, then the clocks, then the rest. The main column dissolves into the grid there so its parts can be ordered. */}
+      <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-x-8 gap-y-8 lg:grid-cols-[minmax(0,1fr)_22rem] lg:grid-rows-[auto_1fr]">
         <section aria-label="The circle's clocks" className="color-scene rounded-[2rem] border border-feature-ink/10 bg-sea px-4 py-7 text-feature-ink shadow-[0_14px_32px_-22px_rgb(19_58_71/0.5)] lg:col-start-2 lg:row-start-1">
           <p className="mb-6 text-center font-display text-xl font-semibold tracking-[-0.02em]">A little closer, wherever you are</p>
           <ClockRow people={people} initialNow={ctx.now} viewerId={ctx.me.id} />
         </section>
 
-        <div className="space-y-10 lg:col-start-1 lg:row-span-2 lg:row-start-1">
-          {d.payingCount > 0 && <WaitingForPayPal />}
-          {isNew && person && isFamily(ctx.me) && <GettingStarted person={who} link={personLink} payees={payeeCount} />}
+        <div className="max-lg:contents lg:col-start-1 lg:row-span-2 lg:row-start-1 lg:space-y-10">
+          <div className="space-y-10 max-lg:order-first">
+            {d.payingCount > 0 && <WaitingForPayPal />}
+            {isNew && person && isFamily(ctx.me) && <GettingStarted person={who} link={personLink} payees={payeeCount} />}
 
-          <section aria-labelledby="waiting" className={nothingWaiting ? "rounded-3xl border border-rule bg-dial p-5 shadow-[0_10px_28px_-22px_rgb(25_47_57/0.3)] sm:p-7" : undefined}>
-            <SectionHeading id="waiting">{nothingWaiting ? "Nothing waiting on you" : "Waiting on you"}</SectionHeading>
-            {nothingWaiting ? (
-              <p className="max-w-prose leading-relaxed text-ink-soft">
-                {d.circle.potEnabled
-                  ? `Tend is paying routine bills within the limits you agreed. Anything bigger or unusual, from the pot or from ${who}'s own PayPal, will appear here.`
-                  : `${who} pays ordinary bills from their own PayPal. Anything unusual is held there ${hold} and appears here, so you can look before it goes.`}
-              </p>
-            ) : (
-              <div className="space-y-4">
-                {d.held.map((h) => (
-                  <HeldCard
-                    key={h.id}
-                    intent={h}
-                    payer={person ? personProps(person) : null}
-                    me={personProps(ctx.me)}
-                    circle={ctx.family.map(personProps)}
-                    initialNow={ctx.now}
-                  />
-                ))}
-                {mine.map((w) => (
-                  <ApprovalCard
-                    key={w.intent.id}
-                    intent={w.intent}
-                    approvals={w.approvals}
-                    myVote={w.myVote}
-                    me={personProps(ctx.me)}
-                    family={ctx.family.map(personProps)}
-                    initialNow={ctx.now}
-                    compact
-                  />
-                ))}
-              </div>
-            )}
-          </section>
+            <section aria-labelledby="waiting" className={nothingWaiting ? "rounded-3xl border border-rule bg-dial p-5 shadow-[0_10px_28px_-22px_rgb(25_47_57/0.3)] sm:p-7" : undefined}>
+              <SectionHeading id="waiting">{nothingWaiting ? "Nothing waiting on you" : "Waiting on you"}</SectionHeading>
+              {nothingWaiting ? (
+                <p className="max-w-prose leading-relaxed text-ink-soft">
+                  {d.circle.potEnabled
+                    ? `Tend is paying routine bills within the limits you agreed. Anything bigger or unusual, from the pot or from ${who}'s own PayPal, will appear here.`
+                    : `${who} pays ordinary bills from their own PayPal. Anything unusual is held there ${hold} and appears here, so you can look before it goes.`}
+                </p>
+              ) : (
+                <div className="space-y-4">
+                  {d.held.map((h) => (
+                    <HeldCard
+                      key={h.id}
+                      intent={h}
+                      payer={person ? personProps(person) : null}
+                      me={personProps(ctx.me)}
+                      circle={ctx.family.map(personProps)}
+                      initialNow={ctx.now}
+                    />
+                  ))}
+                  {mine.map((w) => (
+                    <ApprovalCard
+                      key={w.intent.id}
+                      intent={w.intent}
+                      approvals={w.approvals}
+                      myVote={w.myVote}
+                      me={personProps(ctx.me)}
+                      family={ctx.family.map(personProps)}
+                      initialNow={ctx.now}
+                      compact
+                    />
+                  ))}
+                </div>
+              )}
+            </section>
+          </div>
 
           {others.length > 0 && (
             <section aria-labelledby="others">

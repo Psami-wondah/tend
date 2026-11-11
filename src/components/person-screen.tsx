@@ -361,7 +361,7 @@ export function PersonScreen(props: {
 
             {props.samples.length > 0 && (
               <details className="mt-auto pt-10 text-[0.85em]">
-                <summary className="min-h-14 cursor-pointer rounded-xl border-t border-rule pt-4 font-bold underline underline-offset-4">Try it with an example</summary>
+                <summary className="min-h-14 cursor-pointer border-t border-rule pt-4 font-bold underline underline-offset-4">Try it with an example</summary>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {props.samples.map((s) => (
                     <button key={s.id} type="button" onClick={() => sample(s)} className="min-h-14 rounded-2xl border-2 border-rule-strong bg-dial px-4 py-2 text-left font-bold hover:border-ink">
@@ -430,18 +430,19 @@ export function PersonScreen(props: {
         )}
 
         {mode === "plan" && plan && (
-          <section aria-live="assertive" className="mt-8 flex flex-1 flex-col">
+          <section aria-live="assertive" className="mt-4 flex flex-1 flex-col">
+            {/* Sized so the card and both buttons fit on a phone at the default text size. */}
             <div className="rounded-3xl border-4 border-accent bg-dial p-5 sm:p-7">
-              {plan.decision === "auto_pay" ? <CircleCheck aria-hidden size={52} /> : <PauseCircle aria-hidden size={52} />}
-              <h1 ref={headingRef} tabIndex={-1} className="mt-4 font-display text-[2.2em] leading-[1.08] font-semibold tracking-[-0.025em] outline-none">
+              {plan.decision === "auto_pay" ? <CircleCheck aria-hidden size={36} /> : <PauseCircle aria-hidden size={36} />}
+              <h1 ref={headingRef} tabIndex={-1} className="mt-3 font-display text-[2.2em] leading-[1.08] font-semibold tracking-[-0.025em] outline-none">
                 Before you pay
               </h1>
-              <p className="mt-4 text-[1.2em] leading-relaxed">
+              <p className="mt-3 text-[1.2em] leading-snug">
                 <Txt>{plan.message}</Txt>
               </p>
               {plan.reasons.length > 0 && plan.decision !== "auto_pay" && (
-                <ul className="mt-5 space-y-3 border-t border-rule pt-5 text-[0.95em]">
-                  {plan.reasons.map((r) => (
+                <ul className="mt-4 space-y-3 border-t border-rule pt-4 text-[0.95em]">
+                  {plan.reasons.slice(0, 1).map((r) => (
                     <li key={r} className="flex gap-2">
                       <Hourglass aria-hidden size={20} className="mt-1 shrink-0 text-wait" />
                       <span>

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { settleDueHolds } from "@/lib/own-payments";
-import { and, desc, eq, inArray, isNull, or } from "drizzle-orm";
+import { and, desc, eq, inArray, isNull, ne, or } from "drizzle-orm";
 import { getDb, schema } from "@/lib/db/client";
 import { activeMandate, listPayees } from "@/lib/circle";
 import { holdFor } from "@/lib/time";
@@ -58,7 +58,14 @@ export default async function PersonPage({ searchParams }: { searchParams: Promi
     .select({ intent: schema.paymentIntents })
     .from(schema.paymentIntents)
     .innerJoin(schema.intakes, eq(schema.intakes.id, schema.paymentIntents.intakeId))
-    .where(and(eq(schema.paymentIntents.circleId, ctx.circle.id), or(eq(schema.intakes.submittedBy, person.id), isNull(schema.intakes.submittedBy))))
+    // Not ones they looked at and never paid: "Before you pay" with no PayPal approval yet.
+    .where(
+      and(
+        eq(schema.paymentIntents.circleId, ctx.circle.id),
+        ne(schema.paymentIntents.status, "awaiting_payer"),
+        or(eq(schema.intakes.submittedBy, person.id), isNull(schema.intakes.submittedBy)),
+      ),
+    )
     .orderBy(desc(schema.paymentIntents.createdAt))
     .limit(4);
   const intents = rows.map((r) => r.intent);
@@ -83,7 +90,11 @@ export default async function PersonPage({ searchParams }: { searchParams: Promi
                   ? `${i.payeeName} ${amount}: waiting for a top-up`
                   : i.status === "rejected"
                     ? `Your circle said no to ${i.payeeName}`
-                    : `${i.payeeName} ${amount}: ${i.status.replace("_", " ")}`;
+                    : i.status === "approved" || i.status === "paying"
+                      ? `${i.payeeName} ${amount}: on its way through PayPal`
+                      : i.status === "failed"
+                        ? `${i.payeeName} ${amount}: didn't go through`
+                        : `${i.payeeName} ${amount}: ${i.status.replace("_", " ")}`;
     const tone: PersonRecent["tone"] =
       i.status === "paid" ? "paid" : i.status === "refused" || i.status === "failed" ? "stop" : i.status === "rejected" || i.status === "voided" ? "quiet" : "wait";
     return { id: i.id, line, tone, when: when.format(i.createdAt) };
