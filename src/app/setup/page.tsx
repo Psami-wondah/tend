@@ -20,15 +20,15 @@ export default async function SetupPage() {
       ok: i.ai,
       title: "AI reads bills and answers questions",
       body: i.ai
-        ? "Connected. AI can read bills and answer questions."
+        ? `Connected, using ${i.model} through ${i.aiProvider === "openrouter" ? "OpenRouter" : "the Claude API"}.`
         : "Not connected. The examples and typed messages still work with a keyword reader, but photos need AI.",
-      fix: "Add OPENROUTER_API_KEY (openrouter.ai, Keys) or ANTHROPIC_API_KEY (console.anthropic.com) to .env, then restart.",
+      fix: "Add OPENROUTER_API_KEY (openrouter.ai, Keys) or ANTHROPIC_API_KEY (console.anthropic.com) to .env, then restart. Pick any model with TEND_MODEL; the default is Claude Sonnet 5.5.",
     },
     {
       ok: i.voice,
       title: "Answers read aloud in a natural voice",
-      body: i.voice ? "On. Answers are read aloud in a natural voice." : "The person's screen uses the browser's own voice, which can sound robotic.",
-      fix: "Comes with OPENROUTER_API_KEY. Pick another voice with TEND_VOICE_MODEL and TEND_VOICE (an available AI voice), or set TEND_VOICE=off.",
+      body: i.voice ? `On, with ${i.voiceLabel} through OpenRouter.` : "The person's screen uses the browser's own voice, which can sound robotic.",
+      fix: "Comes with OPENROUTER_API_KEY. Pick another voice with TEND_VOICE_MODEL and TEND_VOICE (any OpenRouter speech model), or set TEND_VOICE=off.",
     },
     {
       ok: i.paypal !== "simulated",

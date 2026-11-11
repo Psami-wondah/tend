@@ -30,7 +30,7 @@ colors:
   paid: "#1d7650"
   paid-tint: "transparent"
   paid-ink: "#ffffff"
-  wait: "#a85f00"
+  wait: "#a05a00"
   wait-tint: "transparent"
   stop: "#bf3528"
   stop-tint: "transparent"

@@ -39,7 +39,7 @@
   /* Legacy tint tokens stay unfilled, including in protected components. */
   --color-paid-tint: transparent;
   --color-paid-ink: #ffffff;
-  --color-wait: #a85f00;
+  --color-wait: #a05a00;
   --color-wait-tint: transparent;
   --color-stop: #bf3528;
   --color-stop-tint: transparent;

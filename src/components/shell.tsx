@@ -93,7 +93,7 @@ function TabLinks({ variant }: { variant: "top" | "bottom" }) {
         aria-current={on ? "page" : undefined}
         className={`flex min-h-18 flex-col items-center justify-center gap-1 text-xs font-bold ${on ? "text-accent" : "text-ink-soft"}`}
       >
-        <span className={`grid h-8 w-14 place-items-center rounded-full border-b-2 transition-colors duration-200 ${on ? "border-action bg-action text-action-ink" : "border-transparent"}`}>
+        <span className={`grid h-8 w-14 place-items-center rounded-full transition-colors duration-200 ${on ? "bg-action text-action-ink" : ""}`}>
           <Icon aria-hidden size={19} strokeWidth={2.25} />
         </span>
         {label}

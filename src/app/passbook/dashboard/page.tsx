@@ -23,7 +23,7 @@ export default async function DashboardPage() {
         <div className="mt-6">
           <h1 className="font-display text-[2rem] leading-none font-semibold tracking-[-0.01em]">Dashboard</h1>
           <p className="mt-2 max-w-3xl text-night-soft">
-            {`The same money as the ledger, as a picture: what ${person} paid, what Tend kept in their account, and who in the circle stepped in, day or night.`}
+            {`The same money as the ledger, as a picture: what ${person} paid, what Tend kept in their account, and who in the circle stepped in, day or night. Built with AG Studio; change any of it.`}
           </p>
           <PassbookTabs current="dashboard" />
         </div>
