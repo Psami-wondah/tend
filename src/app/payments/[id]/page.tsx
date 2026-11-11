@@ -45,6 +45,26 @@ const EVENT: Record<string, string> = {
   capture_completed: "PayPal confirmed the capture",
 };
 
+/** PayPal's webhooks, as "PayPal let Tend know …". */
+const PAYPAL_SAID: Record<string, string> = {
+  "PAYMENT.AUTHORIZATION.VOIDED": "the hold is voided",
+  "PAYMENT.CAPTURE.COMPLETED": "it captured the money",
+  "PAYMENT.PAYOUTS-ITEM.SUCCEEDED": "the payee has the money",
+  "PAYMENT.PAYOUTS-ITEM.UNCLAIMED": "the payee hasn't claimed it yet",
+  "PAYMENT.PAYOUTS-ITEM.FAILED": "the payment failed",
+  "PAYMENT.PAYOUTS-ITEM.RETURNED": "the money came back",
+  "PAYMENT.PAYOUTS-ITEM.BLOCKED": "it blocked the payment",
+  "INVOICING.INVOICE.PAID": "the invoice was paid",
+};
+
+function eventLabel(type: string) {
+  if (type.startsWith("webhook:")) {
+    const said = PAYPAL_SAID[type.slice("webhook:".length)];
+    return said ? `PayPal let Tend know ${said}` : "PayPal sent Tend an update";
+  }
+  return EVENT[type] ?? type.replaceAll("_", " ");
+}
+
 /** The same events, said with the person who did them: "Dolores stopped it, and PayPal voided the hold". */
 const BY_MEMBER: Record<string, string> = {
   approved: "said yes",
@@ -178,7 +198,8 @@ export default async function PaymentPage({ params }: { params: Promise<{ id: st
               )}
               {trail.map((t) => {
                 const who = actor(t.actor);
-                const label = EVENT[t.type] ?? t.type.replaceAll("_", " ");
+                const label = eventLabel(t.type);
+                const paypalEvent = t.type.startsWith("webhook:") ? (t.data as { eventId?: unknown }).eventId : null;
                 const title = who ? `${who.name} ${BY_MEMBER[t.type] ?? `${label.charAt(0).toLowerCase()}${label.slice(1)}`}` : label;
                 return (
                   <TimelineItem
@@ -194,6 +215,11 @@ export default async function PaymentPage({ params }: { params: Promise<{ id: st
                       <p className="mt-1 text-[0.9375rem] text-ink-soft">
                         {decided.awake?.length ? `${decided.awake.join(" and ")} ${decided.awake.length > 1 ? "were" : "was"} awake. ` : ""}
                         {decided.asleep.map((a) => `${a.name} was asleep (${a.local} in ${a.city})`).join("; ")}.
+                      </p>
+                    )}
+                    {typeof paypalEvent === "string" && (
+                      <p className="mt-1 text-sm text-ink-soft">
+                        PayPal event <span className="figures text-ink">{paypalEvent}</span>
                       </p>
                     )}
                     {typeof (t.data as { note?: string }).note === "string" && (t.data as { note?: string }).note && (

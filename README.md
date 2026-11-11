@@ -128,7 +128,7 @@ Tend refuses outright only on a sign with no innocent version: someone posing as
 | Verifying a new payee | **Payouts**: one cent with a four-digit code in the note | `src/lib/payees.ts` |
 | Siblings paying their share; getting a double payment back | **Agent Toolkit** `create_invoice`, `send_invoice`, `get_invoice` | `src/lib/contributions.ts`, `src/lib/recoveries.ts` |
 | Ask Tend looks things up | **Agent Toolkit** read-only tools (`list_transactions`, `list_invoices`, `get_invoice`, `get_order`, `list_disputes`, `get_dispute`) | `src/lib/paypal/toolkit.ts`, `src/lib/agent/assistant.ts` |
-| Settlement | **Webhooks** (`PAYMENT.PAYOUTS-ITEM.*`, `INVOICING.INVOICE.PAID`, `PAYMENT.AUTHORIZATION.VOIDED`, `PAYMENT.CAPTURE.COMPLETED`) with signature verification, plus polling and a cron job that also releases holds that have ended | `src/app/api/webhooks/paypal/route.ts`, `src/app/api/sync/route.ts` |
+| Settlement | **Webhooks** (`PAYMENT.PAYOUTS-ITEM.*`, `INVOICING.INVOICE.PAID`, `PAYMENT.AUTHORIZATION.VOIDED`, `PAYMENT.CAPTURE.COMPLETED`) with signature verification, each recorded once in that payment's history, plus polling and a cron job that also releases holds that have ended | `src/app/api/webhooks/paypal/route.ts`, `src/app/api/sync/route.ts` |
 | Spotting scams that use PayPal itself | The AI's extraction marks real PayPal invoices and money requests that carry a phone number; the rules engine refuses them with a PayPal-specific reason | `src/lib/agent/intake.ts`, `src/lib/mandate/engine.ts` |
 
 The Agent Toolkit ships AI SDK v4 tool objects; Tend runs AI SDK v7. `toolkit.ts` re-wraps each tool and keeps PayPal's own `execute()`. Tools that create or send invoices are only ever called by Tend's server code, never handed to the model.
@@ -213,7 +213,7 @@ Diaspora homes and bank halls have a row of clocks labelled with cities. Tend's 
 ## Scripts
 
 ```bash
-npm test               # 91 tests: rules engine, own payments and holds, Vault, MCP server, pipeline, sign-in, phone alerts, dashboard data and its assistant, demo mode end to end
+npm test               # 96 tests: rules engine, own payments and holds, Vault, MCP server, pipeline, sign-in, phone alerts, dashboard data and its assistant, demo mode end to end
 npm run typecheck
 npm run db:reset       # wipe and reseed both circles (Okafors: five weeks of history, Walter: twelve)
 npm run mcp:demo       # talk to the MCP server the way an AI assistant would
