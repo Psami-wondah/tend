@@ -4,11 +4,11 @@ import type { IntentStatus } from "@/lib/db/schema";
 import { Txt } from "./figures-text";
 
 const MARK: Record<Reason["effect"], { Icon: typeof Check; cls: string; sr: string }> = {
-  refuse: { Icon: X, cls: "bg-stop-tint text-stop", sr: "Refuses:" },
-  hold: { Icon: Clock3, cls: "bg-wait-tint text-wait", sr: "Holds:" },
-  needs_approval: { Icon: CircleHelp, cls: "bg-wait-tint text-wait", sr: "Needs approval:" },
-  cool_off: { Icon: Hourglass, cls: "bg-wait-tint text-wait", sr: "Held for a while:" },
-  auto_pay: { Icon: Check, cls: "bg-paid-tint text-paid", sr: "Allows:" },
+  refuse: { Icon: X, cls: "text-stop", sr: "Refuses:" },
+  hold: { Icon: Clock3, cls: "text-wait", sr: "Holds:" },
+  needs_approval: { Icon: CircleHelp, cls: "text-wait", sr: "Needs approval:" },
+  cool_off: { Icon: Hourglass, cls: "text-wait", sr: "Held for a while:" },
+  auto_pay: { Icon: Check, cls: "text-paid", sr: "Allows:" },
 };
 
 /** The mandate's reasons, in plain words. This is Tend showing its working. */
@@ -19,7 +19,7 @@ export function Reasons({ reasons, compact = false }: { reasons: Reason[]; compa
         const m = MARK[r.effect];
         return (
           <li key={r.code} className="flex gap-2.5 leading-snug">
-            <span aria-hidden className={`mt-0.5 grid size-5 shrink-0 place-items-center rounded-full ${m.cls}`}>
+            <span aria-hidden className={`mt-0.5 grid size-5 shrink-0 place-items-center ${m.cls}`}>
               <m.Icon size={13} strokeWidth={3} />
             </span>
             <span className={compact ? "text-[0.9375rem]" : ""}>

@@ -13,13 +13,13 @@ export function PassbookTabs({ current }: { current: "ledger" | "dashboard" }) {
     },
   ] as const;
   return (
-    <nav aria-label="Passbook views" className="mt-5 inline-flex rounded-2xl border border-night-ink/15 bg-night-deep/40 p-1.5">
+    <nav aria-label="Passbook views" className="mt-5 inline-flex gap-6">
       {tabs.map(({ id, href, label, Icon }) => (
         <Link
           key={id}
           href={href}
           aria-current={current === id ? "page" : undefined}
-          className={`inline-flex min-h-12 items-center gap-2 rounded-xl px-5 text-sm font-bold transition-colors ${current === id ? "bg-night-ink text-night" : "text-night-soft hover:text-night-ink"}`}
+          className={`inline-flex min-h-12 items-center gap-2 border-b-2 px-1 text-sm font-bold transition-colors ${current === id ? "border-night-ink text-night-ink" : "border-transparent text-night-soft hover:border-night-soft hover:text-night-ink"}`}
         >
           <Icon aria-hidden size={16} />
           {label}

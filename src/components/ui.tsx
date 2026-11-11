@@ -33,16 +33,16 @@ const STATUS: Record<IntentStatus, { label: string; tone: "paid" | "wait" | "sto
 };
 
 const TONE = {
-  paid: "bg-paid-tint text-paid",
-  wait: "bg-wait-tint text-wait",
-  stop: "bg-stop-tint text-stop",
-  quiet: "bg-enamel text-ink-soft",
+  paid: "text-paid",
+  wait: "text-wait",
+  stop: "text-stop",
+  quiet: "text-ink-soft",
 };
 
 export function StatusBadge({ status }: { status: IntentStatus }) {
   const s = STATUS[status];
   return (
-    <span className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-sm font-bold whitespace-nowrap ${TONE[s.tone]}`}>
+    <span className={`inline-flex shrink-0 items-center gap-1.5 py-1 text-sm font-bold whitespace-nowrap ${TONE[s.tone]}`}>
       <s.Icon aria-hidden size={15} strokeWidth={2.5} className={status === "paying" ? "animate-spin [animation-duration:2s]" : ""} />
       {s.label}
     </span>
@@ -65,10 +65,10 @@ export function PersonDot({ member, size = 10, dim = false }: { member: PersonLi
 
 /** Name with their colour. `note` adds a quiet trailing word: "asleep", "approved". */
 export function PersonChip({ member, note, tone = "plain" }: { member: PersonLike; note?: string; tone?: "plain" | "done" | "asleep" }) {
-  const bg = tone === "done" ? "bg-paid-tint" : tone === "asleep" ? "bg-night text-night-ink" : "bg-enamel";
-  const noteCls = tone === "done" ? "text-paid" : tone === "asleep" ? "text-night-soft" : "text-ink-soft";
+  const textCls = tone === "done" ? "text-paid" : "text-ink";
+  const noteCls = tone === "done" ? "text-paid" : "text-ink-soft";
   return (
-    <span className={`inline-flex min-h-8 items-center gap-2 rounded-full ${bg} py-1 pr-3 pl-2 text-sm`}>
+    <span className={`inline-flex min-h-8 items-center gap-2 ${textCls} py-1 pr-3 text-sm`}>
       <PersonDot member={member} />
       <span className="font-bold">{member.name}</span>
       {note && (
@@ -111,7 +111,7 @@ export function SectionHeading({ id, children, action }: { id: string; children:
 /** A label that says a transaction is simulated or seed data, never real money. */
 export function SimTag({ id }: { id: string | null | undefined }) {
   if (!id) return null;
-  if (id.startsWith("SIM-")) return <span className="rounded-md bg-enamel px-2 py-1 text-xs font-bold text-ink-soft">Simulated</span>;
-  if (id.startsWith("SEED-")) return <span className="rounded-md bg-enamel px-1.5 py-0.5 text-xs font-bold text-ink-soft">Seed data</span>;
+  if (id.startsWith("SIM-")) return <span className="py-1 text-xs font-bold text-ink-soft">Simulated</span>;
+  if (id.startsWith("SEED-")) return <span className="py-0.5 text-xs font-bold text-ink-soft">Seed data</span>;
   return null;
 }

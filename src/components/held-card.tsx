@@ -56,7 +56,7 @@ export function HeldCard(props: { intent: PaymentIntent; payer: Person | null; m
   const R = 30;
   const C = 2 * Math.PI * R;
   return (
-    <article className="rounded-3xl border-2 border-wait/40 bg-dial p-5 shadow-[0_1px_2px_rgb(18_21_28/0.05),0_10px_24px_-14px_rgb(18_21_28/0.25)] sm:p-7" aria-labelledby={`h-${intent.id}`}>
+    <article className="rounded-3xl border-2 border-wait/40 bg-dial p-5 sm:p-7" aria-labelledby={`h-${intent.id}`}>
       <div className="flex items-start gap-4 sm:gap-5">
         <div className="relative shrink-0" role="img" aria-label={needsYes ? "Held until someone says yes" : `${hours} hours ${mins} minutes left on the hold`}>
           <svg width="76" height="76" viewBox="0 0 76 76" aria-hidden>
@@ -88,7 +88,7 @@ export function HeldCard(props: { intent: PaymentIntent; payer: Person | null; m
         </div>
       </div>
 
-      <p className="mt-5 rounded-xl bg-enamel px-4 py-3 text-[0.9375rem] leading-relaxed">
+      <p className="mt-5 border-l-2 border-rule pl-4 text-[0.9375rem] leading-relaxed">
         <Txt>{intent.evaluation.reasons[0]?.message ?? intent.summary}</Txt>
       </p>
 
@@ -104,11 +104,11 @@ export function HeldCard(props: { intent: PaymentIntent; payer: Person | null; m
         })}
       </ul>
 
-      {error && <p role="alert" className="mt-3 rounded-lg bg-stop-tint px-3 py-2 font-bold text-stop">{error}</p>}
+      {error && <p role="alert" className="mt-3 border-l-2 border-stop pl-3 py-2 font-bold text-stop">{error}</p>}
 
       {isFamily &&
         (confirmStop ? (
-          <div className="mt-5 rounded-2xl border border-stop/20 bg-stop-tint p-4 sm:p-5">
+          <div className="mt-5 border-l-2 border-stop pl-4 py-2 sm:pl-5">
             <p className="font-bold">
               Stop <span className="figures">{amount}</span> to {intent.payeeName}? PayPal voids the hold and the money never leaves {props.payer?.name ?? "their"}&apos;s account.
             </p>

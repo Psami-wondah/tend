@@ -54,7 +54,7 @@ export function RecentRows({ rows, currency }: { rows: (LedgerEntry & { balanceM
         return (
           <li key={r.id}>
             {r.intentId ? (
-              <Link href={`/payments/${r.intentId}`} className="flex min-h-18 items-center gap-3 px-4 py-4 transition-colors hover:bg-enamel/60 sm:px-5">
+              <Link href={`/payments/${r.intentId}`} className="flex min-h-18 items-center gap-3 px-4 py-4 transition-colors hover:underline sm:px-5">
                 {inner}
               </Link>
             ) : (
@@ -75,7 +75,7 @@ export function Stopped({ intents, members }: { intents: PaymentIntent[]; member
         const voided = r.status === "voided";
         return (
           <li key={r.id}>
-            <Link href={`/payments/${r.id}`} className={`flex gap-3 rounded-2xl border border-rule p-5 transition-colors hover:brightness-[0.98] ${voided ? "bg-dial" : "bg-stop-tint"}`}>
+            <Link href={`/payments/${r.id}`} className="flex gap-3 border-b border-rule py-5 transition-colors hover:underline">
               {voided ? (
                 <Ban aria-hidden className="mt-0.5 shrink-0 text-ink-soft" size={22} strokeWidth={2.25} />
               ) : (
@@ -121,7 +121,7 @@ export function OwnRows({ intents }: { intents: PaymentIntent[] }) {
     <ul className="divide-y divide-rule overflow-hidden rounded-3xl border border-rule bg-dial">
       {intents.map((r) => (
         <li key={r.id}>
-          <Link href={`/payments/${r.id}`} className="flex min-h-18 items-center gap-3 px-4 py-4 transition-colors hover:bg-enamel/60 sm:px-5">
+          <Link href={`/payments/${r.id}`} className="flex min-h-18 items-center gap-3 px-4 py-4 transition-colors hover:underline sm:px-5">
             <span className="figures w-14 shrink-0 text-sm text-ink-soft">{dateFmt.format(r.createdAt)}</span>
             {icon(r.status)}
             <span className="min-w-0 flex-1 break-words leading-snug">

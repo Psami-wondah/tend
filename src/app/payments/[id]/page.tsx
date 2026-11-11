@@ -152,9 +152,9 @@ export default async function PaymentPage({ params }: { params: Promise<{ id: st
               <div className="mt-4">
                 <Stages status={intent.status} decision={intent.decision} approvalsRequired={intent.approvalsRequired} />
               </div>
-              {intent.failureReason && <p className="mt-4 rounded-lg bg-stop-tint px-3 py-2 font-bold text-stop">{intent.failureReason}</p>}
+              {intent.failureReason && <p className="mt-4 border-l-2 border-stop pl-3 py-2 font-bold text-stop">{intent.failureReason}</p>}
               {unclaimed && (
-                <p className="mt-4 rounded-lg bg-wait-tint px-3 py-2">
+                <p className="mt-4 border-l-2 border-wait pl-3 py-2">
                   <span className="font-bold">Waiting for {intent.payeeName} to claim it. </span>
                   {intent.payeeEmail ?? "Their address"} has no PayPal account yet, so PayPal emailed them a link and is holding the money. If they don&apos;t claim it within 30 days, PayPal returns it.
                 </p>
@@ -168,7 +168,7 @@ export default async function PaymentPage({ params }: { params: Promise<{ id: st
           )}
 
           {d.recovery && (
-            <p className="rounded-2xl bg-accent/10 p-4">
+            <p className="border-l-2 border-accent pl-4 py-2">
               <span className="font-bold">This was a double payment. </span>
               {d.recovery.status === "found" && "Ask for it back from the home screen."}
               {d.recovery.status === "requested" && <>Tend asked {d.recovery.payeeName} for it back. <SimTag id={d.recovery.paypalInvoiceId} /></>}
@@ -193,7 +193,7 @@ export default async function PaymentPage({ params }: { params: Promise<{ id: st
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={d.intake.imageDataUrl} alt="The document that was sent in" className="mt-3 max-h-80 rounded-xl border border-rule" />
                   )}
-                  {d.intake.text && <blockquote className="mt-2 rounded-xl bg-enamel px-3.5 py-2.5 text-[0.9375rem]">{d.intake.text}</blockquote>}
+                  {d.intake.text && <blockquote className="mt-2 border-l-2 border-rule pl-3.5 py-2.5 text-[0.9375rem]">{d.intake.text}</blockquote>}
                 </TimelineItem>
               )}
               {trail.map((t) => {

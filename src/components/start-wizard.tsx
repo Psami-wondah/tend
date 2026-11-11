@@ -120,7 +120,7 @@ export function StartWizard() {
     const [centre, ...rest] = links;
     return (
       <div className="rise">
-        <span className="grid size-16 place-items-center rounded-2xl border border-paid/20 bg-paid-tint text-paid">
+        <span className="grid size-16 place-items-center text-paid">
           <Check aria-hidden size={30} strokeWidth={2.5} />
         </span>
         <h1 className="mt-5 font-display text-[2.5rem] leading-[1.08] font-semibold tracking-[-0.025em] sm:text-[2.75rem] text-balance">{centre.name}&apos;s circle is ready</h1>
@@ -164,7 +164,7 @@ export function StartWizard() {
       <ol className="grid grid-cols-4 gap-2 border-b border-rule pb-6 sm:gap-4" aria-label="Steps">
         {STEPS.map((s, n) => (
           <li key={s} aria-current={n === step ? "step" : undefined} className="min-w-0">
-            <span aria-hidden className={`figures mb-3 grid size-9 place-items-center rounded-full border text-base font-semibold ${n < step ? "border-paid/25 bg-paid-tint text-paid" : n === step ? "border-action bg-action text-action-ink" : "border-rule-strong bg-dial text-ink-soft"}`}>{n < step ? <Check size={17} strokeWidth={2.5} /> : n + 1}</span>
+            <span aria-hidden className={`figures mb-3 grid size-9 place-items-center rounded-full border text-base font-semibold ${n < step ? "border-paid text-paid" : n === step ? "border-action bg-action text-action-ink" : "border-rule-strong bg-dial text-ink-soft"}`}>{n < step ? <Check size={17} strokeWidth={2.5} /> : n + 1}</span>
             <span aria-hidden className={`block h-1 rounded-full ${n < step ? "bg-paid" : n === step ? "bg-action" : "bg-rule"}`} />
             <span className={`mt-2 block text-sm leading-snug font-bold ${n === step ? "text-ink" : "text-ink-soft"}`}>{s}</span>
           </li>
@@ -211,7 +211,7 @@ export function StartWizard() {
                   <div className="flex items-center justify-between gap-3 border-b border-rule pb-4">
                     <span className="font-display text-xl font-semibold">{n === 0 ? "You" : `Person ${n + 1}`}</span>
                     {n > 0 && (
-                      <button type="button" onClick={() => setHelpers(helpers.filter((_, i) => i !== n))} className="inline-flex min-h-12 items-center gap-1.5 rounded-xl px-2 text-sm font-bold text-ink-soft hover:bg-stop-tint hover:text-stop">
+                      <button type="button" onClick={() => setHelpers(helpers.filter((_, i) => i !== n))} className="inline-flex min-h-12 items-center gap-1.5 rounded-xl px-2 text-sm font-bold text-ink-soft hover:text-stop">
                         <Trash2 aria-hidden size={16} /> Remove
                       </button>
                     )}
@@ -347,7 +347,7 @@ export function StartWizard() {
         )}
 
         {error && (
-          <p role="alert" className="mt-4 rounded-xl bg-stop-tint px-4 py-3 font-bold text-stop">
+          <p role="alert" className="mt-4 border-l-2 border-stop px-4 py-3 font-bold text-stop">
             {error}
           </p>
         )}

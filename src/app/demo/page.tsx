@@ -40,7 +40,7 @@ export default async function Demo() {
           <Link href="/" className="font-display text-[1.75rem] font-semibold tracking-[-0.01em]">
             Tend
           </Link>
-          <span className="rounded-full bg-night-ink/10 px-2.5 py-1 text-xs font-bold">Example circles</span>
+          <span className="border-l border-night-soft pl-4 text-xs font-bold text-night-soft">Example circles</span>
         </nav>
 
         <h1 className="mt-10 max-w-3xl font-display text-[2.25rem] leading-[1.05] font-semibold tracking-[-0.01em] sm:text-[2.75rem]">
@@ -64,7 +64,7 @@ export default async function Demo() {
         ))}
 
         {pot.length > 0 && (
-          <details className="mt-14 rounded-2xl bg-night-ink/6 p-4 sm:p-5">
+          <details className="mt-14 border-y border-night-soft py-6">
             <summary className="cursor-pointer font-bold">Another way to use Tend: a family care pot</summary>
             <p className="mt-2 max-w-prose text-[0.9375rem] text-night-soft">
               Some families pay for care together. Here the circle tops up a shared PayPal pot, Tend pays the pharmacy and the carer from it with PayPal Payouts, and splits the cost

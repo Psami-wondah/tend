@@ -282,7 +282,7 @@ export function PersonScreen(props: {
         {mode === "home" && (
           <>
             <h1 className="mt-8 font-display text-[2.4em] leading-[1.08] font-semibold tracking-[-0.025em]"><span className="mb-2 block text-[0.6em] leading-tight text-ink-soft">Hello {props.name}.</span>{" "}What needs paying?</h1>
-            {props.vaultNotice && <p role="status" className="mt-4 rounded-2xl bg-paid-tint p-4 font-bold text-paid">{props.vaultNotice}</p>}
+            {props.vaultNotice && <p role="status" className="mt-4 border-l-4 border-paid p-4 font-bold text-paid">{props.vaultNotice}</p>}
             <div className="mt-7 grid gap-3">
               <button type="button" onClick={() => fileRef.current?.click()} className={`${bigButton} bg-action text-action-ink hover:bg-action-hover`}>
                 <Camera aria-hidden size={36} strokeWidth={2} className="shrink-0" />
@@ -419,7 +419,7 @@ export function PersonScreen(props: {
           <div role="status" aria-live="polite" className="mt-10 flex flex-col items-center text-center">
             {preview && (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={preview} alt="The photo you sent" className="max-h-64 rounded-2xl border-4 border-dial shadow-lg" />
+              <img src={preview} alt="The photo you sent" className="max-h-64 rounded-2xl border border-rule" />
             )}
             <p className="mt-8 flex items-center gap-3 font-display text-[2em] font-semibold">
               <span aria-hidden className="pulse-dot size-4 rounded-full bg-action" />

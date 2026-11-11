@@ -38,7 +38,7 @@ export function Shell({
   return (
     <div className="min-h-dvh pb-[calc(6rem+env(safe-area-inset-bottom))] lg:pb-20">
       <Live />
-      <header className="shell-header on-night border-b border-night-ink/10 bg-night text-night-ink">
+      <header className="on-night border-b border-night-ink/10 bg-night text-night-ink">
         <div className={`mx-auto ${width} px-4 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-8`}>
           <div className="flex min-h-16 flex-wrap items-center gap-x-3 gap-y-2 pb-3 sm:min-h-20 sm:gap-x-4">
             <Link href="/home" className="inline-flex min-h-12 items-center gap-3 font-display text-[1.875rem] font-medium tracking-[-0.04em]">
@@ -59,7 +59,7 @@ export function Shell({
       <main className={`mx-auto ${width} px-4 pt-7 sm:px-8 sm:pt-9`}>{children}</main>
       <nav
         aria-label="Main"
-        className="fixed inset-x-0 bottom-0 z-30 border-t border-rule bg-dial/95 px-2 pt-1 pb-[env(safe-area-inset-bottom)] backdrop-blur-md lg:hidden"
+        className="fixed inset-x-0 bottom-0 z-30 border-t border-rule bg-dial px-2 pt-1 pb-[env(safe-area-inset-bottom)] lg:hidden"
       >
         <div className="mx-auto grid max-w-lg grid-cols-5">
           <TabLinks variant="bottom" />
@@ -79,7 +79,7 @@ function TabLinks({ variant }: { variant: "top" | "bottom" }) {
           key={href}
           href={href}
           aria-current={on ? "page" : undefined}
-          className={`inline-flex min-h-12 items-center gap-2 rounded-xl px-3 py-2 text-[0.9375rem] font-bold transition-colors duration-200 ${on ? "bg-night-ink/12 text-night-ink ring-1 ring-inset ring-night-ink/15" : "text-night-soft hover:bg-night-ink/5 hover:text-night-ink"}`}
+          className={`inline-flex min-h-12 items-center gap-2 border-b-2 px-3 py-2 text-[0.9375rem] font-bold transition-colors duration-200 ${on ? "border-night-ink text-night-ink" : "border-transparent text-night-soft hover:border-night-soft hover:text-night-ink"}`}
         >
           <Icon aria-hidden size={16} strokeWidth={1.8} />
           {label}
@@ -93,7 +93,7 @@ function TabLinks({ variant }: { variant: "top" | "bottom" }) {
         aria-current={on ? "page" : undefined}
         className={`flex min-h-18 flex-col items-center justify-center gap-1 text-xs font-bold ${on ? "text-action" : "text-ink-soft"}`}
       >
-        <span className={`grid h-8 w-14 place-items-center rounded-full transition-colors duration-200 ${on ? "bg-action text-action-ink" : ""}`}>
+        <span className={`grid h-8 w-14 place-items-center border-b-2 transition-colors duration-200 ${on ? "border-action text-action" : "border-transparent"}`}>
           <Icon aria-hidden size={19} strokeWidth={2.25} />
         </span>
         {label}
@@ -107,7 +107,7 @@ function DemoBadge({ demo }: { demo: { paypal: boolean; ai: boolean } }) {
   return (
     <Link
       href="/setup"
-      className="inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-full border border-night-ink/20 px-3 py-1 text-xs font-bold whitespace-nowrap text-night-soft hover:bg-night-ink/10"
+      className="inline-flex min-h-11 shrink-0 items-center gap-1.5 px-3 py-1 text-xs font-bold whitespace-nowrap text-night-soft underline decoration-night-soft underline-offset-4 hover:text-night-ink"
       title={`${what}. See what's connected.`}
     >
       <FlaskConical aria-hidden size={13} strokeWidth={2.5} />
@@ -123,7 +123,7 @@ function Account({ me }: { me: Person }) {
     <Link
       href="/settings"
       aria-current={on ? "page" : undefined}
-      className={`inline-flex min-h-12 max-w-full items-center gap-2.5 rounded-full border border-night-ink/15 py-2 pr-3.5 pl-3 text-sm font-bold transition-colors duration-200 ${on ? "bg-night-ink/20" : "bg-night-ink/5 hover:bg-night-ink/12"}`}
+      className={`inline-flex min-h-12 max-w-full items-center gap-2.5 border-l border-night-ink/30 py-2 pr-1 pl-4 text-sm font-bold transition-colors duration-200 ${on ? "underline underline-offset-4" : "hover:underline hover:underline-offset-4"}`}
     >
       <span aria-hidden className="size-2.5 rounded-full ring-2 ring-night-ink/30" style={{ background: personVar(me) }} />
       <span className="whitespace-nowrap">

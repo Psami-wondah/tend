@@ -58,7 +58,7 @@ export function ApprovalCard(props: {
   }
 
   return (
-    <article className="rounded-3xl border-2 border-wait/35 bg-dial p-5 shadow-[0_1px_2px_rgb(18_21_28/0.05),0_10px_24px_-14px_rgb(18_21_28/0.25)] sm:p-7" aria-labelledby={`p-${intent.id}`}>
+    <article className="rounded-3xl border-2 border-wait/35 bg-dial p-5 sm:p-7" aria-labelledby={`p-${intent.id}`}>
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="min-w-0">
           <Money minor={intent.amountMinor} currency={intent.currency} size="lg" />
@@ -72,7 +72,7 @@ export function ApprovalCard(props: {
 
       {props.compact ? (
         headline && (
-          <p className="mt-5 rounded-xl bg-enamel px-4 py-3 text-[0.9375rem] leading-relaxed">
+          <p className="mt-5 border-l-2 border-rule pl-4 text-[0.9375rem] leading-relaxed">
             <Txt>{headline.message}</Txt>
           </p>
         )
@@ -91,7 +91,7 @@ export function ApprovalCard(props: {
       )}
 
       {unknownPayee && isFamily && (
-        <div className="mt-5 rounded-2xl border border-rule bg-enamel p-4 sm:p-5">
+        <div className="mt-5 border-t border-rule pt-5">
           {!adding ? (
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
               <p className="min-w-0 flex-1 text-[0.9375rem]">Tend can only pay people the circle has added. Do you know who {intent.payeeName} is?</p>
@@ -138,7 +138,7 @@ export function ApprovalCard(props: {
       </div>
 
       {error && (
-        <p role="alert" className="mt-3 rounded-lg bg-stop-tint px-3 py-2 font-bold text-stop">
+        <p role="alert" className="mt-3 border-l-2 border-stop pl-3 py-2 font-bold text-stop">
           {error}
         </p>
       )}
@@ -151,7 +151,7 @@ export function ApprovalCard(props: {
               {remaining === 1 ? "Tend pays it when one more person says yes." : remaining > 1 ? `Tend pays it when ${remaining} more people say yes.` : ""}
             </p>
           ) : confirmDecline ? (
-            <div className="rounded-2xl border border-stop/20 bg-stop-tint p-4 sm:p-5">
+            <div className="border-l-2 border-stop pl-4 py-2 sm:pl-5">
               <p className="font-bold">
                 Decline <span className="figures">{amount}</span> to {intent.payeeName}? Nobody will be paid, and the circle will see you declined.
               </p>

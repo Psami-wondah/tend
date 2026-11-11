@@ -118,7 +118,7 @@ export default async function Welcome() {
                   Set up Tend for someone <ArrowRight aria-hidden size={18} />
                 </Link>
                 {tryIt && (
-                  <a href="#try" className="inline-flex min-h-14 items-center rounded-full border border-night-ink/35 px-6 font-bold transition-colors hover:border-night-ink hover:bg-night-ink/5">
+                  <a href="#try" className="inline-flex min-h-14 items-center rounded-full border border-night-ink/35 px-6 font-bold transition-colors hover:border-night-ink">
                     Try the demo
                   </a>
                 )}
@@ -153,7 +153,7 @@ export default async function Welcome() {
         <ol className="mt-12 grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
           {STAGES.map(({ stage, title, body }, n) => (
             <li key={stage} className="border-t border-rule pt-5">
-              <span aria-hidden className={`figures mb-6 inline-flex size-11 items-center justify-center rounded-full text-lg ${n === 2 ? "bg-wait-tint text-wait" : n === 3 ? "bg-paid-tint text-paid" : "bg-accent/8 text-accent"}`}>{String(n + 1).padStart(2, "0")}</span>
+              <span aria-hidden className={`figures mb-6 inline-flex min-h-11 items-center text-lg ${n === 2 ? "text-wait" : n === 3 ? "text-paid" : "text-accent"}`}>{String(n + 1).padStart(2, "0")}</span>
               <h3 className="text-lg leading-snug font-bold">
                 <span className="sr-only">Stage {n + 1}, </span>
                 <span className="font-display font-semibold">{stage}.</span> {title}
@@ -164,9 +164,9 @@ export default async function Welcome() {
         </ol>
 
         <h3 className="mt-16 font-display text-[1.75rem] leading-tight font-medium tracking-[-0.02em]">What Tend does with what Walter is sent</h3>
-        <ul className="mt-6 divide-y divide-rule overflow-hidden rounded-3xl border border-rule bg-dial">
+        <ul className="mt-6 divide-y divide-rule border-y border-rule">
           {OUTCOMES.map((o, n) => (
-            <li key={n} className="grid gap-3 px-5 py-5 sm:grid-cols-[minmax(0,1.2fr)_auto_minmax(0,1.3fr)] sm:items-center sm:gap-6 sm:px-7 sm:py-6">
+            <li key={n} className="grid gap-3 px-5 py-5 sm:grid-cols-[minmax(0,1.2fr)_9.5rem_minmax(0,1.3fr)] sm:items-center sm:gap-6 sm:px-7 sm:py-6">
               <span className="font-bold">{o.ask}</span>
               <span>
                 <Verdict tone={o.tone}>{o.verdict}</Verdict>
@@ -217,14 +217,14 @@ export default async function Welcome() {
         <ul className="mt-12 grid gap-x-10 gap-y-9 sm:grid-cols-2 lg:grid-cols-3">
           {PROMISES.map(({ Icon, title, body }) => (
             <li key={title} className="border-t border-rule pt-6">
-              <span className="inline-flex size-12 items-center justify-center rounded-2xl bg-accent/7"><Icon aria-hidden size={25} strokeWidth={1.6} className="text-accent" /></span>
+              <span className="inline-flex min-h-12 items-center"><Icon aria-hidden size={25} strokeWidth={1.6} className="text-accent" /></span>
               <h3 className="mt-3 text-lg font-bold">{title}</h3>
               <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink-soft">{body}</p>
             </li>
           ))}
         </ul>
 
-        <div className="mt-16 grid gap-8 rounded-3xl border border-rule bg-dial p-6 sm:p-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center lg:gap-12">
+        <div className="mt-16 grid gap-8 border-y border-rule py-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center lg:gap-12">
           <div>
             <h3 className="font-display text-[1.75rem] leading-tight font-medium tracking-[-0.02em]">A second key for AI assistants, too</h3>
             <p className="mt-2 text-ink-soft">
@@ -250,7 +250,7 @@ export default async function Welcome() {
             <p className="mt-3 text-[0.9375rem] leading-relaxed text-ink-soft">Built on PayPal, with AI reading every request, AG Studio for the circle&apos;s dashboard, and Render to run it.</p>
             <ul className="mt-3 flex flex-wrap gap-2" aria-label="PayPal technology used">
               {PAYPAL.map((p) => (
-                <li key={p} className="rounded-full bg-enamel px-3 py-1 text-sm font-bold">
+                <li key={p} className="border-r border-rule pr-3 py-1 text-sm font-bold last:border-r-0">
                   {p}
                 </li>
               ))}

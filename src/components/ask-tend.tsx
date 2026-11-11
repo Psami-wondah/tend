@@ -93,7 +93,7 @@ export function AskTend({ memberId, firstName, currency, aiLive, who, pot }: { m
     <div className="flex min-h-[60dvh] flex-col gap-2">
       {messages.length === 0 ? (
         <div className="py-2 sm:py-4">
-          <div aria-hidden className="mb-5 grid size-14 place-items-center rounded-2xl border border-rule bg-dial text-accent"><MessageCircle size={26} strokeWidth={1.6} /></div>
+          <div aria-hidden className="mb-5 grid size-14 place-items-center text-accent"><MessageCircle size={26} strokeWidth={1.6} /></div>
           <p className="max-w-2xl text-xl leading-relaxed">
             Hi {firstName}. Ask about {who}&apos;s money, what&apos;s held, or tell me to pay or stop something. Payments still go through the circle&apos;s rules.
           </p>
@@ -103,7 +103,7 @@ export function AskTend({ memberId, firstName, currency, aiLive, who, pot }: { m
                 <button
                   type="button"
                   onClick={() => send(s)}
-                  className="min-h-24 h-full w-full rounded-2xl border border-rule bg-dial px-5 py-4 text-left text-[1.0625rem] leading-relaxed transition-colors duration-200 hover:border-accent hover:bg-accent/5"
+                  className="min-h-24 h-full w-full rounded-2xl border border-rule bg-dial px-5 py-4 text-left text-[1.0625rem] leading-relaxed transition-colors duration-200 hover:border-accent"
                 >
                   {s}
                 </button>
@@ -124,7 +124,7 @@ export function AskTend({ memberId, firstName, currency, aiLive, who, pot }: { m
                       T
                     </span>
                     <div className="min-w-0">
-                      <p className={`rounded-3xl rounded-tl-md border border-rule px-5 py-4 whitespace-pre-wrap ${m.error ? "bg-stop-tint" : "bg-dial"}`}>
+                      <p className={`rounded-3xl rounded-tl-md border border-rule px-5 py-4 whitespace-pre-wrap ${m.error ? "border-stop text-stop" : "border-rule"}`}>
                         <Txt>{m.content}</Txt>
                       </p>
                       {m.cards?.map((c, j) => <Card key={j} card={c} currency={currency} memberId={memberId} />)}
@@ -156,7 +156,7 @@ export function AskTend({ memberId, firstName, currency, aiLive, who, pot }: { m
           e.preventDefault();
           void send(input);
         }}
-        className="sticky bottom-[calc(5rem+env(safe-area-inset-bottom))] mt-auto flex gap-2 rounded-2xl border border-rule bg-dial p-2 shadow-[0_8px_32px_-16px_rgb(18_21_28/0.2)] lg:bottom-4"
+        className="sticky bottom-[calc(5rem+env(safe-area-inset-bottom))] mt-auto flex gap-2 rounded-2xl border border-rule bg-dial p-2 lg:bottom-4"
       >
         <label className="sr-only" htmlFor="ask">
           Ask Tend

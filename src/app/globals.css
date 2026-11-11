@@ -7,7 +7,7 @@
   State colours (paid, waiting, refused) always travel with a word and an icon.
 */
 @theme static {
-  --color-enamel: #f3f5f7;
+  --color-enamel: #ffffff;
   --color-dial: #ffffff;
   --color-ink: #172238;
   --color-ink-soft: #536176;
@@ -33,12 +33,13 @@
   --color-person-rust: #b4532a;
 
   --color-paid: #1d7650;
-  --color-paid-tint: #e1f1e9;
+  /* Legacy tint tokens stay unfilled, including in protected components. */
+  --color-paid-tint: transparent;
   --color-paid-ink: #ffffff;
   --color-wait: #a85f00;
-  --color-wait-tint: #fbefd9;
+  --color-wait-tint: transparent;
   --color-stop: #bf3528;
-  --color-stop-tint: #f9e3df;
+  --color-stop-tint: transparent;
   --color-stop-ink: #ffffff;
   --color-second-hand: #d23a2c;
 
@@ -68,8 +69,8 @@
 /* Night for the reader: the ground becomes the shell's indigo. */
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-enamel: #101722;
-    --color-dial: #192333;
+    --color-enamel: #151b24;
+    --color-dial: #151b24;
     --color-ink: #edf2fa;
     --color-ink-soft: #b4c1d4;
     --color-rule: #2c3a4f;
@@ -86,12 +87,12 @@
     --color-person-teal: #4cc3c9;
     --color-person-rust: #ec9168;
     --color-paid: #5fcf98;
-    --color-paid-tint: #143628;
+    --color-paid-tint: transparent;
     --color-paid-ink: #06231a;
     --color-wait: #f0b552;
-    --color-wait-tint: #3a2b0e;
+    --color-wait-tint: transparent;
     --color-stop: #ff8b7d;
-    --color-stop-tint: #3d1a17;
+    --color-stop-tint: transparent;
     --color-stop-ink: #2a0a06;
     --color-accent: #c0d2f2;
     --color-action: #e0eafd;
@@ -122,10 +123,7 @@ select {
   cursor: pointer;
 }
 
-/* Shared page rhythm: a quiet frame around the task at hand. */
-.shell-header {
-  background-image: radial-gradient(ellipse at 90% 0%, rgb(130 157 210 / 0.1), transparent 65%);
-}
+/* Flat surfaces share one ground. Meaning lives in words, icons and rules. */
 
 .shell-band {
   padding-block: 0.25rem 1rem;
@@ -258,17 +256,11 @@ select {
   animation: pulse-dot 1.4s ease-in-out infinite;
 }
 
-/* Skeleton shimmer for loading states. */
+/* A single flat surface pulses while content is loading. */
 .skeleton {
-  background: linear-gradient(90deg, var(--color-rule) 0%, var(--color-enamel) 50%, var(--color-rule) 100%);
-  background-size: 200% 100%;
-  animation: shimmer 1.2s linear infinite;
+  background: var(--color-rule);
+  animation: pulse-dot 1.4s ease-in-out infinite;
   border-radius: 8px;
-}
-@keyframes shimmer {
-  to {
-    background-position: -200% 0;
-  }
 }
 
 /* The person's text size, chosen on their screen. */

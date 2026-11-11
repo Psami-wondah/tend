@@ -105,11 +105,11 @@ function PayeeItem({ r, memberId, currency, simulated }: { r: Row; memberId: str
           {r.aliases.length > 0 && <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink-soft">Also appears on bills as {r.aliases.join(", ")}</p>}
         </div>
         {r.verified ? (
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-paid-tint px-2.5 py-1 text-sm font-bold text-paid">
+          <span className="inline-flex items-center gap-1.5 py-1 text-sm font-bold text-paid">
             <BadgeCheck aria-hidden size={16} /> Verified
           </span>
         ) : (
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-wait-tint px-2.5 py-1 text-sm font-bold text-wait">
+          <span className="inline-flex items-center gap-1.5 py-1 text-sm font-bold text-wait">
             <CircleAlert aria-hidden size={16} /> Not verified
           </span>
         )}
@@ -128,7 +128,7 @@ function PayeeItem({ r, memberId, currency, simulated }: { r: Row; memberId: str
       </p>
 
       {!r.verified && (
-        <div className="mt-5 rounded-2xl border border-rule bg-enamel p-4 sm:p-5">
+        <div className="mt-5 border-t border-rule pt-5">
           <p className="text-[0.9375rem]">Tend never pays someone the circle hasn&apos;t verified. Send them one cent with a code, then type the code they saw.</p>
           <div className="mt-4 flex flex-wrap items-end gap-3">
             <button type="button" onClick={() => act("verify")} disabled={busy !== null} className={btn.primary}>

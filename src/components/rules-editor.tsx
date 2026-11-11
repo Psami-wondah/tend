@@ -209,7 +209,7 @@ export function RulesEditor(props: {
 
       {(changes.length > 0 || status) && (
         <div className="fixed inset-x-0 bottom-[calc(5rem+env(safe-area-inset-bottom))] z-20 px-3 lg:bottom-4">
-          <div id="review" className="rise mx-auto max-h-[60dvh] max-w-3xl overflow-y-auto overscroll-contain rounded-3xl border-2 border-action bg-dial p-5 shadow-[0_12px_40px_-12px_rgb(18_21_28/0.45)]">
+          <div id="review" className="rise mx-auto max-h-[60dvh] max-w-3xl overflow-y-auto overscroll-contain rounded-3xl border-2 border-action bg-dial p-5">
             {changes.length > 0 && <ChangeList changes={changes} />}
             {problems.length > 0 && (
               <ul className="mt-2 space-y-1 text-sm font-bold text-stop">
@@ -244,7 +244,7 @@ function ChangeList({ changes }: { changes: RuleChange[] | { label: string; disp
           <span className="font-bold">{c.label}:</span>
           <span className="figures">{c.display}</span>
           {c.loosens && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-wait-tint px-2 py-0.5 text-xs font-bold text-wait">
+            <span className="inline-flex items-center gap-1 text-xs font-bold text-wait">
               <TriangleAlert aria-hidden size={12} /> lets Tend pay more without asking
             </span>
           )}
@@ -331,7 +331,7 @@ function HistoryList({ history, memberId, current }: { history: History; memberI
                 <span className="font-normal text-ink-soft">
                   {" "}by {h.by}, <span className="figures">{fmt.format(new Date(h.at))}</span>
                 </span>
-                {h.version === current && <span className="ml-2 rounded-full bg-paid-tint px-2 py-0.5 text-xs font-bold text-paid">In use</span>}
+                {h.version === current && <span className="ml-2 text-xs font-bold text-paid">In use</span>}
               </p>
               {h.version !== current && (
                 <button

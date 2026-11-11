@@ -35,7 +35,7 @@ export default async function PassbookPage() {
                 : `Everything ${ctx.circle.careRecipientName} paid from their own PayPal, and everything that was held, stopped or refused.`}
             </p>
           </div>
-          <dl className="flex flex-wrap gap-x-8 gap-y-4 rounded-2xl border border-night-ink/15 bg-night-ink/5 px-5 py-4">
+          <dl className="flex flex-wrap gap-x-8 gap-y-4 border-l border-night-ink/30 pl-5 py-1">
             {pot ? (
               <>
                 <div>

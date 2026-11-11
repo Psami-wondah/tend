@@ -38,7 +38,7 @@ export function RecoveryCard({ r, memberId, simulated }: { r: Recovery; memberId
   return (
     <article className="rounded-3xl border-2 border-accent/30 bg-dial p-5 sm:p-7">
       <div className="flex items-start gap-4">
-        <span aria-hidden className="grid size-10 shrink-0 place-items-center rounded-full bg-accent/12 text-accent">
+        <span aria-hidden className="grid size-10 shrink-0 place-items-center text-accent">
           <Undo2 size={20} strokeWidth={2.25} />
         </span>
         <div className="min-w-0">

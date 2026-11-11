@@ -176,8 +176,8 @@ export function PassbookGrid({ rows, currency, people, aiLive, pot = true }: { r
         cellRenderer: (p: ICellRendererParams<PassbookRow>) => {
           const v = String(p.value ?? "");
           if (!v || p.node.rowPinned) return null;
-          const tone = v === "stopped" || v === "refused" ? "bg-stop-tint text-stop" : v === "held" ? "bg-wait-tint text-wait" : v === "in" || v === "refunded" ? "bg-paid-tint text-paid" : "bg-enamel text-ink-soft";
-          return <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${tone}`}>{v}</span>;
+          const tone = v === "stopped" || v === "refused" ? "text-stop" : v === "held" ? "text-wait" : v === "in" || v === "refunded" ? "text-paid" : "text-ink-soft";
+          return <span className={`text-sm font-bold ${tone}`}>{v}</span>;
         },
       },
       {

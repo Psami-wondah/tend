@@ -2,7 +2,7 @@
 name: Tend
 description: A second key for someone's money, read against their circle's clocks.
 colors:
-  enamel: "#f3f5f7"
+  enamel: "#ffffff"
   dial: "#ffffff"
   ink: "#172238"
   ink-soft: "#536176"
@@ -25,12 +25,12 @@ colors:
   person-teal: "#0f7f86"
   person-rust: "#b4532a"
   paid: "#1d7650"
-  paid-tint: "#e1f1e9"
+  paid-tint: "transparent"
   paid-ink: "#ffffff"
   wait: "#a85f00"
-  wait-tint: "#fbefd9"
+  wait-tint: "transparent"
   stop: "#bf3528"
-  stop-tint: "#f9e3df"
+  stop-tint: "transparent"
   stop-ink: "#ffffff"
   second-hand: "#d23a2c"
   action: "#223454"
@@ -202,14 +202,14 @@ components:
     rounded: "{rounded.dial}"
     padding: "4px 10px"
   person-chip:
-    backgroundColor: "{colors.enamel}"
+    backgroundColor: "transparent"
     textColor: "{colors.ink}"
     rounded: "{rounded.dial}"
     padding: "4px 12px 4px 8px"
     height: "32px"
   person-chip-asleep:
-    backgroundColor: "{colors.night}"
-    textColor: "{colors.night-ink}"
+    backgroundColor: "transparent"
+    textColor: "{colors.ink}"
     rounded: "{rounded.dial}"
     padding: "4px 12px 4px 8px"
     height: "32px"
@@ -250,7 +250,7 @@ components:
 
 Tend reads like the row of city clocks in a diaspora living room. A circle can span time zones, so every screen reads money against everyone's clock: porcelain dials on a cool ground, a midnight-indigo shell for headers and anything asleep, slate for the home clock, and one colour per person that follows them everywhere. The memorable moment is the clock row, where asleep people's dials go to night and a waiting payment shows who is awake to approve it.
 
-The system is calm and operational. Density is moderate on phones (16–20px gutters, 20–28px panel padding) and the type is large: body copy never drops below 15px, and labels are bold rather than small. Amounts and clock times are set in one numeral system, Jost with tabular lining figures at fixed steps, so any two amounts compare at a glance. Every line people read is Atkinson Hyperlegible Next. Depth is mostly tonal: white dial surfaces sitting on enamel, with soft ambient shadow reserved for the dials themselves and for the one card that is waiting on you.
+The system is calm and operational. Density is moderate on phones (16–20px gutters, 20–28px panel padding) and the type is large: body copy never drops below 15px, and labels are bold rather than small. Amounts and clock times are set in one numeral system, Jost with tabular lining figures at fixed steps, so any two amounts compare at a glance. Every line people read is Atkinson Hyperlegible Next. Surfaces are flat: the page and its panels share one neutral ground in each theme, separated by rules and whitespace. Status colour appears in text and icons without a matching tinted background.
 
 It refuses the category default: a green balance card over a stack of white cards that could belong to any budgeting app. The balance lives in the night header, not in a card, and green is a state (paid), never the brand.
 
@@ -265,12 +265,14 @@ It refuses the category default: a green balance card over a stack of white card
 
 ## Colors
 
-There is no decorative gold. The shell, daylight strip, focus rings, and home-clock identity use cool hues. Amber is reserved for waiting or a payment needing attention.
+**Flat Surface Rule:** avoid a colour placed on a lighter or darker tint of itself. Use one neutral ground, borders, and whitespace for grouping. Semantic labels carry colour through words and icons. Solid high-contrast primary actions and person-screen results remain appropriate. Historic tint tokens resolve to transparent, including in protected components.
+
+There is no decorative gold, shade-on-shade layering, tinted status pill, translucent card, or decorative gradient. The shell, daylight strip, focus rings, and home-clock identity use cool hues. Amber is reserved for waiting or a payment needing attention.
 
 A cool, near-neutral enamel and white ground under a deep night-indigo shell, with slate and six person hues as identity, and three semantic state colours that never travel alone.
 
 ### Primary
-- **Night Indigo** (`night`): the committed shell colour. The header band, asleep dial faces (`face-night`), asleep approver chips, the active bottom-tab pill and primary actions (`action`) on light. Also the text-selection colour.
+- **Night Indigo** (`night`): the committed shell colour. The header band, asleep dial faces (`face-night`), asleep clock faces, selected controls and primary actions (`action`) on light. Also the text-selection colour.
 - **Night Deep** (`night-deep`): hover for primary actions; the darker step of the shell.
 - **Night Cell** (`night-cell`): the night hours of the day band and neutral progress bars on night or enamel (the welcome stage strip).
 
@@ -290,13 +292,13 @@ A cool, near-neutral enamel and white ground under a deep night-indigo shell, wi
 - **Refused Red** (`stop` / `stop-tint` / `stop-ink`): refused, failed, decline confirmation, recoveries owed, errors.
 
 ### Neutral
-- **Enamel** (`enamel`): the page ground, quiet badges, chip fill, grid header row.
+- **Enamel** (`enamel`): the page and panel ground, grid header row.
 - **Dial White** (`dial`, `face-day`): cards, fields, secondary buttons, day dial faces.
 - **Ink** (`ink`, `hand-day`) and **Ink Soft** (`ink-soft`): text and secondary text; day dial hands.
 - **Night Ink** (`night-ink`, `hand-night`) and **Night Soft** (`night-soft`): text on the night shell; night dial hands.
 - **Rule** (`rule`) and **Rule Strong** (`rule-strong`): dividers and field borders; secondary-button borders and underlines.
 
-In the dark theme (`prefers-color-scheme: dark`) the ground becomes indigo (enamel `#101722`, dial `#192333`), the shell deepens to `#0c1424`, person and state colours lift to lighter values for contrast, state inks go dark, and `action` flips to near-white with indigo ink.
+In the dark theme (`prefers-color-scheme: dark`) the ground becomes indigo (enamel `#151b24`, dial `#151b24`), the shell deepens to `#0c1424`, person and state colours lift to lighter values for contrast, state inks go dark, and `action` flips to near-white with indigo ink.
 
 ### Named Rules
 **The One Colour Per Person Rule.** A person's colour is theirs everywhere they appear. The colour, not a repeated name, is what ties a dot in the day band to a dial and a chip. Interface jobs use `accent`, never a person colour.
@@ -332,28 +334,28 @@ The person's screen scales in `em` from a chosen base of 1.25rem, 1.5rem or 1.8r
 
 ## Layout
 
-The landing page uses a two-level editorial headline with paired phone previews and concentric dial outlines. Inside Tend, fine rules, clearly grouped panels, and a framed clock wall establish a quieter task hierarchy. Presentation changes preserve requests, handlers, form fields, and component contracts.
+The landing page uses a two-level editorial headline with paired phone previews . Inside Tend, fine rules, clearly grouped panels, and a framed clock wall establish a quieter task hierarchy. Presentation changes preserve requests, handlers, form fields, and component contracts.
 
 Phones first. Content sits in a centred column (max 72rem for most screens, 80rem for the passbook) with 16px side gutters, 32px from 640px. The night header spans the full width and holds page-specific header content (pot, day band) beneath the brand row. Spacing runs on a 4px base, with 8px and 12px as the common gaps, 20–28px panel padding and 32–40px between sections.
 
-Below 1024px a fixed bottom tab bar of five equal cells (Home, Passbook, Ask Tend, Rules, Payees), 76px tall, sits over a translucent dial-white panel with backdrop blur and safe-area padding; from 1024px the tabs move into the header as inline links. The clock row wraps to fit the circle, with 56px dials. Stage strips are a four-column grid at one fixed scale so any two payments compare. The person's screen is a single 42rem column, one decision per screen, with safe-area insets.
+Below 1024px a fixed bottom tab bar of five equal cells (Home, Passbook, Ask Tend, Rules, Payees), 76px tall, sits over an opaque neutral surface with safe-area padding; from 1024px the tabs move into the header as inline links. The clock row wraps to fit the circle, with 56px dials. Stage strips are a four-column grid at one fixed scale so any two payments compare. The person's screen is a single 42rem column, one decision per screen, with safe-area insets.
 
 ## Elevation & Depth
 
-Mostly flat and tonal: white dial surfaces on enamel, divided by 1px rules. Shadow is ambient and rare, used where something should feel like an object on the wall or demands attention now. There are no hard or offset shadows.
+One flat neutral surface per theme, divided by 1px rules. Ordinary panels, callouts, badges, and navigation have no shadows or tinted backplates. Clock dials retain their physical face and small shadow so day and night remain recognizable.
 
 ### Shadow Vocabulary
 - **Dial** (`0 1px 2px rgb(18 21 28 / 0.08), 0 6px 14px -6px rgb(18 21 28 / 0.25)`): every clock dial, so it sits proud of the ground.
-- **Waiting card** (`0 1px 2px rgb(18 21 28 / 0.05), 0 10px 24px -14px rgb(18 21 28 / 0.25)`): the approval card that needs you.
-- **Hairline** (`0 1px 2px rgb(18 21 28 / 0.05)`): the passbook grid wrapper.
-- **Review sheet** (`0 12px 40px -12px rgb(18 21 28 / 0.45)`): the rule-change review panel that rises into view.
+- **Waiting card:** an outline carries emphasis, with no shadow.
+- **Passbook:** a fine rule encloses the grid.
+- **Review sheet:** an opaque neutral surface with a strong outline.
 
 ### Named Rules
-**The Flat Ground Rule.** Ordinary cards and lists carry no shadow; only dials and something waiting on you lift.
+**The Flat Ground Rule.** Ordinary cards and lists carry no shadow; only clock dials lift.
 
 ## Shapes
 
-Round where the world is round: dials, dots, chips, badges and the active-tab pill are full circles or pills. Everything else uses gently curved rectangles in three steps: 12–16px for fields and buttons, 24px for panels, lists, the grid wrapper, and large person-screen actions. Day-band cells are near-square (2px) and stage bars are thin 6px pills. Borders are 2px when they mean something (field, secondary button, waiting card at 35% amber, unverified payee at 40% amber) and 4px on the person's screen. Ask Tend bubbles tuck one corner (6px) toward the speaker.
+Round where the world is round: dials, dots and clock bezels are circles. Status labels and person names are unfilled text, paired with icons or personal dots. Everything else uses gently curved rectangles in three steps: 12–16px for fields and buttons, 24px for panels, lists, the grid wrapper, and large person-screen actions. Day-band cells are near-square (2px) and stage bars are thin 6px pills. Borders are 2px when they mean something (field, secondary button, waiting card at 35% amber, unverified payee at 40% amber) and 4px on the person's screen. Ask Tend bubbles tuck one corner (6px) toward the speaker.
 
 ## Components
 
@@ -363,31 +365,31 @@ Solid, wide and unmistakable; every button is at least 48px tall.
 - **Primary:** night indigo with night-ink text, 20px side padding, bold 1rem. Hovers to night deep. In dark mode it becomes near-white with indigo text.
 - **Approve:** paid green with paid-ink, carrying the amount in figures ("Approve $340.00"); hovers 5% darker. Sits full-width beside Decline.
 - **Secondary:** dial white, 1px rule-strong border, ink text; border goes to ink on hover.
-- **Danger (Decline):** secondary at rest; border and text go to refused red on hover. Declining always asks for a confirmation in a refused-tint panel.
+- **Danger (Decline):** secondary at rest; border and text go to refused red on hover. Declining always asks for confirmation beside a refused-colour rule.
 - **Quiet:** bold small ink-soft text with a rule-strong underline, 48px tall.
 - **Disabled:** 55% opacity, not-allowed cursor. **Focus:** 3px accent outline, 2px offset; daylight blue on night surfaces.
 
 ### Chips
-- **Person chip:** pill, 32px tall, enamel fill, person dot, bold name, then a quiet note in figures ("awake, 9:40 pm").
-- **States:** asleep chips go night indigo with night-soft notes; approved chips go paid tint with a green note and check.
-- **Status badge:** pill, tinted fill, coloured bold label and a matching icon; "Paying now" spins its icon.
+- **Person label:** unfilled, with a person dot, bold name, then a quiet note in figures ("awake, 9:40 pm").
+- **States:** asleep is written explicitly; approved has a green note and check. Neither uses a coloured backplate.
+- **Status label:** coloured bold text and a matching icon on the surrounding neutral surface; "Paying now" spins its icon. No pill, fill, or matching shade behind it.
 
 ### Cards / Containers
 - **Corner Style:** 24px.
-- **Background:** dial white on enamel; lists are dial-white panels divided by rule lines.
-- **Shadow Strategy:** none, except the waiting approval card (see Elevation).
+- **Background:** the same neutral surface as the page; lists are divided by rule lines.
+- **Shadow Strategy:** none.
 - **Border:** 1px rule by default; a 2px state-tinted border marks a card that needs action.
 - **Internal Padding:** 20–28px, according to context.
 
 ### Inputs / Fields
 - **Style:** 52px tall, dial white, 1px rule-strong border, 12px radius, 16px side padding, 1rem text; accent caret.
 - **Focus:** border and visible outline turn accent.
-- **Error:** bold refused-red message below, or a refused-tint alert strip.
+- **Error:** bold refused-red message below, beside a refused-colour rule.
 
 ### Navigation
-- **Header:** night indigo, Tend wordmark in Jost 500 (1.875rem), Demo badge outlined in night-soft, viewer switch as a translucent night-ink pill with the viewer's dot.
-- **Bottom tabs (phones):** icon over bold 12px label; the active tab fills a 56x32 pill in `action` and its label turns `action`; inactive is ink-soft.
-- **Top tabs (1024px+):** bold 15px night-soft links; active gets a 12% night-ink fill.
+- **Header:** night indigo, Tend wordmark in Jost 500 (1.875rem), Demo badge outlined in night-soft, viewer link with the viewer's dot and a simple divider.
+- **Bottom tabs (phones):** icon over bold 12px label; the active tab has a short underline and its label turns `action`; inactive is ink-soft.
+- **Top tabs (1024px+):** bold 15px night-soft links; active gets a clear underline.
 
 ### Clock Dial (signature)
 A white or night face sized by context (56px in the clock row), a bezel in the person's colour (size/16, min 3px), four hour ticks at 45% hand colour, hour and minute hands, and a red second-hand pin. The face goes night when the person's local hour is outside the day. Hands sweep 120 degrees into place once on load (900ms, ease-out). Each dial is labelled for screen readers with name, city, time and "probably asleep".
@@ -397,7 +399,7 @@ Twenty-four 10px-tall cells with 2px gaps, daylight blue for daytime hours and n
 
 ### Stages and Reasons
 - **Stages:** a payment's life at one fixed scale: Read, Rules, Family, PayPal. Each is a 6px bar (green done, amber now, red failed, rule for skipped or to-do) over a 13px label and a 12px note.
-- **Reasons:** each rule's verdict as a 20px tinted circle with a check, clock, question or cross, followed by the plain sentence with figures set in Jost.
+- **Reasons:** each rule's verdict as an unfilled check, clock, question or cross, followed by the plain sentence with figures set in Jost.
 
 ### Passbook Grid
 AG Grid Quartz themed from the tokens: Atkinson at 15px (14px bold headers), dial-white rows on an enamel header, rule borders, 52px rows, 44px header, accent colour with a 7% accent hover and 12% selection, 24px wrapper radius with a fine rule border. Wrapped cells on phones read as text at 1.35 line-height.
@@ -406,7 +408,7 @@ AG Grid Quartz themed from the tokens: Atkinson at 15px (14px bold headers), dia
 Two-value contrast: every result is ink on a light field or white on a deep one. Paid and refused results are solid paid or stop panels; waiting results are dial white with a 4px amber border. Large actions are 96–104px tall with 30-36px icons, a 24px radius and 4px or 2px borders. Results speak aloud and rise into place.
 
 ### Motion
-Hands sweep once on load. State changes use the translate-only rise (6px upward, 220ms, cubic-bezier(0.16, 1, 0.3, 1)), with content visible from the first frame. Colour transitions are 200ms. Pulses run only on live states (recording, waiting for PayPal, loading), and skeletons shimmer while loading. Reduced motion turns everything off.
+Hands sweep once on load. State changes use the translate-only rise (6px upward, 220ms, cubic-bezier(0.16, 1, 0.3, 1)), with content visible from the first frame. Colour transitions are 200ms. Pulses run only on live states (recording, waiting for PayPal, loading), and skeletons pulse on a single flat fill while loading. Reduced motion turns everything off.
 
 ## Copy
 
