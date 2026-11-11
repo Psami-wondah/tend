@@ -1,0 +1,14 @@
+Created with the built-in image generation tool.
+Asset: devpost-thumbnail.png
+Output: 1536 × 1024 PNG, opaque, 3:2.
+
+Use case: ads-marketing.
+Asset type: Devpost project gallery thumbnail for the real project Tend. Create one finished, premium 3:2 landscape cover, high resolution, ideally 1536 by 1024 pixels.
+
+Brand and story: Tend helps an older adult keep paying from their own PayPal while people they trust provide a second key. Unusual payments are held before money leaves. This is about dignity, independence, and taking time to check. No assumption about children or parenthood.
+
+Composition: a highly legible editorial cover, not a screenshot of a whole website. On the left, generous clean space with a small simple clock-outline symbol next to a very large exact wordmark “Tend”. Beneath it, the exact headline “Their money,” on one line and “their say.” on the next, set big enough to read as a small gallery tile. On the right, two beautifully rendered slim smartphones, slightly overlapping and gently offset, like a tangible product photograph. The phone group occupies roughly half the canvas. The foreground light phone has a simple Tend screen showing ONLY a pause-circle symbol, the exact text “Held for now”, and a large “$650”. The rear ocean-blue phone has a solid white notification card showing ONLY a small current white clock symbol on an ocean-blue square, “Tend”, and “Before you pay”; two clear buttons beneath say exactly “Stop it” and “Say yes”. Make the text accurate and simplified, with no tiny paragraphs.
+
+Visual direction: distinctive contemporary consumer-product design, assured typography, warm and humane, softly dimensional physical phones and gentle natural shadows. Use the project’s own palette: deep ocean blue #103f55, bright ocean #126382, aqua #89d7dd, clay peach #f0b6a2, warm white #f6f5f1, and dark reading ink #203347. Warm-white canvas; a purposeful solid aqua rounded shape and clay circular shape form a restrained studio backdrop behind the phone group. Crisp high-contrast ink typography, geometric humanist sans for headings. Clean tactile finish. Keep all important elements comfortably inside a 7% safe margin for thumbnail cropping.
+
+Constraints: no gold, no gold clock bezel, no purple gradients, no glow, no generic floating 3D coins, no handshakes, no shields, no padlocks, no random charts, no robot or AI imagery. No same-hue coloured text on matching tinted status pills. No Airbnb or Headspace branding or borrowed logos. No Devpost logo, no badges, no watermark. Do not add any text other than the exact strings requested. The wordmark and headline are the visual priority. The cover must feel like a considered product-launch thumbnail, not a template. Opaque background.
