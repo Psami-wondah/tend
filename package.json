@@ -12,7 +12,6 @@
     "test": "vitest run",
     "db:seed": "tsx scripts/seed.ts",
     "db:reset": "tsx scripts/seed.ts --reset",
-    "demo:scenario": "tsx scripts/demo-scenario.ts",
     "eval:intake": "tsx scripts/eval-intake.ts",
     "mcp:demo": "tsx scripts/mcp-demo.ts"
   },

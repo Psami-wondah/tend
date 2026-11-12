@@ -415,7 +415,7 @@ Hands sweep once on load. State changes use the translate-only rise (6px upward,
 
 ## Copy
 
-Say “AI”, without model names. Generic interface copy refers to the person and their circle; do not assume they are a parent or have children. Named demo stories may describe their actual relationships. Keep VIDEO_SCRIPT.md shot-list labels verbatim.
+Say “AI”, without model names. Generic interface copy refers to the person and their circle; do not assume they are a parent or have children. Named demo stories may describe their actual relationships.
 
 ## Do's and Don'ts
 
